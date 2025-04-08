@@ -23,10 +23,10 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-def save_experiment_config(config_dir, experiment_name, settings):
+def save_experiment_config(config_dir, experiment_name, settings, method):
     """Saves the experiment settings to a YAML file."""
-    os.makedirs(config_dir, exist_ok=True)
-    config_file_path = Path(config_dir) / f"{experiment_name}.yaml"
+    os.makedirs(config_dir/method, exist_ok=True)
+    config_file_path = Path(config_dir) / method / f"{experiment_name}.yaml"
     with open(config_file_path, "w") as f:
         yaml.dump(settings, f, default_flow_style=False, sort_keys=False)
     logging.info(f"Experiment config saved to: {config_file_path}")
@@ -206,7 +206,7 @@ experiment_settings = {
 if args.method == "arima":
     experiment_settings["arima_order"] = arima_order
 
-save_experiment_config(CONFIG_DIR, experiment_name, experiment_settings)
+save_experiment_config(CONFIG_DIR, experiment_name, experiment_settings, args.method)
 
 
 logging.info(f"Process for {TICKER} completed.")
