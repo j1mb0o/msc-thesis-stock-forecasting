@@ -71,6 +71,10 @@ parser.add_argument(
 parser.add_argument(
     "--horizon_len", type=int, default=1, help="Horizon length"
 )
+
+parser.add_argument(
+    "--n_diff", type=int, default=0, help="Number of times to diff the dataset"
+)
 # parser.add_argument(
 #     "--plot_results", action="store_true", help="Whether to display the plot"
 # )
@@ -108,6 +112,7 @@ prepared_data = prepare_data_for_modeling(
     target_column=TARGET_COLUMN,
     test_size=TEST_SIZE,
     base_dir=BASE_DATA_DIR,
+    diff=args.diff
 )
 if prepared_data:
     train_data, test_data = prepared_data
