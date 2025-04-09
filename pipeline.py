@@ -1,4 +1,3 @@
-import argparse
 import datetime
 import logging
 import os
@@ -15,10 +14,8 @@ from sklearn.metrics import (
 
 from utils.download_data import download_data
 from utils.model_data_prep import prepare_data_for_modeling
+from utils.argfile import get_pipeline_arguments
 
-from methods.arima import ArimaForecaster
-from methods.naive_forecast import NaiveForecaster
-from methods.times import TimesFMForecaster
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -33,53 +30,8 @@ def save_experiment_config(config_dir, experiment_name, settings, method):
     logging.info(f"Experiment config saved to: {config_file_path}")
     return config_file_path
 
+args = get_pipeline_arguments()
 
-
-# def main():
-parser = argparse.ArgumentParser(description="Run forecasting pipeline.")
-parser.add_argument(
-    "--ticker",
-    type=str,
-    default="MSFT",
-    help="Stock ticker symbol (e.g., MSFT)",
-)
-parser.add_argument(
-    "--timefreq", type=str, default="1d", help="Data time frequency (e.g., 1d, 1h)"
-)
-parser.add_argument(
-    "--test_size",
-    type=float,
-    default=0.2,
-    help="Proportion of data for the test set",
-)
-parser.add_argument(
-    "--train_last_n",
-    type=float,
-    default=1.0,
-    help="Proportion of train data to keep",
-)
-parser.add_argument(
-    "--method",
-    type=str,
-    choices=["naive", "arima", "fm"],
-    default="naive",
-    help="Forecasting method (naive, arima)",
-)
-parser.add_argument(
-    "--target_column", type=str, default="Open", help="Target column to forecast"
-)
-parser.add_argument(
-    "--horizon_len", type=int, default=1, help="Horizon length"
-)
-
-parser.add_argument(
-    "--n_diff", type=int, default=0, help="Number of times to diff the dataset"
-)
-# parser.add_argument(
-#     "--plot_results", action="store_true", help="Whether to display the plot"
-# )
-
-args = parser.parse_args()
 
 logging.info(f"Starting forecasting pipeline with parameters: {args}")
 
@@ -128,12 +80,14 @@ timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
 
 # 3. Use method and forecast
 if args.method == "naive":
+    from methods.naive_forecast import NaiveForecaster
     naive_forecaster = NaiveForecaster(train_data, test_data)
     forecasts = naive_forecaster.forecast(horizon=HORIZON)
     forecasts_series = forecasts
     forecasts_series.name = "Naive Forecast"
     
 elif args.method == "arima":
+    from methods.arima import ArimaForecaster
     arima = ArimaForecaster(train_data, test_data)
     arima.fit()
     forecasts = arima.forecast(horizon=HORIZON)
@@ -142,6 +96,7 @@ elif args.method == "arima":
     arima_order = arima.order
 
 elif args.method == "fm":
+    from methods.times import TimesFMForecaster
     tfm = TimesFMForecaster(train_data, test_data, horizon_len=HORIZON)
     forecasts_series = tfm.forecast()
     forecasts_series.name = "TimesFM Forecast"
