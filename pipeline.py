@@ -118,7 +118,7 @@ else:
     exit()  # Stop if data preparation fails
 
 now = datetime.datetime.now()
-timestamp = now.strftime("%Y-%m-%d-%H-%M-%S")
+timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
 
 # 3. Use method and forecast
 if args.method == "naive":
@@ -154,32 +154,15 @@ logging.info(f"  MSE:  {mse:.4f}")
 logging.info(f"  MAE:  {mae:.4f}")
 logging.info(f"  RMSE: {rmse:.4f}")
 logging.info(f"  MAPE: {mape*100:.4f}")
-logging.info(f"  MSE:  {mse:.4f}")
 
 results_df = pd.DataFrame(
             {"Actual": test_data, f"{args.method}": forecasts_series}
         )
 
 
-# results_df.index.name = "Date"  # Ensure index has a name
-# results_dir = RESULTS_DATA_DIR / args.method / TICKER
-# results_dir.mkdir(parents=True, exist_ok=True)
-
-
-# results_file_path = (
-#     results_dir / csv_name
-# )
-# results_df.to_csv(results_file_path)
-# logging.info(f"Results saved to: {results_file_path}")
-
-
-# logging.info(f"Process for {TICKER} completed.")
-
-
 results_df.index.name = "Date"  # Ensure index has a name
 results_dir = RESULTS_DATA_DIR / args.method / TICKER
 results_dir.mkdir(parents=True, exist_ok=True)
-
 
 results_file_path = results_dir / csv_name
 results_df.to_csv(results_file_path)
@@ -187,8 +170,6 @@ logging.info(f"Results saved to: {results_file_path}")
 
 # Create experiment name
 experiment_name = f"{timestamp}_{TICKER}_{TIMEFREQ}_{args.method}_h{HORIZON}"
-if args.method == "arima":
-    experiment_name += f"_order{arima_order}"
 
 # Save experiment settings to config file
 experiment_settings = {
@@ -202,9 +183,13 @@ experiment_settings = {
     "method": args.method,
     "horizon": HORIZON,
     "results_file_path": str(results_file_path),
+    "arima_order": arima_order if args.method == "arima" else "N/A",
+    "metrics": {
+        "mse": mse,
+        "mae": mae,
+        "rmse": rmse,
+        "mape": mape}
 }
-if args.method == "arima":
-    experiment_settings["arima_order"] = arima_order
 
 save_experiment_config(CONFIG_DIR, experiment_name, experiment_settings, args.method)
 
