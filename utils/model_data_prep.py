@@ -16,7 +16,7 @@ BASE_DATA_DIR = Path("data")
 def prepare_data_for_modeling(
     ticker: str,
     timefreq: str,
-    train_last_n: Union[float, int],
+    train_last_n: Union[float, int]=1.,
     target_column: str = 'Close',
     test_size: float = 0.2,
     base_dir: Path = BASE_DATA_DIR
