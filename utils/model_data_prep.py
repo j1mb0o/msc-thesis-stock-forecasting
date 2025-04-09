@@ -19,7 +19,8 @@ def prepare_data_for_modeling(
     train_last_n: Union[float, int]=1.,
     target_column: str = 'Close',
     test_size: float = 0.2,
-    base_dir: Path = BASE_DATA_DIR
+    base_dir: Path = BASE_DATA_DIR,
+    diff: bool = False
 ) -> Optional[Tuple[pd.Series, pd.Series]]:
     """
     Loads pre-downloaded stock data, performs a train-test split,
@@ -76,6 +77,21 @@ def prepare_data_for_modeling(
     except Exception as e:
         logging.error(f"An unexpected error occurred during data loading: {e}")
         raise # Re-raise unexpected errors
+
+    if diff != 0:
+        if diff > 0:
+            series = series.diff(diff).dropna()
+        # This approach might not be the best,
+        # since if we get the whole series we "know" the future
+        # Re-visit later
+        else:
+            from pmdarima.arima import ndiffs
+
+            adf = ndiffs(series, test='adf')
+            kpss = ndiffs(series, test='kpss')
+            diff = max(adf, kpss)
+            series = series.diff(diff).dropna()
+
 
     # 2. Initial Train-Test Split
     try:
