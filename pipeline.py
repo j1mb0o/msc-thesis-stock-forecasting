@@ -13,11 +13,12 @@ from sklearn.metrics import (
     mean_absolute_percentage_error,
 )
 
-from methods.arima import ArimaForecaster
 from utils.download_data import download_data
 from utils.model_data_prep import prepare_data_for_modeling
-from methods.naive_forecast import NaiveForecaster
 
+from methods.arima import ArimaForecaster
+from methods.naive_forecast import NaiveForecaster
+from methods.times import TimesFMForecaster
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -126,9 +127,7 @@ if args.method == "naive":
     forecasts = naive_forecaster.forecast(horizon=HORIZON)
     forecasts_series = forecasts
     forecasts_series.name = "Naive Forecast"
-    csv_name = f"{timestamp}_{TICKER}_{TIMEFREQ}_naive_h{HORIZON}_results.csv"
-
-
+    
 elif args.method == "arima":
     arima = ArimaForecaster(train_data, test_data)
     arima.fit()
@@ -136,13 +135,13 @@ elif args.method == "arima":
     forecasts_series = forecasts
     forecasts_series.name = "ARIMA Forecast"
     arima_order = arima.order
-    csv_name = f"{timestamp}_{TICKER}_{TIMEFREQ}_naive_h{HORIZON}_results.csv"
-
-    
 
 elif args.method == "fm":
-    pass
+    tfm = TimesFMForecaster(train_data, test_data, horizon_len=HORIZON)
+    forecasts_series = tfm.forecast()
+    forecasts_series.name = "TimesFM Forecast"
 
+csv_name = f"{timestamp}_{TICKER}_{TIMEFREQ}_naive_h{HORIZON}_results.csv"
 
 mae = mean_absolute_error(test_data, forecasts_series)
 rmse = root_mean_squared_error(test_data, forecasts_series)

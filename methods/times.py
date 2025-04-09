@@ -35,7 +35,11 @@ class TimesFMForecaster:
              raise ValueError("train_data cannot be empty.")
         if test_data.empty:
              raise ValueError("test_data cannot be empty.")
+        if not isinstance(horizon_len, int) or horizon_len <= 0:
+            raise ValueError("horizon must be a positive integer.")
+        
 
+        self.horizon = horizon_len
         self.train_data = train_data
         self.test_data = test_data
         self.freq = freq
@@ -43,7 +47,7 @@ class TimesFMForecaster:
                         hparams=timesfm.TimesFmHparams(
                             backend="gpu",
                             per_core_batch_size=32,
-                            horizon_len=horizon_len,
+                            horizon_len=self.horizon,
                             num_layers=50,
                             use_positional_embedding=False,
                             context_len=2048,
@@ -51,7 +55,7 @@ class TimesFMForecaster:
                         checkpoint=timesfm.TimesFmCheckpoint(
                             huggingface_repo_id="google/timesfm-2.0-500m-pytorch"),
                     )
-    def forecast(self, horizon:int =1):
+    def forecast(self):
         """
         Generates forecasts for the given horizon.
 
@@ -61,23 +65,28 @@ class TimesFMForecaster:
         Returns:
             pd.Series: The forecasts.
         """
-        if not isinstance(horizon, int) or horizon <= 0:
-            raise ValueError("horizon must be a positive integer.")
         
-        # logging.info(f"Performing TimesFM Forecast with horizon={horizon}...")
-        # forecasts = []
-        # for i in tqdm.tqdm(range(0,self.test_data.shape[0], horizon)):
-        #     new_obs = self.test_data[i:i+horizon]
-            
-        #     #TODO: Implement TimesFM model prediction
-        #     forecast = [0]*horizon
-        #     forecasts.extend(forecast)
-        
-            
+        context = self.train_data.copy()
+        logging.info(f"Performing TimesFM Forecast with horizon={self.horizon}...")
+        forecasts = []
+        for i in tqdm.tqdm(range(0,self.test_data.shape[0], self.horizon)):
+            context = pd.concat([context, self.test_data[i:i+self.horizon]])
+            pred, _ = self.model.forecast([context.values], [self.freq])
+            # print(pred[0], type(pred[0]))
 
+            forecasts.extend(pred[0])
+        # print(len(forecasts))
+        if len(forecasts) > self.test_data.shape[0]:
+            forecasts = forecasts[:self.test_data.shape[0]]
+        final_forecast = pd.Series(forecasts, index=self.test_data.index, name=f"TimesFM Forecast (horizon={self.horizon})")
+        return final_forecast
         
 
 if __name__ == "__main__":
-    data = pd.Series(range(100), index=pd.date_range(start='2023-01-01', periods=100, freq='D'))
+    data = pd.Series(range(101), index=pd.date_range(start='2023-01-01', periods=101, freq='D'))
     train, test = data.iloc[:80], data.iloc[80:] # Train on first 15, test on last 5 (indices 15-19)
-    times = TimesFMForecaster(train_data=train, test_data=test)
+    times = TimesFMForecaster(train_data=train, test_data=test, horizon_len=5)
+
+    result = times.forecast()
+    print(result)
+    # perform test to increate the context Series
