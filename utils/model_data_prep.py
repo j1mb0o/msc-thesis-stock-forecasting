@@ -1,5 +1,5 @@
 import pandas as pd
-import pmdarima as pm
+# import pmdarima as pm
 from pmdarima import model_selection
 from pathlib import Path
 import logging
@@ -78,20 +78,9 @@ def prepare_data_for_modeling(
         logging.error(f"An unexpected error occurred during data loading: {e}")
         raise # Re-raise unexpected errors
 
-    if diff != 0:
-        if diff > 0:
-            series = series.diff(diff).dropna()
-        # This approach might not be the best,
-        # since if we get the whole series we "know" the future
-        # Re-visit later
-        else:
-            from pmdarima.arima import ndiffs
-
-            adf = ndiffs(series, test='adf')
-            kpss = ndiffs(series, test='kpss')
-            diff = max(adf, kpss)
-            series = series.diff(diff).dropna()
-
+    if diff:
+        series = series.diff().dropna()
+        
 
     # 2. Initial Train-Test Split
     try:
