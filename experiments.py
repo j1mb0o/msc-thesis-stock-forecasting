@@ -66,7 +66,7 @@ def run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, diff):
 tickers = ["MSFT"]
 timefreqs = ["1d"]
 # methods = ["naive", "arima", "fm"]
-methods = ["naive"]
+methods = ["arima"]
 
 horizon_lens = [1, 5, 21, 63]
 train_last_ns = [1, 2, 4, 6, 8, 10]
@@ -77,10 +77,10 @@ total_exp = 0
 for ticker, timefreq, method, horizon_len, diff in product(tickers, timefreqs, methods, horizon_lens, diffs):
     if method == "naive":
         train_last_n = 1
-        # print(f"{ticker=}, {timefreq=}, {method=}, {horizon_len=}, {diff=}, {train_last_n=}")
-        run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, diff)
-        total_exp += 1
-
+        print(f"{ticker=}, {timefreq=}, {method=}, {horizon_len=}, {diff=}, {train_last_n=}")
+        # run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, diff)
+        # total_exp += 1
+        exit()
     else:
         # train_last_n_options = train_last_ns
         for train_last_n in train_last_ns:
