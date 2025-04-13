@@ -143,13 +143,15 @@ experiment_settings = {
     "ticker": TICKER,
     "timefreq": TIMEFREQ,
     "target_column": TARGET_COLUMN,
+    "split_date": args.split_date,
     "test_years_n": args.test_years,
     "train_last_n": TRAIN_LAST_N,
     "method": args.method,
     "horizon": HORIZON,
+    "diff": args.diff,
     "results_file_path": str(results_file_path),
     "arima_order": arima_order if args.method == "arima" else "N/A",
-    "metrics": {"mse": mse, "mae": mae, "rmse": rmse, "mape": mape},
+    "metrics": {"mse": mse, "mae": mae, "rmse": rmse, "mape": mape*100},
 }
 
 save_experiment_config(CONFIG_DIR, experiment_name, experiment_settings, args.method)
