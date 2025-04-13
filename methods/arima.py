@@ -82,7 +82,8 @@ class ArimaForecaster:
         
         logging.info(f"Performing ARIMA Forecast with horizon={horizon}...")
         forecasts = []
-        for i in tqdm.tqdm(range(0,self.test_data.shape[0], horizon)):
+        # for i in tqdm.tqdm(range(0,self.test_data.shape[0], horizon)):
+        for i in tqdm.tqdm(range(0, 252, horizon)):
             new_obs = self.test_data[i:i+horizon]
             
             forecast = self.model.predict(n_periods=horizon)
