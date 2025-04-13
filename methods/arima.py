@@ -93,7 +93,7 @@ class ArimaForecaster:
 
         logging.info(f"ARIMA forecast generated for {len(self.test_data)} total steps.")
 
-        final_forecast = pd.Series(forecasts, index=self.test_data.index, name=f"ARIMA Forecast (horizon={horizon})")
+        final_forecast = pd.Series(forecasts[:len(self.test_data)], index=self.test_data.index, name=f"ARIMA Forecast (horizon={horizon})")
         return final_forecast
         
 # def experiment_n_times(n=10, train=None, test=None):

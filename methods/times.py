@@ -79,7 +79,7 @@ class TimesFMForecaster:
         # print(len(forecasts))
         if len(forecasts) > self.test_data.shape[0]:
             forecasts = forecasts[:self.test_data.shape[0]]
-        final_forecast = pd.Series(forecasts, index=self.test_data.index, name=f"TimesFM Forecast (horizon={self.horizon})")
+        final_forecast = pd.Series(forecasts[:self.test_data.shape[0]], index=self.test_data.index, name=f"TimesFM Forecast (horizon={self.horizon})")
         return final_forecast
         
 
