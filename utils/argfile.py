@@ -12,16 +12,22 @@ def get_pipeline_arguments():
     parser.add_argument(
         "--timefreq", type=str, default="1d", help="Data time frequency (e.g., 1d, 1h)"
     )
+    # parser.add_argument(
+    #     "--test_size",
+    #     type=float,
+    #     default=0.2,
+    #     help="Proportion of data for the test set",
+    # )
     parser.add_argument(
-        "--test_size",
+        "--test_years",
         type=float,
-        default=0.2,
-        help="Proportion of data for the test set",
+        default=1,
+        help="Numm of years to forecast",
     )
     parser.add_argument(
         "--train_last_n",
         type=float,
-        default=1.0,
+        default=10,
         help="Proportion of train data to keep",
     )
     parser.add_argument(
@@ -42,6 +48,8 @@ def get_pipeline_arguments():
         "--diff", action="store_true", help="Number of times to diff the dataset"
     )
 
-
+    parser.add_argument(
+        "--split_date", type=str, default="2023-01-01", help="Split date"
+    )
     args = parser.parse_args()
     return args
