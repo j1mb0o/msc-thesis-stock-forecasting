@@ -18,7 +18,7 @@ def prepare_data_for_modeling(
     target_column: str = "Open",
     rel_date: str = "2020-01-01", # The date *before* which training data ends, and *at* which test data begins
     n_train_years: int = 10,
-    n_test_years: int = 2,
+    n_test_years: int = 1,
     base_dir: Path = BASE_DATA_DIR,
     diff: bool = False
 ) -> Optional[Tuple[pd.Series, pd.Series]]:
