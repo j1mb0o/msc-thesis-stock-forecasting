@@ -21,14 +21,16 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
+
 def save_experiment_config(config_dir, experiment_name, settings, method):
     """Saves the experiment settings to a YAML file."""
-    os.makedirs(config_dir/method, exist_ok=True)
+    os.makedirs(config_dir / method, exist_ok=True)
     config_file_path = Path(config_dir) / method / f"{experiment_name}.yaml"
     with open(config_file_path, "w") as f:
         yaml.dump(settings, f, default_flow_style=False, sort_keys=False)
     logging.info(f"Experiment config saved to: {config_file_path}")
     return config_file_path
+
 
 args = get_pipeline_arguments()
 
@@ -38,7 +40,7 @@ logging.info(f"Starting forecasting pipeline with parameters: {args}")
 TICKER = args.ticker
 TIMEFREQ = args.timefreq
 TARGET_COLUMN = args.target_column
-TEST_SIZE = args.test_size
+# TEST_SIZE = args.test_size
 TRAIN_LAST_N = args.train_last_n
 HORIZON = args.horizon_len
 
@@ -60,11 +62,12 @@ test_data = None
 prepared_data = prepare_data_for_modeling(
     ticker=TICKER,
     timefreq=TIMEFREQ,
-    train_last_n=TRAIN_LAST_N,
+    rel_date=args.split_date,
+    n_train_years=TRAIN_LAST_N,
+    n_test_years=args.test_years,
     target_column=TARGET_COLUMN,
-    test_size=TEST_SIZE,
     base_dir=BASE_DATA_DIR,
-    diff=args.diff
+    diff=args.diff,
 )
 if prepared_data:
     train_data, test_data = prepared_data
@@ -81,13 +84,15 @@ timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
 # 3. Use method and forecast
 if args.method == "naive":
     from methods.naive_forecast import NaiveForecaster
+
     naive_forecaster = NaiveForecaster(train_data, test_data)
     forecasts = naive_forecaster.forecast(horizon=HORIZON)
     forecasts_series = forecasts
     forecasts_series.name = "Naive Forecast"
-    
+
 elif args.method == "arima":
     from methods.arima import ArimaForecaster
+
     arima = ArimaForecaster(train_data, test_data)
     arima.fit()
     forecasts = arima.forecast(horizon=HORIZON)
@@ -97,11 +102,12 @@ elif args.method == "arima":
 
 elif args.method == "fm":
     from methods.times import TimesFMForecaster
+
     tfm = TimesFMForecaster(train_data, test_data, horizon_len=HORIZON)
     forecasts_series = tfm.forecast()
     forecasts_series.name = "TimesFM Forecast"
 
-csv_name = f"{timestamp}_{TICKER}_{TIMEFREQ}_naive_h{HORIZON}_results.csv"
+csv_name = f"{timestamp}_{TICKER}_{TIMEFREQ}_{args.method}_split_date_{args.split_date}_train_last_n_{TRAIN_LAST_N}_test_years_{args.test_years}_horizon_{HORIZON}.csv"
 
 mae = mean_absolute_error(test_data, forecasts_series)
 rmse = root_mean_squared_error(test_data, forecasts_series)
@@ -114,9 +120,7 @@ logging.info(f"  MAE:  {mae:.4f}")
 logging.info(f"  RMSE: {rmse:.4f}")
 logging.info(f"  MAPE: {mape*100:.4f}")
 
-results_df = pd.DataFrame(
-            {"Actual": test_data, f"{args.method}": forecasts_series}
-        )
+results_df = pd.DataFrame({"Actual": test_data, f"{args.method}": forecasts_series})
 
 
 results_df.index.name = "Date"  # Ensure index has a name
@@ -128,7 +132,9 @@ results_df.to_csv(results_file_path)
 logging.info(f"Results saved to: {results_file_path}")
 
 # Create experiment name
-experiment_name = f"{timestamp}_{TICKER}_{TIMEFREQ}_{args.method}_h{HORIZON}"
+experiment_name = csv_name = (
+    f"{timestamp}_{TICKER}_{TIMEFREQ}_{args.method}_split_date_{args.split_date}_train_last_n_{TRAIN_LAST_N}_test_years_{args.test_years}_horizon_{HORIZON}"
+)
 
 # Save experiment settings to config file
 experiment_settings = {
@@ -137,17 +143,13 @@ experiment_settings = {
     "ticker": TICKER,
     "timefreq": TIMEFREQ,
     "target_column": TARGET_COLUMN,
-    "test_size": TEST_SIZE,
+    "test_years_n": args.test_years,
     "train_last_n": TRAIN_LAST_N,
     "method": args.method,
     "horizon": HORIZON,
     "results_file_path": str(results_file_path),
     "arima_order": arima_order if args.method == "arima" else "N/A",
-    "metrics": {
-        "mse": mse,
-        "mae": mae,
-        "rmse": rmse,
-        "mape": mape}
+    "metrics": {"mse": mse, "mae": mae, "rmse": rmse, "mape": mape},
 }
 
 save_experiment_config(CONFIG_DIR, experiment_name, experiment_settings, args.method)
