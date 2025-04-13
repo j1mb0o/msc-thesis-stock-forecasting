@@ -12,12 +12,6 @@ def get_pipeline_arguments():
     parser.add_argument(
         "--timefreq", type=str, default="1d", help="Data time frequency (e.g., 1d, 1h)"
     )
-    # parser.add_argument(
-    #     "--test_size",
-    #     type=float,
-    #     default=0.2,
-    #     help="Proportion of data for the test set",
-    # )
     parser.add_argument(
         "--test_years",
         type=float,
