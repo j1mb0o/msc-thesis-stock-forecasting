@@ -51,11 +51,13 @@ def run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, diff):
         str(horizon_len),
         "--train_last_n",
         str(train_last_n),
-        "--diff" if diff else "",   
     ]
+
+    if diff:
+        command.append("--diff")
     
-    # subprocess.run(command.split())
-    return command
+    subprocess.run(command)
+    # return command
 
 
 
@@ -63,7 +65,8 @@ def run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, diff):
 # Define the parameters to iterate over
 tickers = ["MSFT"]
 timefreqs = ["1d"]
-methods = ["naive", "arima", "fm"]
+# methods = ["naive", "arima", "fm"]
+methods = ["naive"]
 
 horizon_lens = [1, 5, 21, 63]
 train_last_ns = [1, 2, 4, 6, 8, 10]
