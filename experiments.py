@@ -78,13 +78,13 @@ for ticker, timefreq, method, horizon_len, diff in product(tickers, timefreqs, m
     if method == "naive":
         train_last_n = 1
         # print(f"{ticker=}, {timefreq=}, {method=}, {horizon_len=}, {diff=}, {train_last_n=}")
-        print(run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, diff))
+        run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, diff)
         total_exp += 1
 
     else:
         # train_last_n_options = train_last_ns
         for train_last_n in train_last_ns:
-            print(run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, diff))
+            run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, diff)
             # print(f"{method=}, {horizon_len=}, {diff=}, {train_last_n=}")
             total_exp += 1
 
