@@ -1,0 +1,21 @@
+experiment_name: 2025-04-13_22-01-09_MSFT_1d_arima_split_date_2023-01-01_train_last_n_6.0_test_years_1_horizon_1
+timestamp: 2025-04-13_22-01-09
+ticker: MSFT
+timefreq: 1d
+target_column: Open
+split_date: '2023-01-01'
+test_years_n: 1
+train_last_n: 6.0
+method: arima
+horizon: 1
+diff: false
+results_file_path: results/arima/MSFT/2025-04-13_22-01-09_MSFT_1d_arima_split_date_2023-01-01_train_last_n_6.0_test_years_1_horizon_1.csv
+arima_order: !!python/tuple
+- 1
+- 1
+- 1
+metrics:
+  mse: 22.64381472093596
+  mae: 3.642141236517556
+  rmse: 4.7585517461656295
+  mape: 1.209085775543039
