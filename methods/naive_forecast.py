@@ -64,9 +64,9 @@ class NaiveForecaster:
         train_len = len(self.train_data)
 
         # Iterate through the test set indices in chunks of horizon
-        # for i in range(0, total_test_len, horizon):
+        for i in range(0, total_test_len, horizon):
         # hardcoded as in other two methods
-        for i in range(0, 252, horizon):
+        # for i in range(0, 252, horizon):
             # Determine the index in the *combined* data of the last known actual value
             # If i=0, use the last value of train data (index train_len - 1)
             # If i>0, use the actual value from test data just before this chunk starts.

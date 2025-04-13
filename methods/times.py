@@ -69,8 +69,8 @@ class TimesFMForecaster:
         context = self.train_data.copy()
         logging.info(f"Performing TimesFM Forecast with horizon={self.horizon}...")
         forecasts = []
-        # for i in tqdm.tqdm(range(0,self.test_data.shape[0], self.horizon)):
-        for i in tqdm.tqdm(range(0, 252, self.horizon)):
+        for i in tqdm.tqdm(range(0,self.test_data.shape[0], self.horizon)):
+        # for i in tqdm.tqdm(range(0, 252, self.horizon)):
             context = pd.concat([context, self.test_data[i:i+self.horizon]])
             pred, _ = self.model.forecast([context.values], [self.freq])
             # print(pred[0], type(pred[0]))
