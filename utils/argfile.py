@@ -41,9 +41,7 @@ def get_pipeline_arguments():
     parser.add_argument(
         "--diff", action="store_true", help="Number of times to diff the dataset"
     )
-    # parser.add_argument(
-    #     "--plot_results", action="store_true", help="Whether to display the plot"
-    # )
+
 
     args = parser.parse_args()
     return args
