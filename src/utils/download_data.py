@@ -10,7 +10,7 @@ from typing import Union, List, Optional
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Define the base directory for saving data
-BASE_DATA_DIR = Path("data")
+BASE_DATA_DIR = Path("../data")
 
 # --- Helper Function (Optional but Recommended) ---
 def _validate_tickers(ticker_input: Union[str, List[str]]) -> List[str]:

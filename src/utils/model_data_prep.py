@@ -9,7 +9,7 @@ import datetime # Needed for Timestamp
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Define the default base directory where data is stored
-BASE_DATA_DIR = Path("data")
+BASE_DATA_DIR = Path("../data")
 
 
 def prepare_data_for_modeling(

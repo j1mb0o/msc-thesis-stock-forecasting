@@ -45,9 +45,9 @@ TRAIN_LAST_N = args.train_last_n
 HORIZON = args.horizon_len
 
 
-BASE_DATA_DIR = Path("data")
-RESULTS_DATA_DIR = Path("results")
-CONFIG_DIR = Path("configs")
+BASE_DATA_DIR = Path("../data")
+RESULTS_DATA_DIR = Path("../results")
+CONFIG_DIR = Path("../configs")
 
 logging.info(f"Starting process for {TICKER} ({TIMEFREQ})")
 
