@@ -1,0 +1,18 @@
+experiment_name: 2025-04-18_12-06-17_MSFT_1d_fm_split_date_2023-01-01_train_last_n_6.0_test_years_1_horizon_63
+timestamp: 2025-04-18_12-06-17
+ticker: MSFT
+timefreq: 1d
+target_column: Open
+split_date: '2023-01-01'
+test_years_n: 1
+train_last_n: 6.0
+method: fm
+horizon: 63
+diff: false
+results_file_path: results/fm/MSFT/2025-04-18_12-06-17_MSFT_1d_fm_split_date_2023-01-01_train_last_n_6.0_test_years_1_horizon_63.csv
+arima_order: N/A
+metrics:
+  mse: 738.2727047517495
+  mae: 20.69171075125067
+  rmse: 27.17117415114315
+  mape: 7.238386205617019
