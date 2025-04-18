@@ -42,7 +42,7 @@ class TimesFMForecaster:
         self.horizon = horizon_len
         self.train_data = train_data
         self.test_data = test_data
-        self.freq = freq
+        self.freq = 0 if horizon_len == 1 else 1 if (horizon_len > 1 and horizon_len <= 5) else 2
         self.model = timesfm.TimesFm(
                         hparams=timesfm.TimesFmHparams(
                             backend="gpu",
