@@ -25,7 +25,7 @@ logging.basicConfig(
 def save_experiment_config(config_dir, experiment_name, settings, method, ticker):
     """Saves the experiment settings to a YAML file."""
     os.makedirs(config_dir / method / ticker, exist_ok=True)
-    config_file_path = Path(config_dir) / method / f"{experiment_name}.yaml"
+    config_file_path = Path(config_dir) / method / ticker / f"{experiment_name}.yaml"
     with open(config_file_path, "w") as f:
         yaml.dump(settings, f, default_flow_style=False, sort_keys=False)
     logging.info(f"Experiment config saved to: {config_file_path}")
