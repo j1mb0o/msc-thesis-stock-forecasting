@@ -53,9 +53,9 @@ HORIZON = args.horizon_len
 BASE_DATA_DIR = Path("data")
 RESULTS_DATA_DIR = Path("results", EXP_NAME)
 CONFIG_DIR = Path("configs", EXP_NAME)
-print(CONFIG_DIR)
-print(RESULTS_DATA_DIR)
-exit()
+# print(CONFIG_DIR)
+# print(RESULTS_DATA_DIR)
+
 logging.info(f"Starting process for {TICKER} ({TIMEFREQ})")
 
 # Step 1 download data if not already done
