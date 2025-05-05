@@ -41,9 +41,12 @@ def get_pipeline_arguments():
     parser.add_argument(
         "--diff", action="store_true", help="Number of times to diff the dataset"
     )
-
     parser.add_argument(
         "--split_date", type=str, default="2023-01-01", help="Split date"
     )
+    parser.add_argument(
+        "--exp_name", type=str, default=None, help="Experiment name"
+    )
+
     args = parser.parse_args()
     return args
