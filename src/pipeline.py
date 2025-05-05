@@ -34,7 +34,12 @@ def save_experiment_config(config_dir, experiment_name, settings, method):
 
 args = get_pipeline_arguments()
 
-
+if args.exp_name is None:
+    EXP_NAME = datetime.datetime.now().strftime("%Y-%m-%d")
+    print(EXP_NAME)
+else:
+    EXP_NAME = args.exp_name
+    # print(args.exp_name)
 logging.info(f"Starting forecasting pipeline with parameters: {args}")
 
 TICKER = args.ticker
@@ -46,9 +51,11 @@ HORIZON = args.horizon_len
 
 
 BASE_DATA_DIR = Path("data")
-RESULTS_DATA_DIR = Path("results")
-CONFIG_DIR = Path("configs")
-
+RESULTS_DATA_DIR = Path("results", EXP_NAME)
+CONFIG_DIR = Path("configs", EXP_NAME)
+print(CONFIG_DIR)
+print(RESULTS_DATA_DIR)
+exit()
 logging.info(f"Starting process for {TICKER} ({TIMEFREQ})")
 
 # Step 1 download data if not already done
