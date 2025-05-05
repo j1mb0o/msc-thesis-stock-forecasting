@@ -22,9 +22,9 @@ logging.basicConfig(
 )
 
 
-def save_experiment_config(config_dir, experiment_name, settings, method):
+def save_experiment_config(config_dir, experiment_name, settings, method, ticker):
     """Saves the experiment settings to a YAML file."""
-    os.makedirs(config_dir / method, exist_ok=True)
+    os.makedirs(config_dir / method / ticker, exist_ok=True)
     config_file_path = Path(config_dir) / method / f"{experiment_name}.yaml"
     with open(config_file_path, "w") as f:
         yaml.dump(settings, f, default_flow_style=False, sort_keys=False)
@@ -161,7 +161,7 @@ experiment_settings = {
     "metrics": {"mse": mse, "mae": mae, "rmse": rmse, "mape": mape*100},
 }
 
-save_experiment_config(CONFIG_DIR, experiment_name, experiment_settings, args.method)
+save_experiment_config(CONFIG_DIR, experiment_name, experiment_settings, args.method, TICKER)
 
 
 logging.info(f"Process for {TICKER} completed.")
