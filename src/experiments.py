@@ -32,8 +32,8 @@ method = sys.argv[1]
 if method not in ["naive", "arima", "fm"]:
     raise NameError("The method is not supported")
 
-start_log = np.log10(10)  
-stop_log = np.log10(200)  
+start_log = np.log10(25)  
+stop_log = np.log10(250)  
 log_spaced_values = np.logspace(start_log, stop_log, 10)
 
 horizon_lens = [1, 5, 21, 63]
