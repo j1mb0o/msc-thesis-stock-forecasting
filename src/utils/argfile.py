@@ -69,7 +69,3 @@ if __name__ == '__main__':
     print(f"Differencing: {args.diff}")
     print(f"Split Date: {args.split_date}")
     print(f"Experiment Name: {args.exp_name}")
-
-    # Example of how you might call the script from the command line:
-    # python src/pipeline.py --ticker AAPL --train_last_n_days 365
-    # python src/pipeline.py --ticker GOOG --train_last_n_years 5
