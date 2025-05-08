@@ -16,7 +16,7 @@ def run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, exp_name):
         method,
         "--horizon_len",
         str(horizon_len),
-        "----train_last_n_days",
+        "--train_last_n_days",
         str(train_last_n),
         "--exp_name",
         exp_name,
@@ -30,7 +30,7 @@ timefreqs = ["1d"]
 method = sys.argv[1]
 
 if method not in ["naive", "arima", "fm"]:
-    raise NameError
+    raise NameError("The method is not supported")
 
 start_log = np.log10(10)  
 stop_log = np.log10(200)  
