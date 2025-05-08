@@ -16,7 +16,7 @@ def run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, exp_name):
         method,
         "--horizon_len",
         str(horizon_len),
-        "--train_last_n",
+        "----train_last_n_days",
         str(train_last_n),
         "--exp_name",
         exp_name,
