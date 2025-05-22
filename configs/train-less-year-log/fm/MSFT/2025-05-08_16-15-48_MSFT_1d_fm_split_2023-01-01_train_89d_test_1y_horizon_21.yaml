@@ -10,7 +10,7 @@ test_period_years: 1
 forecasting_method: fm
 horizon_length: 21
 differencing_applied: false
-results_file_path: results/train-less-year/fm/MSFT/2025-05-08_16-15-48_MSFT_1d_fm_split_2023-01-01_train_89d_test_1y_horizon_21.csv
+results_file_path: results/train-less-year-log/fm/MSFT/2025-05-08_16-15-48_MSFT_1d_fm_split_2023-01-01_train_89d_test_1y_horizon_21.csv
 arima_order: N/A
 evaluation_metrics:
   mse: 202.5991597165746

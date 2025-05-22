@@ -10,7 +10,7 @@ test_period_years: 1
 forecasting_method: arima
 horizon_length: 5
 differencing_applied: false
-results_file_path: results/train-less-year/arima/MSFT/2025-05-08_17-28-44_MSFT_1d_arima_split_2023-01-01_train_53d_test_1y_horizon_5.csv
+results_file_path: results/train-less-year-log/arima/MSFT/2025-05-08_17-28-44_MSFT_1d_arima_split_2023-01-01_train_53d_test_1y_horizon_5.csv
 arima_order: (1, 0, 0)
 evaluation_metrics:
   mse: 1007.2498107204078
