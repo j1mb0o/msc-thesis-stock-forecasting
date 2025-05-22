@@ -44,16 +44,19 @@ def plot_varying_horizon(model:str) -> None:
     
     unique_horizon_dicts = {}
 
-    for conf in os.listdir(MODEL_PATH):
-        with open(MODEL_PATH / conf, 'r') as f:
+    for conf_filename in os.listdir(MODEL_PATH):
+        with open(MODEL_PATH / conf_filename, 'r') as f:
             config = yaml.safe_load(f)
-        c = ConfDataClass(horizon_len=config['horizon_length'], 
-                          resutls_filepath=config['results_file_path'], 
-                          training_period_value=config['training_period_value'])
-        unique_horizon_dicts[c.horizon_len] = [c]
+        c = ConfDataClass(horizon_len=config['horizon_length'],
+                        resutls_filepath=config['results_file_path'],
+                        training_period_value=config['training_period_value'])
+        if c.horizon_len not in unique_horizon_dicts:
+            unique_horizon_dicts[c.horizon_len] = []
+        unique_horizon_dicts[c.horizon_len].append(c)
 
-    print(unique_horizon_dicts.keys())
-    print(unique_horizon_dicts)
+    # now we have our configs
+    
+
 
 
 def plot_varying_train_size():
@@ -64,5 +67,6 @@ if __name__ == '__main__':
 
     for model in os.listdir(CONFIG_PATH):
         plot_varying_horizon(model)
+        # TODO: RM for every model to run
         exit()
         # plot_varying_train_size()
