@@ -61,6 +61,8 @@ def plot_varying_horizon(model:str) -> None:
 
     plotted_on_fig_count = 0
     fig, axs = plt.subplots(2, 2, figsize=(12, 10))
+    # Set the main title for the entire figure
+    fig.suptitle(f"MSFT {model.upper()} Model: Forecasts vs. Training Data for Various Horizons", fontsize=16)
     axs = axs.flatten()
 
     for horizon_len, configs_for_this_horizon in sorted(unique_horizon_dicts.items()):
@@ -74,18 +76,21 @@ def plot_varying_horizon(model:str) -> None:
 
         print(configs_for_this_horizon)
         # continue
-        PLOT_GROUNG_TRUTH = True
+        PLOT_GROUND_TRUTH = True # Corrected variable name
+
+        current_ax = axs[plotted_on_fig_count]
+        # Set title for the current subplot (once per horizon)
+        current_ax.set_title(f"Forecast Horizon: {horizon_len} days", fontsize=10)
+        legend_items_for_ax = [] # To keep track of legend items for the current axis
 
         for i, conf_data in enumerate(configs_for_this_horizon):
-            current_ax = axs[plotted_on_fig_count]
-            csv_file_path = Path(conf_data.resutls_filepath) # Assuming this is project-root relative
+            # Note: 'resutls_filepath' in ConfDataClass seems to be a typo for 'results_filepath'. 
+            # If ConfDataClass is updated, this access will need to change.
+            csv_file_path = Path(conf_data.resutls_filepath) 
 
-        
             if not csv_file_path.exists():
                 print(f"    Warning: CSV file not found at {csv_file_path}")
-                current_ax.text(0.5, 0.5, 'CSV File NOT FOUND', ha='center', va='center', color='red', fontsize=9)
-                current_ax.set_title(f"{csv_file_path.name[:30]}...\nNOT FOUND", fontsize=8)
-                # plotted_on_fig_count += 1
+                # Optionally, add a text indication on the plot if a file is missing for a specific line
                 continue
             
             results_df = pd.read_csv(csv_file_path)
@@ -100,28 +105,33 @@ def plot_varying_horizon(model:str) -> None:
                 x_values = results_df.index
                 x_label = 'Index'
 
-            plot_title = f"Forecast Horizon: {conf_data.horizon_len} days"
-            legend_items = []
+            # The subplot title is now set outside this inner loop.
+            # plot_title = f"Forecast Horizon: {conf_data.horizon_len} days" 
 
+            # Determine the forecast column name dynamically based on the model if possible,
+            # or ensure it's consistent from pipeline.py (e.g., f"{model}_Forecast")
+            forecast_col_name = f"{model}_Forecast" # Assuming 'arima_Forecast', 'naive_Forecast', etc.
+            if model == 'fm': # TimesFM might have a different default name from pipeline.py
+                forecast_col_name = "TimesFM Forecast" # Match the name set in pipeline.py
+            
             if 'arima_Forecast' in results_df.columns:
                 current_ax.plot(x_values, results_df['arima_Forecast'], label=f"Train Days: {conf_data.training_period_value}")
-                legend_items.append("Preds")
-            if PLOT_GROUNG_TRUTH:
-                current_ax.plot(x_values, results_df['Actual'], label=f"Ground Truth Values")
-                legend_items.append("Actual Values")
-                PLOT_GROUNG_TRUTH = False
+                if "Preds" not in legend_items_for_ax: legend_items_for_ax.append("Preds")
             
-            current_ax.set_title(plot_title, fontsize=10)
+            if PLOT_GROUND_TRUTH and 'Actual' in results_df.columns:
+                current_ax.plot(x_values, results_df['Actual'], label=f"Ground Truth Values")
+                if "Actual Values" not in legend_items_for_ax: legend_items_for_ax.append("Actual Values")
+                PLOT_GROUND_TRUTH = False # Plot ground truth only once per subplot
+            
             current_ax.set_xlabel(x_label, fontsize=9)
             current_ax.set_ylabel("Value", fontsize=9)
-            if legend_items:
-                current_ax.legend(fontsize=8)
             current_ax.tick_params(axis='x', rotation=30, labelsize=8)
             current_ax.tick_params(axis='y', labelsize=8)
             current_ax.grid(True, linestyle=':', alpha=0.6)
-
+        if legend_items_for_ax or configs_for_this_horizon: # Add legend if there are items or if any config was processed
+            current_ax.legend(fontsize=8)
         plotted_on_fig_count+=1
-    plt.tight_layout()
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95]) # Adjust rect to make space for suptitle and x-axis labels
     plt.show()
 
 
