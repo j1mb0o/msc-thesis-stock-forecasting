@@ -105,7 +105,10 @@ def plot_varying_horizon(model:str) -> None:
 
             # The subplot title is now set outside this inner loop.
             # plot_title = f"Forecast Horizon: {conf_data.horizon_len} days" 
-
+            if PLOT_GROUND_TRUTH and 'Actual' in results_df.columns:
+                current_ax.plot(x_values, results_df['Actual'], label=f"Ground Truth Values")
+                if "Actual Values" not in legend_items_for_ax: legend_items_for_ax.append("Actual Values")
+                PLOT_GROUND_TRUTH = False # Plot ground truth only once per subplot
             # Determine the forecast column name dynamically based on the model if possible,
             # or ensure it's consistent from pipeline.py (e.g., f"{model}_Forecast")
             forecast_col_name = f"{model}_Forecast" # Assuming 'arima_Forecast', 'naive_Forecast', etc.
@@ -116,10 +119,6 @@ def plot_varying_horizon(model:str) -> None:
                 current_ax.plot(x_values, results_df['arima_Forecast'], label=f"Train Days: {conf_data.training_period_value}")
                 if "Preds" not in legend_items_for_ax: legend_items_for_ax.append("Preds")
             
-            if PLOT_GROUND_TRUTH and 'Actual' in results_df.columns:
-                current_ax.plot(x_values, results_df['Actual'], label=f"Ground Truth Values")
-                if "Actual Values" not in legend_items_for_ax: legend_items_for_ax.append("Actual Values")
-                PLOT_GROUND_TRUTH = False # Plot ground truth only once per subplot
             
             current_ax.set_xlabel(x_label, fontsize=9)
             current_ax.set_ylabel("Value", fontsize=9)
