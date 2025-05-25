@@ -70,11 +70,11 @@ def plot_varying_horizon(model:str) -> None:
             print(f"No configurations loaded for horizon: {horizon_len}")
             continue
 
-        print(f"  Plotting for Horizon: {horizon_len} days, Number of configs: {len(configs_for_this_horizon)}")
+        # print(f"  Plotting for Horizon: {horizon_len} days, Number of configs: {len(configs_for_this_horizon)}")
 
         configs_for_this_horizon.sort(key=lambda x: x.training_period_value)
 
-        print(configs_for_this_horizon)
+        # print(configs_for_this_horizon)
         # continue
         PLOT_GROUND_TRUTH = True # Corrected variable name
 
@@ -154,14 +154,14 @@ def plot_varying_train_size(model:str) -> None:
         unique_train_len[c.training_period_value].append(c)
 
     # now we have our configs
-    print(f"Found train lens: {sorted(list(unique_train_len.keys()))}")
+    # print(f"Found train lens: {sorted(list(unique_train_len.keys()))}")
 
     for horizon_len, configs_for_this_horizon in sorted(unique_train_len.items()):
         if not configs_for_this_horizon:
             print(f"No configurations loaded for horizon: {horizon_len}")
             continue
 
-        print(f"  Plotting for Horizon: {horizon_len} days, Number of configs: {len(configs_for_this_horizon)}")
+        # print(f"  Plotting for Horizon: {horizon_len} days, Number of configs: {len(configs_for_this_horizon)}")
 
         configs_for_this_horizon.sort(key=lambda x: x.horizon_len)
 
