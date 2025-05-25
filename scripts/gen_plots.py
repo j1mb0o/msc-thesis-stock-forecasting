@@ -17,7 +17,7 @@ RESULTS_PATH = Path()
 @dataclass
 class ConfDataClass:    
     horizon_len: int = 0
-    resutls_filepath: str = ''
+    results_filepath: str = ''
     training_period_value: int = 0
 
 def setup_paths(exp_name: str):
@@ -49,7 +49,7 @@ def plot_varying_horizon(model:str) -> None:
         with open(MODEL_PATH / conf_filename, 'r') as f:
             config = yaml.safe_load(f)
         c = ConfDataClass(horizon_len=config['horizon_length'],
-                        resutls_filepath=config['results_file_path'],
+                        results_filepath=config['results_file_path'],
                         training_period_value=config['training_period_value'])
         
         if c.horizon_len not in unique_horizon_dicts:
@@ -84,9 +84,7 @@ def plot_varying_horizon(model:str) -> None:
         legend_items_for_ax = [] # To keep track of legend items for the current axis
 
         for i, conf_data in enumerate(configs_for_this_horizon):
-            # Note: 'resutls_filepath' in ConfDataClass seems to be a typo for 'results_filepath'. 
-            # If ConfDataClass is updated, this access will need to change.
-            csv_file_path = Path(conf_data.resutls_filepath) 
+            csv_file_path = Path(conf_data.results_filepath) 
 
             if not csv_file_path.exists():
                 print(f"    Warning: CSV file not found at {csv_file_path}")
@@ -149,7 +147,7 @@ def plot_varying_train_size(model:str) -> None:
             config = yaml.safe_load(f)
 
         c = ConfDataClass(horizon_len=config['horizon_length'],
-                        resutls_filepath=config['results_file_path'],
+                        results_filepath=config['results_file_path'],
                         training_period_value=config['training_period_value'])
         
         if c.horizon_len not in unique_train_len:
