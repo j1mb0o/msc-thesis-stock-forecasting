@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 import sys
 import numpy as np
 import yaml
@@ -35,9 +36,9 @@ def setup_paths(exp_name: str):
         # This is a critical check, as no configs means nothing to plot.
         raise NotADirectoryError(f"CRITICAL: CONFIG_PATH does not exist: {CONFIG_PATH}")
 
-# Pause for now
+
 def plot_varying_horizon(model:str) -> None:
-    """Plots every configs based ont the horizon and changes"""
+    """Plots forecasts for different training data sizes, grouped by horizon, on a 2x2 grid."""
 
     # get the unique horizon lens
     #TODO: Change this when will add more stocks
@@ -56,32 +57,55 @@ def plot_varying_horizon(model:str) -> None:
             unique_horizon_dicts[c.horizon_len] = []
         unique_horizon_dicts[c.horizon_len].append(c)
 
-    # now we have our configs
+    if not unique_horizon_dicts:
+        print(f"No configurations found for model {model} under {MODEL_PATH}")
+        return
+
     print(f"Found horizons: {sorted(list(unique_horizon_dicts.keys()))}")
+
+    # Prepare style map for unique training periods
+    all_configs = [item for sublist in unique_horizon_dicts.values() for item in sublist]
+    unique_training_periods = sorted(list(set(c.training_period_value for c in all_configs)))
+
+    style_map = {}
+    if unique_training_periods:
+        # Use tab10 colors, cycle if more than 10 TPs
+        cmap = plt.colormaps.get_cmap('tab10')
+        colors_palette = cmap.colors
+        # linestyles_palette = ['--', 'solid', '-.', ':']
+        linestyles_palette = ["solid"]
+        
+        style_map = {
+            tp: (colors_palette[i % len(colors_palette)], 
+                 linestyles_palette[i % len(linestyles_palette)])
+            for i, tp in enumerate(unique_training_periods)
+        }
+
+    legend_handles_dict = {} # To store unique legend items (label: handle)
 
     plotted_on_fig_count = 0
     fig, axs = plt.subplots(2, 2, figsize=(12, 10))
     # Set the main title for the entire figure
-    fig.suptitle(f"MSFT {model.upper()} Model: Forecasts vs. Training Data for Various Horizons", fontsize=16)
+    fig.suptitle(f"MSFT {model.upper()} Model: Forecasts vs. Actuals for Various Horizons & Training Durations", fontsize=16)
     axs = axs.flatten()
+    max_subplots = len(axs)
 
     for horizon_len, configs_for_this_horizon in sorted(unique_horizon_dicts.items()):
+        if plotted_on_fig_count >= max_subplots:
+            print(f"Warning: More unique horizons ({len(unique_horizon_dicts)}) than available subplots ({max_subplots}). Plotting only the first {max_subplots}.")
+            break
+
         if not configs_for_this_horizon:
             print(f"No configurations loaded for horizon: {horizon_len}")
             continue
 
-        # print(f"  Plotting for Horizon: {horizon_len} days, Number of configs: {len(configs_for_this_horizon)}")
-
         configs_for_this_horizon.sort(key=lambda x: x.training_period_value)
 
-        # print(configs_for_this_horizon)
-        # continue
-        PLOT_GROUND_TRUTH = True # Corrected variable name
+        PLOT_GROUND_TRUTH_ON_THIS_AX = True 
 
         current_ax = axs[plotted_on_fig_count]
         # Set title for the current subplot (once per horizon)
         current_ax.set_title(f"Forecast Horizon: {horizon_len} days", fontsize=10)
-        legend_items_for_ax = [] # To keep track of legend items for the current axis
 
         for i, conf_data in enumerate(configs_for_this_horizon):
             csv_file_path = Path(conf_data.results_filepath) 
@@ -89,8 +113,7 @@ def plot_varying_horizon(model:str) -> None:
             if not csv_file_path.exists():
                 print(f"    Warning: CSV file not found at {csv_file_path}")
                 # Optionally, add a text indication on the plot if a file is missing for a specific line
-                continue
-            
+                continue            
             results_df = pd.read_csv(csv_file_path)
             
             if 'Date' in results_df.columns:
@@ -103,32 +126,42 @@ def plot_varying_horizon(model:str) -> None:
                 x_values = results_df.index
                 x_label = 'Index'
 
-            # The subplot title is now set outside this inner loop.
-            # plot_title = f"Forecast Horizon: {conf_data.horizon_len} days" 
-            if PLOT_GROUND_TRUTH and 'Actual' in results_df.columns:
-                current_ax.plot(x_values, results_df['Actual'], label=f"Ground Truth Values")
-                if "Actual Values" not in legend_items_for_ax: legend_items_for_ax.append("Actual Values")
-                PLOT_GROUND_TRUTH = False # Plot ground truth only once per subplot
-            # Determine the forecast column name dynamically based on the model if possible,
-            # or ensure it's consistent from pipeline.py (e.g., f"{model}_Forecast")
-            forecast_col_name = f"{model}_Forecast" # Assuming 'arima_Forecast', 'naive_Forecast', etc.
-            if model == 'fm': # TimesFM might have a different default name from pipeline.py
-                forecast_col_name = "TimesFM Forecast" # Match the name set in pipeline.py
-            
-            if 'arima_Forecast' in results_df.columns:
-                current_ax.plot(x_values, results_df['arima_Forecast'], label=f"Train Days: {conf_data.training_period_value}")
-                if "Preds" not in legend_items_for_ax: legend_items_for_ax.append("Preds")
-            
-            
+            # Plot Ground Truth (Actuals) - once per subplot
+            if PLOT_GROUND_TRUTH_ON_THIS_AX and 'Actual' in results_df.columns:
+                gt_label = "Actual Values"
+                line, = current_ax.plot(x_values, results_df['Actual'], color='black', linestyle='-', linewidth=1.5, label=gt_label)
+                if gt_label not in legend_handles_dict:
+                    legend_handles_dict[gt_label] = line
+                PLOT_GROUND_TRUTH_ON_THIS_AX = False 
+
+            # Plot Forecast
+            # The column name in the CSV is {method}_Forecast as per pipeline.py
+            forecast_col_name = f"{model}_Forecast" 
+
+            if forecast_col_name in results_df.columns:
+                tp_value = conf_data.training_period_value
+                color, style = style_map.get(tp_value, ('blue', '-')) # Default style if tp_value somehow not in map
+                fc_label = f"Train Days: {tp_value}"
+                
+                line, = current_ax.plot(x_values, results_df[forecast_col_name], label=fc_label, color=color, linestyle=style)
+                if fc_label not in legend_handles_dict:
+                    legend_handles_dict[fc_label] = line
+            else:
+                print(f"    Warning: Forecast column '{forecast_col_name}' not found in {csv_file_path} for model '{model}'")
+
             current_ax.set_xlabel(x_label, fontsize=9)
             current_ax.set_ylabel("Value", fontsize=9)
             current_ax.tick_params(axis='x', rotation=30, labelsize=8)
             current_ax.tick_params(axis='y', labelsize=8)
             current_ax.grid(True, linestyle=':', alpha=0.6)
-        if legend_items_for_ax or configs_for_this_horizon: # Add legend if there are items or if any config was processed
-            current_ax.legend(fontsize=8)
+
         plotted_on_fig_count+=1
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95]) # Adjust rect to make space for suptitle and x-axis labels
+
+    # Add a single legend for the entire figure
+    if legend_handles_dict:
+        fig.legend(legend_handles_dict.values(), legend_handles_dict.keys(), loc='lower center', bbox_to_anchor=(0.5, 0.01), ncol=min(5, len(legend_handles_dict)), fontsize=9)
+    
+    plt.tight_layout(rect=[0, 0.05, 1, 0.95]) # Adjust rect to make space for suptitle and legend
     plt.show()
 
 
