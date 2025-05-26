@@ -39,7 +39,7 @@ def setup_paths(exp_name: str):
         raise NotADirectoryError(f"CRITICAL: CONFIG_PATH does not exist: {CONFIG_PATH}")
 
 
-def rewrite_varying_horizon(model:str, stock:str) -> None:
+def varying_horizon(model:str, stock:str) -> None:
     MODEL_PATH = CONFIG_PATH / model / stock
     
     unique_horizon_dicts = {}
@@ -170,7 +170,7 @@ if __name__ == '__main__':
     setup_paths(EXPERIMENT_NAME)
 
     for model in os.listdir(CONFIG_PATH):
-        rewrite_varying_horizon(model, 'MSFT')
+        varying_horizon(model, 'MSFT')
         # plot_varying_train_size(model)
         # TODO: RM for every model to run
         # exit()
