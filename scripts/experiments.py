@@ -58,10 +58,15 @@ if exp_name == "train-resticted-years":
     horizon_lens = [1, 5, 21, 63]
     train_last_ns = [1, 2, 4, 6, 8, 10]
     days = False
-elif exp_name == "train-less-year":
+elif exp_name == "train-less-year-log":
     horizon_lens = [1, 5, 21, 63]
     log_spaces_values = np.logspace(np.log10(25), np.log10(250), 10)
     train_last_ns = [int(value) for value in log_spaces_values]
+    days = True
+elif exp_name == "train-less-year-linear":
+    horizon_lens = [1, 5, 21, 63]
+    lineal_spaced_values = np.linspace(25, 250, 10)
+    train_last_ns = [int(value) for value in lineal_spaced_values]
     days = True
 else:
     raise NameError("The experiment name is not supported")
