@@ -3,11 +3,11 @@ from itertools import product
 import numpy as np
 import sys
 
-def run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, exp_name):
+def run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, exp_name, days_flag=False):
     """Runs the pipeline with the given parameters."""
     command = [
         "python",
-        "src/pipeline.py",
+        "scripts/pipeline.py",
         "--ticker",
         ticker,
         "--timefreq",
@@ -16,7 +16,7 @@ def run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, exp_name):
         method,
         "--horizon_len",
         str(horizon_len),
-        "--train_last_n_days",
+        "--train_last_n_years" if not days_flag else "--train_last_n_days",
         str(train_last_n),
         "--exp_name",
         exp_name,
@@ -24,30 +24,56 @@ def run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, exp_name):
     subprocess.run(command)
     # return command
 
+# def experiment_years_training():
+#     tickers = ["MSFT"]
+#     timefreqs = ["1d"]
+#     horizon_lens = [1, 5, 21, 63]
+#     train_last_ns = [1, 2, 4, 6, 8, 10]
+#     exp_name = "train-resticted-years"
+#     days = False
+    
+#     return horizon_lens, train_last_ns, exp_name, tickers, timefreqs, days
 
+
+# def experiment_les_year_log():
+
+#     tickers = ["MSFT"]
+#     timefreqs = ["1d"]
+#     start_log = np.log10(25)  
+#     stop_log = np.log10(250)  
+#     log_spaced_values = np.logspace(start_log, stop_log, 10)
+#     horizon_lens = [1, 5, 21, 63]
+#     train_last_ns = [int(value) for value in log_spaced_values]
+#     exp_name = "train-less-year"
+#     days = True
+#     return horizon_lens, train_last_ns, exp_name, tickers, timefreqs, days
+
+
+method = sys.argv[1]
+exp_name = sys.argv[2]
 tickers = ["MSFT"]
 timefreqs = ["1d"]
-method = sys.argv[1]
+
+if exp_name == "train-resticted-years":
+    horizon_lens = [1, 5, 21, 63]
+    train_last_ns = [1, 2, 4, 6, 8, 10]
+    days = False
+elif exp_name == "train-less-year":
+    horizon_lens = [1, 5, 21, 63]
+    log_spaces_values = np.logspace(np.log10(25), np.log10(250), 10)
+    train_last_ns = [int(value) for value in log_spaces_values]
+    days = True
+else:
+    raise NameError("The experiment name is not supported")
+
 
 if method not in ["naive", "arima", "fm"]:
     raise NameError("The method is not supported")
 
-start_log = np.log10(25)  
-stop_log = np.log10(250)  
-log_spaced_values = np.logspace(start_log, stop_log, 10)
-
-horizon_lens = [1, 5, 21, 63]
-train_last_ns = [int(value) for value in log_spaced_values]
-print(train_last_ns)
-
-exp_name = "train-less-year"
-# exit()
 total_exp = 0
 
 for ticker, timefreq, horizon_len, train_last_n in product(tickers, timefreqs, horizon_lens, train_last_ns):
-    run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, exp_name)
-    # print(f"{method=}, {horizon_len=}, {train_last_n=}")
+    run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, exp_name, days_flag=days)
     total_exp += 1
 
-        
 print(total_exp)
