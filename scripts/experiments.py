@@ -54,9 +54,9 @@ exp_name = sys.argv[2]
 tickers = ["MSFT"]
 timefreqs = ["1d"]
 
-if exp_name == "train-resticted-years":
+if exp_name == "train-restricted-years":
     horizon_lens = [1, 5, 21, 63]
-    train_last_ns = [1, 2, 4, 6, 8, 10]
+    train_last_ns = [int(value) for value in np.linspace(1, 10, 10)]
     days = False
 elif exp_name == "train-less-year-log":
     horizon_lens = [1, 5, 21, 63]
