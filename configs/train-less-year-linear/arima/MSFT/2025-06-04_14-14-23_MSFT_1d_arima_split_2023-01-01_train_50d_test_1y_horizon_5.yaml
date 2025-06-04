@@ -1,0 +1,19 @@
+experiment_config_name: 2025-06-04_14-14-23_MSFT_1d_arima_split_2023-01-01_train_50d_test_1y_horizon_5
+run_timestamp: 2025-06-04_14-14-23
+ticker: MSFT
+timefreq: 1d
+target_column: Open
+split_date: '2023-01-01'
+training_period_value: 50
+training_period_unit: days
+test_period_years: 1
+forecasting_method: arima
+horizon_length: 5
+differencing_applied: false
+results_file_path: results/train-less-year-linear/arima/MSFT/2025-06-04_14-14-23_MSFT_1d_arima_split_2023-01-01_train_50d_test_1y_horizon_5.csv
+arima_order: (1, 0, 0)
+evaluation_metrics:
+  mse: 1144.7186053557982
+  mae: 29.13508106533361
+  rmse: 33.83369038925252
+  mape: 9.010534137839182
