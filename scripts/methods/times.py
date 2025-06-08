@@ -71,8 +71,8 @@ class TimesFMForecaster:
         forecasts = []
         for i in tqdm.tqdm(range(0,self.test_data.shape[0], self.horizon)):
         # for i in tqdm.tqdm(range(0, 252, self.horizon)):
-            context = pd.concat([context, self.test_data[i:i+self.horizon]])
             pred, _ = self.model.forecast([context.values], [self.freq])
+            context = pd.concat([context, self.test_data[i:i+self.horizon]])
             # print(pred[0], type(pred[0]))
 
             forecasts.extend(pred[0])
