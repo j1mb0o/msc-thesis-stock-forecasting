@@ -153,7 +153,7 @@ def varying_train_size(model: str, stock: str) -> None:
         print(f"No configurations found for model {model}, stock {stock} under {MODEL_PATH}")
         return
 
-    fig, axs = plt.subplots(4, 3, figsize=(15, 12)) 
+    fig, axs = plt.subplots(5, 2, figsize=(12, 15)) 
     axs = axs.flatten() # Flatten to easily index as axs[i]
 
     global_legend = {}
@@ -231,8 +231,8 @@ def varying_train_size(model: str, stock: str) -> None:
     
     # Filename similar to varying_horizon's output naming convention
     # Using .png as in your varying_horizon example's savefig.
-    # plt.savefig(output_dir / f"{model}_{stock}_varying_train_size.png", format='png', dpi=300, bbox_inches='tight')
-    plt.show() # Kept commented as in original varying_horizon
+    plt.savefig(output_dir / f"{model}_{stock}_varying_train_size.png", format='png', dpi=300, bbox_inches='tight')
+    # plt.show() # Kept commented as in original varying_horizon
     # plt.close(fig) # Good practice to close figures when done, especially in scripts
 
 
