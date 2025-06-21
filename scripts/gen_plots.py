@@ -235,7 +235,113 @@ def varying_horizon(model:str, stock:str) -> None:
 #     # plt.show() # Kept commented as in original varying_horizon
 #     # plt.close(fig) # Good practice to close figures when done, especially in scripts
 
+# TODO MAE vs Training data: MAE y axis and Train data as X axis and horizon as the subplot
+def plot_mape_vs_training_days_by_horizon_matplotlib(stock_ticker: str = "MSFT"):
+    """
+    Plots MAPE vs. Training Data Size, faceted by Horizon, using Matplotlib.
+    This function replicates the sns.relplot from the notebook.
+    """
 
+    mape_col = 'MAPE'
+    days_col = 'training_period_value'
+    horizon_col = 'forecast_horizon'
+    model_type_col = 'Method'
+
+    all_results_data = []
+    model_methods = {
+        "naive": "Naive",
+        "arima": "ARIMA",
+        "fm": "TimesFM" # Assuming 'fm' is the directory name for TimesFM
+    }
+
+    for method_dir, method_name in model_methods.items():
+        MODEL_CONFIG_PATH = CONFIG_PATH / method_dir / stock_ticker
+        if not MODEL_CONFIG_PATH.exists():
+            print(f"Warning: Config path for {method_name} ({MODEL_CONFIG_PATH}) does not exist. Skipping.")
+            continue
+
+        for conf_filename in os.listdir(MODEL_CONFIG_PATH):
+            if not conf_filename.endswith(".yaml"): # Process only YAML files
+                continue
+            with open(MODEL_CONFIG_PATH / conf_filename, 'r') as f:
+                config = yaml.safe_load(f)
+            
+            all_results_data.append({
+                model_type_col: method_name,
+                days_col: config['training_period_value'],
+                horizon_col: config['horizon_length'],
+                mape_col: config['evaluation_metrics']['mape']
+            })
+
+    if not all_results_data:
+        print(f"No data loaded for experiment {EXPERIMENT_NAME}, stock {stock_ticker}. Cannot generate plot.")
+        return
+
+    df_mape_results = pd.DataFrame(all_results_data)
+
+    if df_mape_results.empty:
+        print(f"DataFrame is empty after loading configs for {stock_ticker}. Cannot generate plot.")
+        return
+
+    # Define consistent plotting styles
+    palette = {'Naive': 'grey', 'ARIMA': 'orange', 'TimesFM': 'blue'}
+    markers_map = {'Naive': 'o', 'ARIMA': 's', 'TimesFM': '^'}
+
+    unique_horizons = sorted(df_mape_results[horizon_col].unique())
+    n_horizons = len(unique_horizons)
+    if n_horizons == 0:
+        print(f"No unique horizons found for {stock_ticker}. Cannot generate plot.")
+        return
+        
+    ncols = 2
+    nrows = int(np.ceil(n_horizons / ncols))
+
+    fig, axs = plt.subplots(nrows, ncols, figsize=(5 * ncols, 4 * nrows), sharey=False, squeeze=False)
+    axs_flat = axs.flatten()
+
+    plot_handles = []
+    plot_labels = []
+
+    for idx, horizon_val in enumerate(unique_horizons):
+        ax = axs_flat[idx]
+        data_for_horizon = df_mape_results[df_mape_results[horizon_col] == horizon_val]
+
+        for method in model_methods.values(): # Iterate in defined order for consistent legend
+            if method not in palette: continue # Skip if method not in palette
+            
+            method_data = data_for_horizon[data_for_horizon[model_type_col] == method].sort_values(by=days_col)
+            if not method_data.empty:
+                line, = ax.plot(method_data[days_col], method_data[mape_col], 
+                                label=method, 
+                                color=palette.get(method, 'black'), # Use .get for safety
+                                marker=markers_map.get(method, None), # Use .get for safety
+                                linestyle='-')
+                if method not in plot_labels: # Collect handles/labels for figure legend
+                    plot_handles.append(line)
+                    plot_labels.append(method)
+
+        ax.set_title(f"Horizon: {horizon_val} {'days' if horizon_val > 1 else 'day'}")
+        ax.set_xlabel('Days of Training/Context Data')
+        ax.set_ylabel(f'{mape_col} (Lower is Better)')
+        ax.grid(True, axis='y', linestyle='--', alpha=0.7)
+        ax.tick_params(axis='x', rotation=45)
+
+    # Remove any unused subplots
+    for i in range(n_horizons, nrows * ncols):
+        fig.delaxes(axs_flat[i])
+
+    if plot_handles:
+        fig.legend(plot_handles, plot_labels, loc='upper center', bbox_to_anchor=(0.5, 0.05), ncol=len(model_methods))
+
+    fig.suptitle(f'MAPE vs. Training/Context Data Size by Horizon for {stock_ticker} ({EXPERIMENT_NAME})', fontsize=14, y=1.03 if nrows ==1 else 0.98) # Adjust y for suptitle
+    fig.tight_layout(rect=[0, 0.05, 1, 0.95]) # Adjust rect to make space for legend
+
+    output_dir = FIGURES_PATH / "mape_analysis" / stock_ticker
+    os.makedirs(output_dir, exist_ok=True)
+    plot_filename = output_dir / f"mape_vs_training_days_by_horizon_{stock_ticker}_{EXPERIMENT_NAME}.png"
+    plt.savefig(plot_filename, format='png', dpi=300, bbox_inches='tight')
+    print(f"Plot saved to {plot_filename}")
+    plt.close(fig) # Close the figure to free memory
 
 
 if __name__ == '__main__':
@@ -243,9 +349,8 @@ if __name__ == '__main__':
 
     setup_paths(EXPERIMENT_NAME)
 
-    for model in os.listdir(CONFIG_PATH):
-        varying_horizon(model, 'MSFT')
-        # varying_train_size(model, 'MSFT')
-        # plot_varying_train_size(model)
-        # TODO: RM for every model to run
-        # exit()
+    # for model in os.listdir(CONFIG_PATH):
+    #     varying_horizon(model, 'MSFT')
+        
+    # TODO Add previous plots from notebook
+    plot_mape_vs_training_days_by_horizon_matplotlib(stock_ticker="MSFT")
