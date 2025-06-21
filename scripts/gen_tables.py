@@ -80,16 +80,43 @@ def varying_horizon(model:str, stock:str) -> None:
             continue
 
         configs_for_this_horizon.sort(key=lambda x: x.training_period_value)
-    
 
-    os.makedirs(TABLES_PATH / model / stock, exist_ok=True)
-    # plt.savefig(TABLES_PATH / model / f"{model}_varying_horizon.eps", format='eps')
-    plt.savefig(TABLES_PATH / model / stock / f"{model}_{stock}_varying_horizon_tight.png", format='png', dpi=300, bbox_inches='tight')
-    # plt.show()    # Add a single legend for the entire figure
+        # Create a DataFrame for the current horizon
+        df_data = []
+        for conf_data in configs_for_this_horizon:
+            df_data.append({
+                'Training Period (Days)': conf_data.training_period_value,
+                'MSE': conf_data.mse,
+                'MAE': conf_data.mae,
+                'RMSE': conf_data.rmse,
+                'MAPE (%)': conf_data.mape
+            })
+        
+        df = pd.DataFrame(df_data)
+        df = df.set_index('Training Period (Days)')
+        
+        # Save the DataFrame to a CSV file
+        output_dir = TABLES_PATH / model / stock
+        os.makedirs(output_dir, exist_ok=True)
+        
+        table_filename = output_dir / f"{model}_{stock}_horizon_{horizon_len}_metrics.csv"
+        # df.to_csv(table_filename)
+        # Save the DataFrame to a LaTeX file
+        latex_filename = output_dir / f"{model}_{stock}_horizon_{horizon_len}_metrics.tex"
+        df.to_latex(latex_filename, caption=f"Evaluation Metrics for {model.upper()} on {stock} with Horizon {horizon_len} {'days' if horizon_len > 1 else 'day'}", label=f"tab:{model}_{stock}_h{horizon_len}_metrics")
+        
+        print(f"Table for Horizon {horizon_len} saved to {table_filename}")
+
+    # os.makedirs(TABLES_PATH / model / stock, exist_ok=True)
+    # plt.savefig(TABLES_PATH / model / stock / f"{model}_{stock}_varying_horizon_tight.png", format='png', dpi=300, bbox_inches='tight')
+
 
 
 if __name__ == '__main__':
     print(f"--- Starting Plot Generation for Experiment: {EXPERIMENT_NAME} ---")
     setup_paths(EXPERIMENT_NAME)
-    varying_horizon('fm', 'MSFT')
+    # varying_horizon('fm', 'MSFT')
+    for model in os.listdir(CONFIG_PATH):
+        varying_horizon(model, 'MSFT')
+        
     
