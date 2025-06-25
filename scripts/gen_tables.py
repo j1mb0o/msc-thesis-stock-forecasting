@@ -81,34 +81,119 @@ def varying_horizon(model:str, stock:str) -> None:
 
         configs_for_this_horizon.sort(key=lambda x: x.training_period_value)
 
-        # Create a DataFrame for the current horizon
         df_data = []
+        previous_metrics = {}
+        metric_columns = ['MSE', 'MAE', 'RMSE', 'MAPE (%)']
+        
         for conf_data in configs_for_this_horizon:
-            df_data.append({
-                'Training Period (Days)': conf_data.training_period_value,
+            current_metrics = {
                 'MSE': conf_data.mse,
                 'MAE': conf_data.mae,
                 'RMSE': conf_data.rmse,
                 'MAPE (%)': conf_data.mape
-            })
+            }
+            
+            row_for_df = {
+                'Training Period (Days)': conf_data.training_period_value,
+                **current_metrics
+            }
+
+            if previous_metrics:
+                for metric in metric_columns:
+                    current_value = current_metrics[metric]
+                    prev_value = previous_metrics.get(metric, 0)
+                    if prev_value != 0:
+                        percent_change = ((current_value - prev_value) / prev_value) * 100
+                        row_for_df[f'{metric} % Change'] = f'{percent_change:.2f}%'
+                    else:
+                        row_for_df[f'{metric} % Change'] = 'N/A'
+            
+            df_data.append(row_for_df)
+            previous_metrics = current_metrics
         
+        if not df_data:
+            print(f"No data to process for horizon {horizon_len}")
+            continue
+
         df = pd.DataFrame(df_data)
+
+        # Reorder columns for better readability
+        ordered_cols = ['Training Period (Days)']
+        change_cols = []
+        for metric in metric_columns:
+            ordered_cols.append(metric)
+            change_col_name = f'{metric} % Change'
+            if change_col_name in df.columns:
+                ordered_cols.append(change_col_name)
+                change_cols.append(change_col_name)
+        df = df[ordered_cols]
+
         df = df.set_index('Training Period (Days)')
         
-        # Save the DataFrame to a CSV file
+        # Calculate average percentile change for each metric
+        avg_row_data = {}
+        for col in change_cols:
+            numeric_changes = pd.to_numeric(df[col].str.replace('%', '', regex=False), errors='coerce')
+            if numeric_changes.notna().any():
+                avg_change = numeric_changes.mean()
+                avg_row_data[col] = f'{avg_change:.2f}%'
+        
+        if avg_row_data:
+            avg_df = pd.DataFrame([avg_row_data], index=pd.Index(['Average % Change'], name=df.index.name))
+            df = pd.concat([df, avg_df])
+
+        # --- Prepare and Save Outputs ---
         output_dir = TABLES_PATH / model / stock
         os.makedirs(output_dir, exist_ok=True)
         
+        # Optional: Save the raw data to a CSV file (with separate columns)
         table_filename = output_dir / f"{model}_{stock}_horizon_{horizon_len}_metrics.csv"
-        # df.to_csv(table_filename)
-        # Save the DataFrame to a LaTeX file
-        latex_filename = output_dir / f"{model}_{stock}_horizon_{horizon_len}_metrics.tex"
-        df.to_latex(latex_filename, caption=f"Evaluation Metrics for {model.upper()} on {stock} with Horizon {horizon_len} {'days' if horizon_len > 1 else 'day'}", label=f"tab:{model}_{stock}_h{horizon_len}_metrics")
-        
-        print(f"Table for Horizon {horizon_len} saved to {table_filename}")
+        # df.to_csv(table_filename) 
 
-    # os.makedirs(TABLES_PATH / model / stock, exist_ok=True)
-    # plt.savefig(TABLES_PATH / model / stock / f"{model}_{stock}_varying_horizon_tight.png", format='png', dpi=300, bbox_inches='tight')
+        # Transform DataFrame for LaTeX output:
+        # Combines metric and % change into one column and escapes '%' for LaTeX.
+        df_latex = df.copy()
+        for metric in metric_columns:
+            change_col = f'{metric} % Change'
+            if change_col in df_latex.columns:
+                
+                new_col_values = []
+                for index, row in df_latex.iterrows():
+                    metric_val = row[metric]
+                    change_val_str = row[change_col]
+
+                    # Prepare the escaped change string
+                    escaped_change_str = None
+                    if pd.notna(change_val_str) and change_val_str != 'N/A':
+                        escaped_change_str = change_val_str.replace('%', r'\%')
+
+                    # Handle the 'Average % Change' row specifically
+                    if index == 'Average % Change':
+                        new_col_values.append(f"({escaped_change_str})" if escaped_change_str else '-')
+                    else:
+                        # Handle regular data rows
+                        val_str = f"{metric_val:.4f}" if pd.notna(metric_val) else "-"
+                        if escaped_change_str:
+                            new_col_values.append(f"{val_str} ({escaped_change_str})")
+                        else:
+                            new_col_values.append(val_str)
+                
+                # Update the metric column and drop the now-redundant change column
+                df_latex[metric] = new_col_values
+                df_latex.drop(columns=[change_col], inplace=True)
+
+        # Escape '%' in column names and index for LaTeX, as to_latex(escape=False) is used.
+        df_latex.columns = [str(col).replace('%', r'\%') for col in df_latex.columns]
+        df_latex.index = [str(idx).replace('%', r'\%') if isinstance(idx, str) else idx for idx in df_latex.index]
+        if df_latex.index.name:
+            df_latex.index.name = df_latex.index.name.replace('%', r'\%')
+
+        # Save the transformed DataFrame to a LaTeX file
+        latex_filename = output_dir / f"{model}_{stock}_horizon_{horizon_len}_metrics.tex"
+        df_latex.to_latex(latex_filename, caption=f"Evaluation Metrics for {model.upper()} on {stock} with Horizon {horizon_len} {'days' if horizon_len > 1 else 'day'}", label=f"tab:{model}_{stock}_h{horizon_len}_metrics", na_rep='-', escape=False)
+        
+        print(f"Table for Horizon {horizon_len} saved to {latex_filename}")
+
 
 
 
