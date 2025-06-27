@@ -128,16 +128,17 @@ def varying_horizon(model:str, stock:str) -> None:
     # plt.show()    # Add a single legend for the entire figure
 
 
-# TODO MAE vs Training data: MAE y axis and Train data as X axis and horizon as the subplot
-def plot_mape_vs_training_days_by_horizon_matplotlib(stock_ticker: str = "MSFT"):
+
+def plot_metrics_vs_training_days_by_horizon_matplotlib(stock_ticker: str = "MSFT", metric_to_plot: str = "MAPE"):
     """
-    Plots MAPE vs. Training Data Size, faceted by Horizon, using Matplotlib.
+    Plots a specified metric (e.g., MAPE, MAE, MSE, RMSE) vs. Training Data Size, faceted by Horizon, using Matplotlib.
     This function replicates the sns.relplot from the notebook.
     """
 
-    mape_col = 'MAPE'
+    metric_col = metric_to_plot # Use the passed metric as the column name for plotting
     days_col = 'training_period_value'
     horizon_col = 'forecast_horizon'
+    unit_col = 'training_period_unit'
     model_type_col = 'Method'
 
     all_results_data = []
@@ -163,7 +164,8 @@ def plot_mape_vs_training_days_by_horizon_matplotlib(stock_ticker: str = "MSFT")
                 model_type_col: method_name,
                 days_col: config['training_period_value'],
                 horizon_col: config['horizon_length'],
-                mape_col: config['evaluation_metrics']['mape']
+                metric_col: config['evaluation_metrics'][metric_to_plot.lower()], # Access the specific metric
+                unit_col: config.get('training_period_unit', 'days') # Default to days if not present
             })
 
     if not all_results_data:
@@ -204,7 +206,7 @@ def plot_mape_vs_training_days_by_horizon_matplotlib(stock_ticker: str = "MSFT")
             
             method_data = data_for_horizon[data_for_horizon[model_type_col] == method].sort_values(by=days_col)
             if not method_data.empty:
-                line, = ax.plot(method_data[days_col], method_data[mape_col], 
+                line, = ax.plot(method_data[days_col], method_data[metric_col], 
                                 label=method, 
                                 color=palette.get(method, 'black'), # Use .get for safety
                                 marker=markers_map.get(method, None), # Use .get for safety
@@ -213,9 +215,19 @@ def plot_mape_vs_training_days_by_horizon_matplotlib(stock_ticker: str = "MSFT")
                     plot_handles.append(line)
                     plot_labels.append(method)
 
+        # Determine the x-axis label based on the unit in the data for this horizon
+        # It's assumed units are consistent within an experiment.
+        xlabel = "Training/Context Data Size" # a generic fallback
+        if not data_for_horizon.empty:
+            unit = data_for_horizon[unit_col].iloc[0]
+            xlabel = f'Training/Context Data ({unit.capitalize()})'
+        
+        y_label = f'{metric_col} (Lower is Better)'
+        if metric_col == 'MAPE': # Add percentage sign for MAPE
+            y_label = f'{metric_col} (%) (Lower is Better)'
         ax.set_title(f"Horizon: {horizon_val} {'days' if horizon_val > 1 else 'day'}")
-        ax.set_xlabel('Days of Training/Context Data')
-        ax.set_ylabel(f'{mape_col} (Lower is Better)')
+        ax.set_xlabel(xlabel) # Use the dynamically determined x-axis label
+        ax.set_ylabel(y_label) # Use the dynamically determined y-axis label
         ax.grid(True, axis='y', linestyle='--', alpha=0.7)
         ax.tick_params(axis='x', rotation=45)
 
@@ -226,12 +238,13 @@ def plot_mape_vs_training_days_by_horizon_matplotlib(stock_ticker: str = "MSFT")
     if plot_handles:
         fig.legend(plot_handles, plot_labels, loc='upper center', bbox_to_anchor=(0.5, 0.05), ncol=len(model_methods))
 
-    fig.suptitle(f'MAPE vs. Training/Context Data Size by Horizon for {stock_ticker} ({EXPERIMENT_NAME})', fontsize=14, y=1.03 if nrows ==1 else 0.98) # Adjust y for suptitle
+    fig.suptitle(f'{metric_col} vs. Training/Context Data Size by Horizon for {stock_ticker} ({EXPERIMENT_NAME})', fontsize=14, y=1.03 if nrows ==1 else 0.98) # Adjust y for suptitle
     fig.tight_layout(rect=[0, 0.05, 1, 0.95]) # Adjust rect to make space for legend
 
-    output_dir = FIGURES_PATH / "mape_analysis" / stock_ticker
+    output_dir = FIGURES_PATH / "metrics_analysis" / stock_ticker
     os.makedirs(output_dir, exist_ok=True)
-    plot_filename = output_dir / f"mape_vs_training_days_by_horizon_{stock_ticker}_{EXPERIMENT_NAME}.png"
+    # Use the metric name in the filename
+    plot_filename = output_dir / f"{metric_to_plot}_vs_training_days_by_horizon_{stock_ticker}_{EXPERIMENT_NAME}.png"
     plt.savefig(plot_filename, format='png', dpi=300, bbox_inches='tight')
     print(f"Plot saved to {plot_filename}")
     plt.close(fig) # Close the figure to free memory
@@ -245,5 +258,7 @@ if __name__ == '__main__':
     # for model in os.listdir(CONFIG_PATH):
     #     varying_horizon(model, 'MSFT')
         
-    # TODO Add previous plots from notebook
-    plot_mape_vs_training_days_by_horizon_matplotlib(stock_ticker="MSFT")
+    plot_metrics_vs_training_days_by_horizon_matplotlib(stock_ticker="MSFT", metric_to_plot="MAPE")
+    plot_metrics_vs_training_days_by_horizon_matplotlib(stock_ticker="MSFT", metric_to_plot="MAE")
+    plot_metrics_vs_training_days_by_horizon_matplotlib(stock_ticker="MSFT", metric_to_plot="MSE")
+    plot_metrics_vs_training_days_by_horizon_matplotlib(stock_ticker="MSFT", metric_to_plot="RMSE")
