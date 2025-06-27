@@ -249,6 +249,121 @@ def plot_metrics_vs_training_days_by_horizon_matplotlib(stock_ticker: str = "MSF
     print(f"Plot saved to {plot_filename}")
     plt.close(fig) # Close the figure to free memory
 
+def plot_metrics_across_horizon_by_training_days_matplotlib(stock_ticker: str = "MSFT", metric_to_plot: str = "MAPE"):
+    """
+    Plots a specified metric (e.g., MAPE, MAE, MSE, RMSE) vs. Forecasting Horizon,
+    faceted by Training Data Size, using Matplotlib.
+    """
+
+    metric_col = metric_to_plot # Use the passed metric as the column name for plotting
+    x_axis_col = 'horizon_length' # New X-axis: Forecasting Horizon
+    facet_col = 'training_period_value' # New Faceting: Training Data Size
+    unit_col = 'training_period_unit'
+    model_type_col = 'Method'
+
+    all_results_data = []
+    model_methods = {
+        "naive": "Naive",
+        "arima": "ARIMA",
+        "fm": "TimesFM" # Assuming 'fm' is the directory name for TimesFM
+    }
+
+    for method_dir, method_name in model_methods.items():
+        MODEL_CONFIG_PATH = CONFIG_PATH / method_dir / stock_ticker
+        if not MODEL_CONFIG_PATH.exists():
+            print(f"Warning: Config path for {method_name} ({MODEL_CONFIG_PATH}) does not exist. Skipping.")
+            continue
+
+        for conf_filename in os.listdir(MODEL_CONFIG_PATH):
+            if not conf_filename.endswith(".yaml"): # Process only YAML files
+                continue
+            with open(MODEL_CONFIG_PATH / conf_filename, 'r') as f:
+                config = yaml.safe_load(f)
+            
+            all_results_data.append({
+                model_type_col: method_name,
+                facet_col: config['training_period_value'], # This is now the facet
+                x_axis_col: config['horizon_length'], # This is now the X-axis
+                metric_col: config['evaluation_metrics'][metric_to_plot.lower()], # Access the specific metric
+                unit_col: config.get('training_period_unit', 'days') # Default to days if not present
+            })
+
+    if not all_results_data:
+        print(f"No data loaded for experiment {EXPERIMENT_NAME}, stock {stock_ticker}. Cannot generate plot.")
+        return
+
+    df_results = pd.DataFrame(all_results_data)
+
+    if df_results.empty:
+        print(f"DataFrame is empty after loading configs for {stock_ticker}. Cannot generate plot.")
+        return
+
+    # Define consistent plotting styles
+    palette = {'Naive': 'grey', 'ARIMA': 'orange', 'TimesFM': 'blue'}
+    markers_map = {'Naive': 'o', 'ARIMA': 's', 'TimesFM': '^'}
+
+    unique_facet_values = sorted(df_results[facet_col].unique())
+    n_facets = len(unique_facet_values)
+    if n_facets == 0:
+        print(f"No unique training data sizes found for {stock_ticker}. Cannot generate plot.")
+        return
+    
+    # Change this to change the num of columns
+    ncols = 3
+    nrows = int(np.ceil(n_facets / ncols))
+
+    fig, axs = plt.subplots(nrows, ncols, figsize=(5 * ncols, 4 * nrows), sharey=False, squeeze=False)
+    axs_flat = axs.flatten()
+
+    plot_handles = []
+    plot_labels = []
+
+    for idx, facet_val in enumerate(unique_facet_values):
+        ax = axs_flat[idx]
+        data_for_facet = df_results[df_results[facet_col] == facet_val]
+
+        for method in model_methods.values(): # Iterate in defined order for consistent legend
+            if method not in palette: continue # Skip if method not in palette
+            
+            method_data = data_for_facet[data_for_facet[model_type_col] == method].sort_values(by=x_axis_col)
+            if not method_data.empty:
+                line, = ax.plot(method_data[x_axis_col], method_data[metric_col], 
+                                label=method, 
+                                color=palette.get(method, 'black'), # Use .get for safety
+                                marker=markers_map.get(method, None), # Use .get for safety
+                                linestyle='-')
+                if method not in plot_labels: # Collect handles/labels for figure legend
+                    plot_handles.append(line)
+                    plot_labels.append(method)
+
+        unit = data_for_facet[unit_col].iloc[0] if not data_for_facet.empty else "units"
+        ax.set_title(f"Training Data: {facet_val} {unit.capitalize()}")
+        ax.set_xlabel("Forecasting Horizon (Days)")
+        y_label = f'{metric_col} (Lower is Better)'
+        if metric_col == 'MAPE': # Add percentage sign for MAPE
+            y_label = f'{metric_col} (%) (Lower is Better)'
+        ax.set_ylabel(y_label)
+        ax.grid(True, axis='y', linestyle='--', alpha=0.7)
+        ax.tick_params(axis='x', rotation=45)
+
+    # Remove any unused subplots
+    for i in range(n_facets, nrows * ncols):
+        fig.delaxes(axs_flat[i])
+
+    if plot_handles:
+        fig.legend(plot_handles, plot_labels, loc='upper center', bbox_to_anchor=(0.5, 0.05), ncol=len(model_methods))
+
+    fig.suptitle(f'{metric_col} Across Forecasting Horizon by Training Data Size for {stock_ticker}', fontsize=14, y=1.03 if nrows ==1 else 0.98) # Adjust y for suptitle
+    fig.tight_layout(rect=[0, 0.05, 1, 0.95]) # Adjust rect to make space for legend
+
+    output_dir = FIGURES_PATH / "metrics_analysis" / stock_ticker
+    os.makedirs(output_dir, exist_ok=True)
+    # Use the metric name in the filename
+    plot_filename = output_dir / f"{metric_to_plot}_across_horizon_by_training_days_{stock_ticker}_{EXPERIMENT_NAME}.png"
+    plt.savefig(plot_filename, format='png', dpi=300, bbox_inches='tight')
+    print(f"Plot saved to {plot_filename}")
+    plt.close(fig) # Close the figure to free memory
+
 
 if __name__ == '__main__':
     print(f"--- Starting Plot Generation for Experiment: {EXPERIMENT_NAME} ---")
@@ -258,7 +373,8 @@ if __name__ == '__main__':
     # for model in os.listdir(CONFIG_PATH):
     #     varying_horizon(model, 'MSFT')
         
-    plot_metrics_vs_training_days_by_horizon_matplotlib(stock_ticker="MSFT", metric_to_plot="MAPE")
-    plot_metrics_vs_training_days_by_horizon_matplotlib(stock_ticker="MSFT", metric_to_plot="MAE")
-    plot_metrics_vs_training_days_by_horizon_matplotlib(stock_ticker="MSFT", metric_to_plot="MSE")
-    plot_metrics_vs_training_days_by_horizon_matplotlib(stock_ticker="MSFT", metric_to_plot="RMSE")
+    plot_metrics_across_horizon_by_training_days_matplotlib(stock_ticker="MSFT", metric_to_plot="MAPE")
+    plot_metrics_across_horizon_by_training_days_matplotlib(stock_ticker="MSFT", metric_to_plot="MAE")
+    plot_metrics_across_horizon_by_training_days_matplotlib(stock_ticker="MSFT", metric_to_plot="MSE")
+    plot_metrics_across_horizon_by_training_days_matplotlib(stock_ticker="MSFT", metric_to_plot="RMSE")
+    
