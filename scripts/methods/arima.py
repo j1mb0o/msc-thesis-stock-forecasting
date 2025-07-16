@@ -86,10 +86,10 @@ class ArimaForecaster:
         # for i in tqdm.tqdm(range(0, 252, horizon)):
             new_obs = self.test_data[i:i+horizon]
             
-            forecast = self.model.predict(n_periods=horizon)
+            forecast = self.model.predict(n_periods=horizon) #type: ignore
             forecasts.extend(forecast)
 
-            self.model.update(new_obs)
+            self.model.update(new_obs) # type: ignore
 
         logging.info(f"ARIMA forecast generated for {len(self.test_data)} total steps.")
 
@@ -107,13 +107,11 @@ class ArimaForecaster:
 
 
 if __name__ == "__main__":
-    from utils.model_data_prep import prepare_data_for_modeling
-    train, test = prepare_data_for_modeling()
-    
-    train, test = prepare_data_for_modeling()
+    data = pd.Series(range(101), index=pd.date_range(start='2023-01-01', periods=101, freq='D'))
+    train, test = data.iloc[:80], data.iloc[80:] # Train on first 15, test on last 5 (indices 15-19)
     arima = ArimaForecaster(train_data=train, test_data=test)
-    # arima.fit()
-    # arima.forecast(horizon=1)
+    arima.fit()
+    arima.forecast(horizon=1)
     # arima.experiment_n_times(10)
     # experiment_n_times(10, train, test)
     
