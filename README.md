@@ -24,3 +24,8 @@ Most important scripts: `pipeline.py`, `experiments.py`, `gen_plots.py`
 python <script_name>.py
 ```
 
+## Measuring Time
+
+```bash
+(time python {SCIPT_NAME}) &> {NAME_OF_OUTPUT_FILE}
+```
