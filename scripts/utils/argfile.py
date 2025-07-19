@@ -32,9 +32,9 @@ def get_pipeline_arguments():
     parser.add_argument(
         "--method",
         type=str,
-        choices=["naive", "arima", "fm"],
+        choices=["naive", "arima", "fm", "sundial"],
         default="naive",
-        help="Forecasting method (naive, arima, fm)",
+        help="Forecasting method (naive, arima, fm, sundial)",
     )
     parser.add_argument(
         "--target_column", type=str, default="Open", help="Target column to forecast"

@@ -72,7 +72,7 @@ else:
     raise NameError("The experiment name is not supported")
 
 
-if method not in ["naive", "arima", "fm"]:
+if method not in ["naive", "arima", "fm", "sundial"]:
     raise NameError("The method is not supported")
 
 total_exp = 0
