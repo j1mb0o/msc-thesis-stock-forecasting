@@ -148,6 +148,18 @@ elif args.method == "fm":
     except Exception as e:
         logging.error(f"Error during TimesFM forecasting: {e}")
         exit()
+elif args.method == "sundial":
+    try:
+        from methods.sundial import SundialForecaster
+        sundial_forecaster = SundialForecaster(train_data, test_data, horizon_len=HORIZON)
+        forecasts_series = sundial_forecaster.forecast()
+        forecasts_series.name = "Sundial Forecast"
+    except ImportError:
+        logging.error("Sundial method requires the 'transformers' package. Please ensure it is installed.")
+        exit()
+    except Exception as e:
+        logging.error(f"Error during Sundial forecasting: {e}")
+        exit()
 else:
     logging.error(f"Unsupported method: {args.method}")
     exit()
