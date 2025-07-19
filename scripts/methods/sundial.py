@@ -81,7 +81,6 @@ if __name__ == "__main__":
     import numpy as np
     print("Running test suite for SundialForecaster...")
     # TODO: check carefully the tests
-    # TODO: Experiment with flash attn and kv cache
 
     # Test Case 1: Input Validation
     print("\n--- Test Case 1: Input Validation ---")
