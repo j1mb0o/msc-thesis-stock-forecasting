@@ -1,0 +1,19 @@
+experiment_config_name: 2025-07-19_22-19-45_MSFT_1d_sundial_split_2023-01-01_train_5y_test_1y_horizon_1
+run_timestamp: 2025-07-19_22-19-45
+ticker: MSFT
+timefreq: 1d
+target_column: Open
+split_date: '2023-01-01'
+training_period_value: 5.0
+training_period_unit: years
+test_period_years: 1
+forecasting_method: sundial
+horizon_length: 1
+differencing_applied: false
+results_file_path: results/train-restricted-years/sundial/MSFT/2025-07-19_22-19-45_MSFT_1d_sundial_split_2023-01-01_train_5y_test_1y_horizon_1.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 26.467640185539494
+  mae: 4.009190566764239
+  rmse: 5.144671047359539
+  mape: 1.3301864556804972
