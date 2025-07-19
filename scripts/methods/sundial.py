@@ -82,24 +82,6 @@ if __name__ == "__main__":
     print("Running test suite for SundialForecaster...")
     # TODO: check carefully the tests
 
-    # Test Case 1: Input Validation
-    print("\n--- Test Case 1: Input Validation ---")
-    try:
-        # Test for non-Series input
-        print("Testing with list input for train_data...")
-        SundialForecaster(train_data=[1, 2, 3], test_data=pd.Series([4, 5]))
-    except TypeError as e:
-        print(f"Successfully caught expected error: {e}")
-
-    try:
-        # Test for empty input
-        print("Testing with empty Series for train_data...")
-        empty_series = pd.Series([], dtype=float)
-        SundialForecaster(train_data=empty_series, test_data=pd.Series([4, 5]))
-    except ValueError as e:
-        print(f"Successfully caught expected error: {e}")
-    print("Input validation tests passed.")
-
     # Setup for functional tests
     data = pd.Series(
         np.linspace(0, 100, 100), 
@@ -107,6 +89,49 @@ if __name__ == "__main__":
         dtype=np.float32
     )
     train_main, test_main = data.iloc[:80], data.iloc[80:]
+
+    # Test Case 1: Input Validation
+    print("\n--- Test Case 1: Input Validation ---")
+    try:
+        # Test for non-Series input
+        print("Testing with list input for train_data...")
+        SundialForecaster(train_data=train_main, test_data=test_main)
+    except TypeError as e:
+        print(f"Successfully caught expected error: {e}")
+
+    try:
+        # Test for empty input
+        print("Testing with empty Series for train_data...")
+        empty_series = pd.Series([], dtype=float)
+        SundialForecaster(train_data=empty_series, test_data=test_main)
+    except ValueError as e:
+        print(f"Successfully caught expected error: {e}")
+    print("Input validation tests passed.")
+
+    # Test Case 1b: Test Data Validation
+    print("\n--- Test Case 1b: Test Data Validation ---")
+    try:
+        # Test for list input
+        print("Testing with list input for test_data...")
+        SundialForecaster(train_data=train_main, test_data=[])
+    except TypeError as e:
+        print(f"Successfully caught expected error: {e}")
+
+    try:
+        # Test for None input
+        print("Testing with None input for test_data...")
+        SundialForecaster(train_data=train_main, test_data=None)
+    except TypeError as e:
+        print(f"Successfully caught expected error: {e}")
+
+    try:
+        # Test for empty Series input
+        print("Testing with empty Series for test_data...")
+        empty_series = pd.Series([], dtype=float)
+        SundialForecaster(train_data=train_main, test_data=empty_series)
+    except ValueError as e:
+        print(f"Successfully caught expected error: {e}")
+    print("Test data validation tests passed.")
 
     # Test Case 2: Core Functionality (Happy Path)
     print("\n--- Test Case 2: Core Functionality (Happy Path) ---")
