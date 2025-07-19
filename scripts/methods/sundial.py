@@ -73,7 +73,9 @@ class SundialForecaster:
 
 
         logging.info(f"Sundial forecast generated for {len(self.test_data)} total steps.")
-
+        if len(forecasts) > self.test_data.shape[0]:
+                    forecasts = forecasts[:self.test_data.shape[0]]
+        
         final_forecast = pd.Series(forecasts[:len(self.test_data)], index=self.test_data.index, name=f"Sundial Forecast (horizon={self.horizon})")
         return final_forecast
 
