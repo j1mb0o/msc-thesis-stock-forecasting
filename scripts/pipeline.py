@@ -15,7 +15,7 @@ from sklearn.metrics import (
 try:
     from sklearn.metrics import root_mean_squared_error
 except ImportError:
-    import numpy as np
+    import numpy as np # type: ignore
     def root_mean_squared_error(y_true, y_pred):
         return np.sqrt(mean_squared_error(y_true, y_pred))
 
@@ -159,6 +159,19 @@ elif args.method == "sundial":
         exit()
     except Exception as e:
         logging.error(f"Error during Sundial forecasting: {e}")
+        exit()
+elif args.method == "chronos_base":
+    try:
+        from methods.chronos_mac import ChronosForecaster
+        chronos_forecaster = ChronosForecaster(train_data, test_data, horizon_len=HORIZON)
+        forecasts_series = chronos_forecaster.forecast()
+        forecasts_series.name = "Chronos-MAC Forecast"
+    except ImportError:
+        if os.uname().sysname == 'Darwin':
+            logging.error("Chronos-MAC method requires the 'chronos_mlx' package. Please ensure it is installed.")
+        exit()
+    except Exception as e:
+        logging.error(f"Error during Chronos-MAC forecasting: {e}")
         exit()
 else:
     logging.error(f"Unsupported method: {args.method}")

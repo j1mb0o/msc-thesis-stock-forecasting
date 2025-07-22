@@ -32,7 +32,7 @@ def get_pipeline_arguments():
     parser.add_argument(
         "--method",
         type=str,
-        choices=["naive", "arima", "fm", "sundial"],
+        choices=["naive", "arima", "fm", "sundial", "chronos_base"],
         default="naive",
         help="Forecasting method (naive, arima, fm, sundial)",
     )
