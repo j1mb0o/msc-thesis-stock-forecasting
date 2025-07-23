@@ -1,4 +1,5 @@
 import subprocess
+import time
 from itertools import product
 import numpy as np
 import sys
@@ -80,6 +81,7 @@ total_exp = 0
 for ticker, timefreq, horizon_len, train_last_n in product(tickers, timefreqs, horizon_lens, train_last_ns):
     try:
         run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, exp_name, days_flag=days)
+        time.sleep(5)
         total_exp += 1
     except Exception as e:
         print("Exception occured")
