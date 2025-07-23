@@ -78,7 +78,10 @@ if method not in ["naive", "arima", "fm", "sundial", "chronos_base"]:
 total_exp = 0
 
 for ticker, timefreq, horizon_len, train_last_n in product(tickers, timefreqs, horizon_lens, train_last_ns):
-    run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, exp_name, days_flag=days)
-    total_exp += 1
-
+    try:
+        run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, exp_name, days_flag=days)
+        total_exp += 1
+    except Exception as e:
+        print("Exception occured")
+        exit()
 print(total_exp)
