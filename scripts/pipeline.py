@@ -12,11 +12,13 @@ from sklearn.metrics import (
     # root_mean_squared_error, # Available in scikit-learn >= 1.0
     mean_absolute_percentage_error,
 )
+
 # For older scikit-learn versions, define root_mean_squared_error if not present
 try:
     from sklearn.metrics import root_mean_squared_error
 except ImportError:
-    import numpy as np # type: ignore
+    import numpy as np  # type: ignore
+
     def root_mean_squared_error(y_true, y_pred):
         return np.sqrt(mean_squared_error(y_true, y_pred))
 
@@ -34,12 +36,14 @@ logging.basicConfig(
 def save_experiment_config(config_dir, experiment_name, settings, method, ticker):
     """Saves the experiment settings to a YAML file."""
     # Ensure experiment_name is filesystem-friendly
-    safe_experiment_name = "".join(c if c.isalnum() or c in ['-', '_'] else '_' for c in experiment_name)
-    
+    safe_experiment_name = "".join(
+        c if c.isalnum() or c in ["-", "_"] else "_" for c in experiment_name
+    )
+
     config_path = Path(config_dir) / method / ticker
     config_path.mkdir(parents=True, exist_ok=True)
     config_file_path = config_path / f"{safe_experiment_name}.yaml"
-    
+
     with open(config_file_path, "w") as f:
         yaml.dump(settings, f, default_flow_style=False, sort_keys=False)
     logging.info(f"Experiment config saved to: {config_file_path}")
@@ -49,7 +53,9 @@ def save_experiment_config(config_dir, experiment_name, settings, method, ticker
 args = get_pipeline_arguments()
 
 if args.exp_name is None:
-    EXP_NAME = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S_experiment") # Added more detail
+    EXP_NAME = datetime.datetime.now().strftime(
+        "%Y-%m-%d_%H-%M-%S_experiment"
+    )  # Added more detail
 else:
     EXP_NAME = args.exp_name
 
@@ -92,8 +98,8 @@ prepared_data = prepare_data_for_modeling(
     ticker=TICKER,
     timefreq=TIMEFREQ,
     rel_date=args.split_date,
-    n_train_years=args.train_last_n_years, # Pass years
-    n_train_days=args.train_last_n_days,   # Pass days (will take precedence if set)
+    n_train_years=args.train_last_n_years,  # Pass years
+    n_train_days=args.train_last_n_days,  # Pass days (will take precedence if set)
     n_test_years=args.test_years,
     target_column=TARGET_COLUMN,
     base_dir=BASE_DATA_DIR,
@@ -102,7 +108,12 @@ prepared_data = prepare_data_for_modeling(
 
 if prepared_data:
     train_data, test_data = prepared_data
-    if train_data is not None and not train_data.empty and test_data is not None and not test_data.empty:
+    if (
+        train_data is not None
+        and not train_data.empty
+        and test_data is not None
+        and not test_data.empty
+    ):
         logging.info(
             f"Data prepared: Train size={len(train_data)}, Test size={len(test_data)}"
         )
@@ -118,10 +129,11 @@ timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
 
 # 3. Use method and forecast
 forecasts_series = None
-arima_order_info = "N/A" # Default for non-ARIMA models
+arima_order_info = "N/A"  # Default for non-ARIMA models
 
 if args.method == "naive":
     from methods.naive_forecast import NaiveForecaster
+
     naive_forecaster = NaiveForecaster(train_data, test_data)
     forecasts = naive_forecaster.forecast(horizon=HORIZON)
     forecasts_series = forecasts
@@ -129,22 +141,26 @@ if args.method == "naive":
 
 elif args.method == "arima":
     from methods.arima import ArimaForecaster
+
     arima = ArimaForecaster(train_data, test_data)
-    arima.fit() # Fit the model
+    arima.fit()  # Fit the model
     forecasts = arima.forecast(horizon=HORIZON)
     forecasts_series = forecasts
     forecasts_series.name = "ARIMA Forecast"
-    arima_order_info = str(arima.order) # Get order after fitting
+    arima_order_info = str(arima.order)  # Get order after fitting
 
 elif args.method == "fm":
     # Ensure TimesFM is installed or handle import error
     try:
         from methods.times import TimesFMForecaster
+
         tfm = TimesFMForecaster(train_data, test_data, horizon_len=HORIZON)
         forecasts_series = tfm.forecast()
         forecasts_series.name = "TimesFM Forecast"
     except ImportError:
-        logging.error("TimesFM method requires the 'timesfm' package. Please install it.")
+        logging.error(
+            "TimesFM method requires the 'timesfm' package. Please install it."
+        )
         exit()
     except Exception as e:
         logging.error(f"Error during TimesFM forecasting: {e}")
@@ -152,24 +168,34 @@ elif args.method == "fm":
 elif args.method == "sundial":
     try:
         from methods.sundial import SundialForecaster
-        sundial_forecaster = SundialForecaster(train_data, test_data, horizon_len=HORIZON)
+
+        sundial_forecaster = SundialForecaster(
+            train_data, test_data, horizon_len=HORIZON
+        )
         forecasts_series = sundial_forecaster.forecast()
         forecasts_series.name = "Sundial Forecast"
     except ImportError:
-        logging.error("Sundial method requires the 'transformers' package. Please ensure it is installed.")
+        logging.error(
+            "Sundial method requires the 'transformers' package. Please ensure it is installed."
+        )
         exit()
     except Exception as e:
         logging.error(f"Error during Sundial forecasting: {e}")
         exit()
 elif args.method == "chronos_base":
     try:
-        from methods.chronos_mac import ChronosForecaster
-        chronos_forecaster = ChronosForecaster(train_data, test_data, horizon_len=HORIZON)
+        from methods.chronos_forcast import ChronosForecaster
+
+        chronos_forecaster = ChronosForecaster(
+            train_data, test_data, horizon_len=HORIZON
+        )
         forecasts_series = chronos_forecaster.forecast()
         forecasts_series.name = "Chronos-MAC Forecast"
     except ImportError:
-        if os.uname().sysname == 'Darwin':
-            logging.error("Chronos-MAC method requires the 'chronos_mlx' package. Please ensure it is installed.")
+        if os.uname().sysname == "Darwin":
+            logging.error(
+                "Chronos-MAC method requires the 'chronos_mlx' package. Please ensure it is installed."
+            )
         exit()
     except Exception as e:
         logging.error(f"Error during Chronos-MAC forecasting: {e}")
@@ -184,19 +210,25 @@ if forecasts_series is None:
 
 # Ensure test_data and forecasts_series have the same length for metrics calculation
 if len(test_data) != len(forecasts_series):
-    logging.warning(f"Test data length ({len(test_data)}) and forecast length ({len(forecasts_series)}) mismatch. Adjusting forecast to match test data length for evaluation.")
+    logging.warning(
+        f"Test data length ({len(test_data)}) and forecast length ({len(forecasts_series)}) mismatch. Adjusting forecast to match test data length for evaluation."
+    )
     # This can happen if horizon doesn't perfectly divide test set length, or if forecasting logic has issues.
     # A common approach is to take the forecast for the number of periods in test_data.
     min_len = min(len(test_data), len(forecasts_series))
     test_data = test_data.iloc[:min_len]
     forecasts_series = forecasts_series.iloc[:min_len]
     if min_len == 0:
-        logging.error("No overlapping data between test and forecast for metrics. Exiting.")
+        logging.error(
+            "No overlapping data between test and forecast for metrics. Exiting."
+        )
         exit()
 
 
 # Construct a filename that reflects the training period accurately
-train_period_str = f"{int(train_period_value)}{train_period_unit[0]}" # e.g., 10y or 365d
+train_period_str = (
+    f"{int(train_period_value)}{train_period_unit[0]}"  # e.g., 10y or 365d
+)
 
 csv_name = (
     f"{timestamp}_{TICKER}_{TIMEFREQ}_{args.method}_split_{args.split_date}_"
@@ -212,9 +244,11 @@ logging.info(f"Evaluation Metrics for {args.method} Forecast:")
 logging.info(f"  MSE:  {mse:.4f}")
 logging.info(f"  MAE:  {mae:.4f}")
 logging.info(f"  RMSE: {rmse:.4f}")
-logging.info(f"  MAPE: {mape*100:.4f}%") # Display MAPE as percentage
+logging.info(f"  MAPE: {mape * 100:.4f}%")  # Display MAPE as percentage
 
-results_df = pd.DataFrame({"Actual": test_data, f"{args.method}_Forecast": forecasts_series}) # Renamed forecast column
+results_df = pd.DataFrame(
+    {"Actual": test_data, f"{args.method}_Forecast": forecasts_series}
+)  # Renamed forecast column
 
 results_df.index.name = "Date"
 results_dir = RESULTS_DATA_DIR / args.method / TICKER
@@ -245,10 +279,12 @@ experiment_settings = {
     "evaluation_metrics": {"mse": mse, "mae": mae, "rmse": rmse, "mape": mape * 100},
 }
 
-save_experiment_config(CONFIG_DIR, experiment_config_name, experiment_settings, args.method, TICKER)
+save_experiment_config(
+    CONFIG_DIR, experiment_config_name, experiment_settings, args.method, TICKER
+)
 
 logging.info(f"Process for {TICKER} completed successfully.")
-#TODO: Remove afterwards
+# TODO: Remove afterwards
 
 if __name__ == "__main__":
     # This block is for direct execution of pipeline.py,
