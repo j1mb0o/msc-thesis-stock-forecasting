@@ -1,0 +1,19 @@
+experiment_config_name: 2025-07-25_17-22-34_MSFT_1d_chronos_base_split_2023-01-01_train_2y_test_1y_horizon_21
+run_timestamp: 2025-07-25_17-22-34
+ticker: MSFT
+timefreq: 1d
+target_column: Open
+split_date: '2023-01-01'
+training_period_value: 2.0
+training_period_unit: years
+test_period_years: 1
+forecasting_method: chronos_base
+horizon_length: 21
+differencing_applied: false
+results_file_path: results/train-restricted-years/chronos_base/MSFT/2025-07-25_17-22-34_MSFT_1d_chronos_base_split_2023-01-01_train_2y_test_1y_horizon_21.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 222.53710172095725
+  mae: 10.948190451091167
+  rmse: 14.91767749084814
+  mape: 3.5373781514400626
