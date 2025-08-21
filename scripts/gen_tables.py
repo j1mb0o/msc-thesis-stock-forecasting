@@ -44,6 +44,15 @@ def setup_paths(exp_name: str):
 
 
 def varying_horizon(model:str, stock:str) -> None:
+    model_methods = {
+        "naive": "Naive",
+        "arima": "ARIMA",
+        "fm": "TimesFM",
+        "sundial": "Sundial",
+        "chronos_base": "Chronos"
+    }
+    model_name = model_methods.get(model, model.upper())
+
     MODEL_PATH = CONFIG_PATH / model / stock
     
     unique_horizon_dicts = {}
@@ -190,7 +199,7 @@ def varying_horizon(model:str, stock:str) -> None:
 
         # Save the transformed DataFrame to a LaTeX file
         latex_filename = output_dir / f"{model}_{stock}_horizon_{horizon_len}_metrics.tex"
-        df_latex.to_latex(latex_filename, caption=f"Evaluation Metrics for {model.upper()} on {stock} with Horizon {horizon_len} {'days' if horizon_len > 1 else 'day'}", label=f"tab:{model}_{stock}_h{horizon_len}_metrics", na_rep='-', escape=False)
+        df_latex.to_latex(latex_filename, caption=f"Evaluation Metrics for {model_name} on {stock} with Horizon {horizon_len} {'days' if horizon_len > 1 else 'day'}", label=f"tab:{model}_{stock}_h{horizon_len}_metrics", na_rep='-', escape=False)
         
         print(f"Table for Horizon {horizon_len} saved to {latex_filename}")
 
