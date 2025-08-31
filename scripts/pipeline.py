@@ -33,14 +33,16 @@ logging.basicConfig(
 )
 
 
-def save_experiment_config(config_dir, experiment_name, settings, method, ticker):
+def save_experiment_config(
+    config_dir, experiment_name, settings, method, ticker, timefreq, exp_name
+):
     """Saves the experiment settings to a YAML file."""
     # Ensure experiment_name is filesystem-friendly
     safe_experiment_name = "".join(
         c if c.isalnum() or c in ["-", "_"] else "_" for c in experiment_name
     )
 
-    config_path = Path(config_dir) / method / ticker
+    config_path = Path(config_dir) / ticker / timefreq / method / exp_name
     config_path.mkdir(parents=True, exist_ok=True)
     config_file_path = config_path / f"{safe_experiment_name}.yaml"
 
@@ -70,8 +72,8 @@ HORIZON = args.horizon_len
 
 
 BASE_DATA_DIR = Path("data")
-RESULTS_DATA_DIR = Path("results", EXP_NAME)
-CONFIG_DIR = Path("configs", EXP_NAME)
+RESULTS_DATA_DIR = Path("results")
+CONFIG_DIR = Path("configs")
 
 logging.info(f"Starting process for {TICKER} ({TIMEFREQ})")
 
@@ -251,9 +253,10 @@ results_df = pd.DataFrame(
 )  # Renamed forecast column
 
 results_df.index.name = "Date"
-results_dir.mkdir(parents=True, exist_ok=True)
+results_path = RESULTS_DATA_DIR / TICKER / TIMEFREQ / args.method / EXP_NAME
+results_path.mkdir(parents=True, exist_ok=True)
 
-results_file_path = results_dir / csv_name
+results_file_path = results_path / csv_name
 results_df.to_csv(results_file_path)
 logging.info(f"Results saved to: {results_file_path}")
 
@@ -279,7 +282,7 @@ experiment_settings = {
 }
 
 save_experiment_config(
-    config_dir, experiment_config_name, experiment_settings
+    CONFIG_DIR, experiment_config_name, experiment_settings, args.method, TICKER, TIMEFREQ, EXP_NAME
 )
 
 logging.info(f"Process for {TICKER} completed successfully.")
