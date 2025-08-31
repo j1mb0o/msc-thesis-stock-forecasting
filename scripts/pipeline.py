@@ -251,7 +251,6 @@ results_df = pd.DataFrame(
 )  # Renamed forecast column
 
 results_df.index.name = "Date"
-results_dir = RESULTS_DATA_DIR / args.method / TICKER
 results_dir.mkdir(parents=True, exist_ok=True)
 
 results_file_path = results_dir / csv_name
@@ -274,24 +273,17 @@ experiment_settings = {
     "forecasting_method": args.method,
     "horizon_length": HORIZON,
     "differencing_applied": args.diff,
-    "results_file_path": str(results_file_path),
+    "results_file_path": str(results_file_path.resolve()),
     "arima_order": arima_order_info,
     "evaluation_metrics": {"mse": mse, "mae": mae, "rmse": rmse, "mape": mape * 100},
 }
 
 save_experiment_config(
-    CONFIG_DIR, experiment_config_name, experiment_settings, args.method, TICKER
+    config_dir, experiment_config_name, experiment_settings
 )
 
 logging.info(f"Process for {TICKER} completed successfully.")
-# TODO: Remove afterwards
 
 if __name__ == "__main__":
-    # This block is for direct execution of pipeline.py,
-    # usually, it's run via command line with arguments.
-    # For testing, you might simulate args or run with defaults.
-    # e.g., to test with days:
-    # python src/pipeline.py --ticker MSFT --train_last_n_days 200 --exp_name test_days_run
-    # e.g., to test with years (default behavior if --train_last_n_days is not set):
-    # python src/pipeline.py --ticker MSFT --train_last_n_years 2 --exp_name test_years_run
+    # testing purposes
     pass
