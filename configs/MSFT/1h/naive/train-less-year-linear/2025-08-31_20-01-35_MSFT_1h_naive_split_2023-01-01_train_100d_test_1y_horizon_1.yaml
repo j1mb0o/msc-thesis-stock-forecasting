@@ -1,0 +1,19 @@
+experiment_config_name: 2025-08-31_20-01-35_MSFT_1h_naive_split_2023-01-01_train_100d_test_1y_horizon_1
+run_timestamp: 2025-08-31_20-01-35
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2023-01-01'
+training_period_value: 100
+training_period_unit: days
+test_period_years: 1
+forecasting_method: naive
+horizon_length: 1
+differencing_applied: false
+results_file_path: /Users/dimitris/LU/Thesis/thesis-code-new/results/MSFT/1h/naive/train-less-year-linear/2025-08-31_20-01-35_MSFT_1h_naive_split_2023-01-01_train_100d_test_1y_horizon_1.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 3.278664114285716
+  mae: 1.2276342857142857
+  rmse: 1.8107081803221954
+  mape: 0.3993717599868192
