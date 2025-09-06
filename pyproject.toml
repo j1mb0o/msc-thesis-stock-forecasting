@@ -1,26 +1,25 @@
-[project]
+[tool.poetry]
 name = "thesis-code-new"
 version = "0.1.0"
-description = ""
-authors = [
-    {name = "Dimitris",email = "zinodimitris@gmail.com"}
-]
-readme = "README.md"
-requires-python = ">=3.11,<3.12"
-dependencies = [
-    "timesfm[torch] (>=1.2.9,<2.0.0) ; sys_platform == \"linux\"",
-    "pmdarima (>=2.0.4,<3.0.0)",
-    "matplotlib (>=3.9.2,<4.0.0)",
-    "pyaml (>=25.5.0,<26.0.0)",
-    "pandas (>=2.2.3,<3.0.0)",
-    "tqdm (>=4.66.3,<5.0.0)",
-    "yfinance (>=0.2.61,<0.3.0)",
-    "numpy (==1.26.4)",
-    "chronos-forecasting (>=1.5.2,<2.0.0)",
-]
-
-[tool.poetry]
+description = "Thesis project code (not packaged)"
+authors = ["Dimitris <zinodimitris@gmail.com>"]
 package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+timesfm = { version = ">=1.2.9,<2.0.0", extras = ["torch"], markers = "sys_platform == 'linux'" }
+pmdarima = ">=2.0.4,<3.0.0"
+matplotlib = ">=3.9.2,<4.0.0"
+pyaml = ">=25.5.0,<26.0.0"
+pandas = ">=2.2.3,<3.0.0"
+tqdm = ">=4.66.3,<5.0.0"
+yfinance = ">=0.2.61,<0.3.0"
+numpy = "==1.26.4"
+chronos-forecasting = ">=1.5.2,<2.0.0"
+
+[tool.poetry.group.dev.dependencies]
+jupyter = "^1.0"
+black = "^24.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

@@ -209,7 +209,15 @@ def prepare_data_for_modeling(
             logging.error(msg)
             raise ValueError(msg) from e
 
-        data = pd.read_csv(file_path, index_col='Date', parse_dates=True)
+        if timefreq == '1h':
+            data = pd.read_csv(file_path, sep='\t', engine='python')
+            data.columns = data.columns.str.replace('[<>]', '', regex=True)
+            data.columns = data.columns.str.title()
+            data['datetime'] = pd.to_datetime(data['Date'] + ' ' + data['Time'])
+            data = data.set_index('datetime')
+            data = data.drop(columns=['Date', 'Time', 'Tickvol', 'Vol', 'Spread'])
+        else:
+            data = pd.read_csv(file_path, index_col='Date', parse_dates=True)
         logging.info(f"Successfully loaded data for {ticker} ({timefreq}). Columns: {data.columns.tolist()}")
 
         if target_column not in data.columns:
