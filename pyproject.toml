@@ -1,26 +1,53 @@
-[tool.poetry]
+[project]
 name = "thesis-code-new"
 version = "0.1.0"
 description = "Thesis project code (not packaged)"
-authors = ["Dimitris <zinodimitris@gmail.com>"]
-package-mode = false
+authors = [
+    { name = "Dimitris", email = "zinodimitris@gmail.com" },
+]
+requires-python = ">=3.11,<3.12"
 
-[tool.poetry.dependencies]
-python = ">=3.11,<3.12"
-timesfm = { version = ">=1.2.9,<2.0.0", extras = ["torch"], markers = "sys_platform == 'linux'" }
-pmdarima = ">=2.0.4,<3.0.0"
-matplotlib = ">=3.9.2,<4.0.0"
-pyaml = ">=25.5.0,<26.0.0"
-pandas = ">=2.2.3,<3.0.0"
-tqdm = ">=4.66.3,<5.0.0"
-yfinance = ">=0.2.61,<0.3.0"
-numpy = "==1.26.4"
-chronos-forecasting = ">=1.5.2,<2.0.0"
+# Common dependencies that both models share
+dependencies = [
+    "torch",
+    "pmdarima>=2.0.4,<3.0.0",
+    "matplotlib>=3.9.2,<4.0.0",
+    "pyaml>=25.5.0,<26.0.0",
+    "pandas>=2.2.3,<3.0.0",
+    "tqdm>=4.66.3,<5.0.0",
+    "yfinance>=0.2.61,<0.3.0",
+    "numpy==1.26.4",
+    # timesfm is platform specific
+    "timesfm[torch]>=1.2.9,<2.0.0; sys_platform == 'linux'",
+]
 
-[tool.poetry.group.dev.dependencies]
-jupyter = "^1.0"
-black = "^24.0"
+[project.optional-dependencies]
+# Dependencies exclusively for the Chronos model
+chronos = [
+    "chronos-forecasting>=1.5.2,<2.0.0",
+    "transformers>=4.48.0,<5.0.0", # The newer version Chronos needs
+]
 
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+# Dependencies exclusively for the Sundial model
+sundial = [
+    # "sundial-package-name", # Add the actual sundial package here
+    "transformers==4.40.1", # The specific older version Sundial needs
+]
+
+# Development tools
+dev = [
+    "jupyter>=1.0",
+    "black>=24.0",
+]
+
+# Add this new section below to guide the builder
+[tool.setuptools.packages.find]
+exclude = [
+    "data*",
+    "tables*",
+    "results*",
+    "figures*",
+    "configs*",
+    "notebooks*",
+    "*_env",  # Using a pattern to exclude sundial_env, chronos_env, etc.
+]
