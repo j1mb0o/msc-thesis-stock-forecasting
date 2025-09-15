@@ -59,7 +59,7 @@ args = parser.parse_args()
 method = args.method
 exp_name = args.exp_name
 tickers = ["MSFT"]
-timefreqs = ["1h"]
+timefreqs = ["1d"]
 
 if exp_name == "train-restricted-years":
     # horizon_lens = [1, 5, 21, 63]
