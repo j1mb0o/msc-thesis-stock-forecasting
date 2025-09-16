@@ -1,0 +1,19 @@
+experiment_config_name: 2025-09-15_15-47-18_MSFT_1d_arima_split_2023-01-01_train_41d_test_1y_horizon_1
+run_timestamp: 2025-09-15_15-47-18
+ticker: MSFT
+timefreq: 1d
+target_column: Open
+split_date: '2023-01-01'
+training_period_value: 41
+training_period_unit: days
+test_period_years: 1
+forecasting_method: arima
+horizon_length: 1
+differencing_applied: false
+results_file_path: /Users/dimitris/LU/Thesis/thesis-code-new/results/MSFT/1d/arima/train-less-year-log/2025-09-15_15-47-18_MSFT_1d_arima_split_2023-01-01_train_41d_test_1y_horizon_1.csv
+arima_order: (1, 0, 0)
+evaluation_metrics:
+  mse: 389.9708883899932
+  mae: 17.585780193179744
+  rmse: 19.747680582539136
+  mape: 5.469498492261533
