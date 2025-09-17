@@ -53,7 +53,7 @@ def run_pipeline(ticker, timefreq, method, horizon_len, train_last_n, exp_name, 
 parser = argparse.ArgumentParser(description="Run experiments for time series forecasting.")
 parser.add_argument("--method", type=str, required=True, help="The forecasting method to use.")
 parser.add_argument("--exp_name", type=str, required=True, help="The name of the experiment to run.")
-parser.add_argument("--timefreq", type=str, required=True, help="The time frequency of the data.")
+parser.add_argument("--timefreq", type=str, required=False, help="The time frequency of the data.")
 args = parser.parse_args()
 
 method = args.method
