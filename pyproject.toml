@@ -9,7 +9,6 @@ requires-python = ">=3.11,<3.12"
 
 # Common dependencies that both models share
 dependencies = [
-    "torch",
     "pmdarima>=2.0.4,<3.0.0",
     "matplotlib>=3.9.2,<4.0.0",
     "pyaml>=25.5.0,<26.0.0",
@@ -17,8 +16,6 @@ dependencies = [
     "tqdm>=4.66.3,<5.0.0",
     "yfinance>=0.2.61,<0.3.0",
     "numpy==1.26.4",
-    # timesfm is platform specific
-    "timesfm[torch]>=1.2.9,<2.0.0; sys_platform == 'linux'",
 ]
 
 [project.optional-dependencies]
@@ -34,6 +31,9 @@ sundial = [
     "transformers==4.40.1", # The specific older version Sundial needs
 ]
 
+times = [
+    "timesfm[torch]>=1.2.9,<2.0.0; sys_platform == 'linux'",
+]
 # Development tools
 dev = [
     "jupyter>=1.0",
