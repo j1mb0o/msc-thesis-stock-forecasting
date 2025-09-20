@@ -52,7 +52,7 @@ def plot_metrics_vs_training_days(df, ticker, timefreq, figures_root):
         plot_handles, plot_labels = [], []
 
         model_methods = df["forecasting_method"].unique()
-        palette = plt.cm.get_cmap("viridis", len(model_methods))
+        palette = plt.get_cmap("viridis", len(model_methods))
         color_map = {method: palette(i) for i, method in enumerate(model_methods)}
         markers_map = {
             method: marker
@@ -160,4 +160,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
