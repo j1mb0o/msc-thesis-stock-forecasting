@@ -30,10 +30,10 @@ for HORIZON_LEN in $HORIZONS; do
       TRAIN_LAST_NS=$(seq 1 10)
       DAYS_FLAG="--train_last_n_years"
     elif [ "$exp_name" == "train-less-year-log" ]; then
-      TRAIN_LAST_NS=$(python -c "import numpy as np; print(' '.join([str(int(v)) for v in np.logspace(np.log10(25), np.log10(250), 10)]))")
+      TRAIN_LAST_NS=$(python -c 'import numpy as np; print(" ".join([str(int(v)) for v in np.logspace(np.log10(25), np.log10(250), 10)]))')
       DAYS_FLAG="--train_last_n_days"
     elif [ "$exp_name" == "train-less-year-linear" ]; then
-      TRAIN_LAST_NS=$(python -c "import numpy as np; print(' '.join([str(int(v)) for v in np.linspace(25, 250, 10)]))")
+      TRAIN_LAST_NS=$(python -c 'import numpy as np; print(" ".join([str(int(v)) for v in np.linspace(25, 250, 10)]))')
       DAYS_FLAG="--train_last_n_days"
     else
       echo "Unknown experiment name: $exp_name"
@@ -42,7 +42,7 @@ for HORIZON_LEN in $HORIZONS; do
 
     # --- Parameter Combination Loop ---
     for train_last_n in $TRAIN_LAST_NS; do
-      echo "--- Running: Ticker=$TICKER, Timefreq=$TIMEFREQ, Horizon=$HORIZON_LEN, Train=$train_last_n ---"
+      echo "--- Running: Ticker=$TICKER, Timefreq=$TIMEFREQ, Horizon=$HORIZON_LEN, Train=$train_last_n ---" 
       
       python scripts/pipeline.py \
         --ticker "$TICKER" \
@@ -56,4 +56,5 @@ for HORIZON_LEN in $HORIZONS; do
   done
 done
 
-echo "===== All experiments for method $METHOD completed. =====
+echo "===== All experiments for method $METHOD completed. ====="
+
