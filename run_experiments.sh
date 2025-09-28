@@ -1,12 +1,14 @@
 #!/bin/bash
 
-# This script runs a series of forecasting experiments for the 'sundial' method,
-# calling the main pipeline script directly with different parameter combinations.
+# This script runs a series of forecasting experiments.
+# The forecasting method can be specified as the first argument to the script.
+# Example: ./run_experiments.sh arima
+# If no method is specified, it defaults to 'naive'.
 
 # --- Configuration ---
 TICKER="MSFT"
 TIMEFREQ="1d"
-METHOD="naive"
+METHOD=${1:-"naive"}
 # HORIZON_LEN=1
 # Set to false to run for a single horizon length of 1
 MULTIPLE_HORIZONS=${MULTIPLE_HORIZONS:-true}
