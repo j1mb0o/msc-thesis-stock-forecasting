@@ -1,0 +1,19 @@
+experiment_config_name: 2025-09-28_18-26-58_MSFT_1d_chronos_base_split_2023-01-01_train_8y_test_1y_horizon_63
+run_timestamp: 2025-09-28_18-26-58
+ticker: MSFT
+timefreq: 1d
+target_column: Open
+split_date: '2023-01-01'
+training_period_value: 8.0
+training_period_unit: years
+test_period_years: 1
+forecasting_method: chronos_base
+horizon_length: 63
+differencing_applied: false
+results_file_path: /Users/dimitris/LU/Thesis/thesis-code-new/results/MSFT/1d/chronos_base/train-restricted-years/2025-09-28_18-26-58_MSFT_1d_chronos_base_split_2023-01-01_train_8y_test_1y_horizon_63.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 718.3494760151573
+  mae: 21.80021619572205
+  rmse: 26.8020423851459
+  mape: 7.054164231487785
