@@ -10,7 +10,7 @@ test_period_years: 1
 forecasting_method: fm
 horizon_length: 5
 differencing_applied: false
-results_file_path: /root/thesis-code-new/results/MSFT/1d/fm/train-less-year-linear/2025-09-28_20-14-00_MSFT_1d_fm_split_2023-01-01_train_200d_test_1y_horizon_5.csv
+results_file_path: /Users/dimitris/LU/Thesis/thesis-code-new/results/MSFT/1d/fm/train-less-year-linear/2025-09-28_20-14-00_MSFT_1d_fm_split_2023-01-01_train_200d_test_1y_horizon_5.csv
 arima_order: N/A
 evaluation_metrics:
   mse: 68.69152837124956
