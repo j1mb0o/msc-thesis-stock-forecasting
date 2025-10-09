@@ -22,10 +22,11 @@ fi
 
 # --- Experiment Loop ---
 for HORIZON_LEN in $HORIZONS; do
-  for exp_name in "train-restricted-years" "train-less-year-log" "train-less-year-linear"; do
+  for exp_name in "train-restricted-years" "train-less-year-log" "train-less-year-linear" "train-restricted-years-pct" "train-less-year-log-pct" "train-less-year-linear-pct"; do
     echo "===== Running Experiment: $exp_name for method $METHOD, Horizon: $HORIZON_LEN ====="
 
     # Determine training parameters based on experiment name
+    PCT_CHANGE_FLAG=""
     if [ "$exp_name" == "train-restricted-years" ]; then
       TRAIN_LAST_NS=$(seq 1 10)
       DAYS_FLAG="--train_last_n_years"
@@ -35,6 +36,18 @@ for HORIZON_LEN in $HORIZONS; do
     elif [ "$exp_name" == "train-less-year-linear" ]; then
       TRAIN_LAST_NS=$(python -c 'import numpy as np; print(" ".join([str(int(v)) for v in np.linspace(25, 250, 10)]))')
       DAYS_FLAG="--train_last_n_days"
+    elif [ "$exp_name" == "train-restricted-years-pct" ]; then
+      TRAIN_LAST_NS=$(seq 1 10)
+      DAYS_FLAG="--train_last_n_years"
+      PCT_CHANGE_FLAG="--pct_change"
+    elif [ "$exp_name" == "train-less-year-log-pct" ]; then
+      TRAIN_LAST_NS=$(python -c 'import numpy as np; print(" ".join([str(int(v)) for v in np.logspace(np.log10(25), np.log10(250), 10)]))')
+      DAYS_FLAG="--train_last_n_days"
+      PCT_CHANGE_FLAG="--pct_change"
+    elif [ "$exp_name" == "train-less-year-linear-pct" ]; then
+      TRAIN_LAST_NS=$(python -c 'import numpy as np; print(" ".join([str(int(v)) for v in np.linspace(25, 250, 10)]))')
+      DAYS_FLAG="--train_last_n_days"
+      PCT_CHANGE_FLAG="--pct_change"
     else
       echo "Unknown experiment name: $exp_name"
       continue
@@ -50,7 +63,8 @@ for HORIZON_LEN in $HORIZONS; do
         --method "$METHOD" \
         --horizon_len "$HORIZON_LEN" \
         "$DAYS_FLAG" "$train_last_n" \
-        --exp_name "$exp_name"
+        --exp_name "$exp_name" \
+        $PCT_CHANGE_FLAG
       
     done
   done
