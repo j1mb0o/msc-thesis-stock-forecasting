@@ -46,6 +46,9 @@ def get_pipeline_arguments():
         "--diff", action="store_true", help="Apply differencing to the target series."
     )
     parser.add_argument(
+        "--pct_change", action="store_true", help="Apply percentage change to the target series. Mutually exclusive with --diff."
+    )
+    parser.add_argument(
         "--split_date", type=str, default="2023-01-01", help="Split date (YYYY-MM-DD) for train/test separation."
     )
     parser.add_argument(
@@ -67,5 +70,6 @@ if __name__ == '__main__':
     print(f"Target Column: {args.target_column}")
     print(f"Horizon Length: {args.horizon_len}")
     print(f"Differencing: {args.diff}")
+    print(f"Percentage Change: {args.pct_change}")
     print(f"Split Date: {args.split_date}")
     print(f"Experiment Name: {args.exp_name}")
