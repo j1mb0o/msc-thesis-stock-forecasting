@@ -106,6 +106,7 @@ prepared_data = prepare_data_for_modeling(
     target_column=TARGET_COLUMN,
     base_dir=BASE_DATA_DIR,
     diff=args.diff,
+    pct_change=args.pct_change,
 )
 
 if prepared_data:
@@ -276,6 +277,7 @@ experiment_settings = {
     "forecasting_method": args.method,
     "horizon_length": HORIZON,
     "differencing_applied": args.diff,
+    "percentage_change_applied": args.pct_change,
     "results_file_path": str(results_file_path.resolve()),
     "arima_order": arima_order_info,
     "evaluation_metrics": {"mse": mse, "mae": mae, "rmse": rmse, "mape": mape * 100},

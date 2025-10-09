@@ -21,7 +21,8 @@ def prepare_data_for_modeling(
     n_train_days: Optional[int] = None,  # New parameter for days
     n_test_years: float = 1,
     base_dir: Path = BASE_DATA_DIR,
-    diff: bool = False
+    diff: bool = False,
+    pct_change: bool = False
 ) -> Optional[Tuple[pd.Series, pd.Series]]:
     """
     Loads time series data, selects a target column, optionally differences it,
@@ -40,6 +41,8 @@ def prepare_data_for_modeling(
         n_test_years (float): Number of years of testing data from rel_date. Defaults to 1.
         base_dir (Path): The base directory for data.
         diff (bool): If True, computes the first difference of the series. Defaults to False.
+        pct_change (bool): If True, computes the percentage change of the series. Defaults to False.
+                           Mutually exclusive with diff parameter.
 
     Returns:
         Optional[Tuple[pd.Series, pd.Series]]: (train_series, test_series), or None on failure.
@@ -95,6 +98,12 @@ def prepare_data_for_modeling(
         logging.error(f"Unexpected error loading/validating data from {file_path}: {e}")
         raise
 
+    # Validate that diff and pct_change are not both True
+    if diff and pct_change:
+        msg = "diff and pct_change parameters are mutually exclusive. Please set only one to True."
+        logging.error(msg)
+        raise ValueError(msg)
+
     if diff:
         logging.info(f"Applying first difference to '{target_column}' series.")
         series = series.diff().dropna()
@@ -102,6 +111,13 @@ def prepare_data_for_modeling(
             logging.warning(f"Series is empty after differencing and dropna for '{target_column}'.")
             return None
         logging.info(f"Series length after differencing and dropna: {len(series)}")
+    elif pct_change:
+        logging.info(f"Applying percentage change to '{target_column}' series.")
+        series = series.pct_change().dropna()
+        if series.empty:
+            logging.warning(f"Series is empty after percentage change and dropna for '{target_column}'.")
+            return None
+        logging.info(f"Series length after percentage change and dropna: {len(series)}")
 
     # --- Calculate date ranges ---
     # Determine training period start date based on days or years
@@ -238,7 +254,37 @@ if __name__ == "__main__":
         if not train_years_days_zero.empty:
             print(f"Train (years, days=0) range: {train_years_days_zero.index.min()} to {train_years_days_zero.index.max()}")
 
+    logging.info("\n--- Testing with pct_change=True ---")
+    train_pct, test_pct = prepare_data_for_modeling(
+        ticker="DUMMY",
+        timefreq="1d",
+        rel_date="2022-01-01",
+        n_train_years=2,
+        n_test_years=1,
+        pct_change=True
+    )
+    if train_pct is not None and test_pct is not None:
+        print(f"Train (pct_change): {len(train_pct)} obs, Test (pct_change): {len(test_pct)} obs")
+        if not train_pct.empty:
+            print(f"Train (pct_change) range: {train_pct.index.min()} to {train_pct.index.max()}")
+            print(f"Train (pct_change) sample values: {train_pct.head().values}")
+
+    logging.info("\n--- Testing mutual exclusivity (diff=True, pct_change=True) ---")
+    try:
+        prepare_data_for_modeling(
+            ticker="DUMMY",
+            timefreq="1d",
+            rel_date="2022-01-01",
+            n_train_years=2,
+            n_test_years=1,
+            diff=True,
+            pct_change=True
+        )
+        print("ERROR: Should have raised ValueError for mutual exclusivity!")
+    except ValueError as e:
+        print(f"SUCCESS: Correctly raised ValueError: {e}")
+
     # Cleanup dummy file
-    # import os
-    # os.remove(dummy_data_path)
-    # os.rmdir(dummy_data_path.parent)
+    import os
+    os.remove(dummy_data_path)
+    os.rmdir(dummy_data_path.parent)
