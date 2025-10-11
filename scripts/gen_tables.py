@@ -27,7 +27,7 @@ def generate_latex_table(df_group, tables_root, ticker, timefreq, method, exp_na
 
     df_data = []
     previous_metrics = {}
-    metric_columns = ['MSE', 'MAE', 'RMSE', 'MAPE (%)', 'SMAPE (%)']
+    metric_columns = ['MSE', 'MAE', 'RMSE', 'MAPE (%)', 'SMAPE (%)', 'MDA (%)']
 
     for _, row in df_group.iterrows():
         current_metrics = {
@@ -35,7 +35,8 @@ def generate_latex_table(df_group, tables_root, ticker, timefreq, method, exp_na
             'MAE': row['mae'],
             'RMSE': row['rmse'],
             'MAPE (%)': row['mape'],
-            'SMAPE (%)': row['smape']
+            'SMAPE (%)': row['smape'],
+            'MDA (%)': row['mean_directional_accuracy']
         }
         
         row_for_df = {

@@ -25,6 +25,21 @@ except ImportError:
         return np.sqrt(mean_squared_error(y_true, y_pred))
 
 
+def mean_directional_accuracy(y_true, y_pred):
+    """Calculate Mean Directional Accuracy (MDA).
+    
+    MDA is similar to Direction Accuracy but can be weighted by magnitude.
+    For this implementation, we use the same formula as Direction Accuracy.
+    
+    Args:
+        y_true: Array-like of true values
+        y_pred: Array-like of predicted values
+        
+    Returns:
+        Mean directional accuracy as a decimal (multiply by 100 for percentage)
+    """
+    y_true, y_pred = np.array(y_true), np.array(y_pred)
+    return np.mean(np.sign(y_true) == np.sign(y_pred))
 
 
 from utils.download_data import download_data
@@ -247,6 +262,7 @@ rmse = root_mean_squared_error(test_data, forecasts_series)
 mape = mean_absolute_percentage_error(test_data, forecasts_series)
 mse = mean_squared_error(test_data, forecasts_series)
 smape = smape(test_data, forecasts_series)
+mda = mean_directional_accuracy(test_data, forecasts_series)
 
 logging.info(f"Evaluation Metrics for {args.method} Forecast:")
 logging.info(f"  MSE:  {mse:.4f}")
@@ -254,6 +270,7 @@ logging.info(f"  MAE:  {mae:.4f}")
 logging.info(f"  RMSE: {rmse:.4f}")
 logging.info(f"  MAPE: {mape * 100:.4f}%")  # Display MAPE as percentage
 logging.info(f"  SMAPE: {smape :.4f}%")  # Display SMAPE as percentage
+logging.info(f"  Mean Directional Accuracy: {mda * 100:.4f}%")  # Display as percentage
 
 results_df = pd.DataFrame(
     {"Actual": test_data, f"{args.method}_Forecast": forecasts_series}
@@ -286,11 +303,24 @@ experiment_settings = {
     "percentage_change_applied": args.pct_change,
     "results_file_path": str(results_file_path.resolve()),
     "arima_order": arima_order_info,
-    "evaluation_metrics": {"mse": mse, "mae": mae, "rmse": rmse, "mape": mape * 100, "smape": smape},
+    "evaluation_metrics": {
+        "mse": mse,
+        "mae": mae,
+        "rmse": rmse,
+        "mape": mape * 100,
+        "smape": smape,
+        "mean_directional_accuracy": mda * 100,
+    },
 }
 
 save_experiment_config(
-    CONFIG_DIR, experiment_config_name, experiment_settings, args.method, TICKER, TIMEFREQ, EXP_NAME
+    CONFIG_DIR,
+    experiment_config_name,
+    experiment_settings,
+    args.method,
+    TICKER,
+    TIMEFREQ,
+    EXP_NAME,
 )
 
 logging.info(f"Process for {TICKER} completed successfully.")
