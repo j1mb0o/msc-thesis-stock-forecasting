@@ -1,0 +1,505 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+
+\geometry{a4paper, margin=1in}
+
+\title{MSFT Stock Forecasting Analysis Report}
+\author{Analysis of Time Series Forecasting Methods}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This report presents a comprehensive analysis of Microsoft (MSFT) stock forecasting using multiple time series methods across different timeframes and experimental configurations. The study compares five forecasting methods—ARIMA, Chronos Base, FM (Foundation Model), Naive, and Sundial—across daily (1d) and hourly (1h) data frequencies. Three experimental setups were employed: train-less-year-linear, train-less-year-log, and train-restricted-years. Performance was evaluated using standard metrics including MSE, MAE, RMSE, and MAPE across various training periods and prediction horizons.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+\subsection{Timeframes}
+The analysis encompasses two primary data frequencies:
+\begin{itemize}
+\item \textbf{Daily (1d)}: End-of-day closing prices for long-term trend analysis
+\item \textbf{Hourly (1h)}: Intraday price movements for short-term forecasting
+\end{itemize}
+
+\subsection{Experimental Configurations}
+Three distinct training approaches were implemented:
+\begin{itemize}
+\item \textbf{train-less-year-linear}: Linear scaling with training periods under one year
+\item \textbf{train-less-year-log}: Logarithmic scaling with training periods under one year  
+\item \textbf{train-restricted-years}: Training restricted to specific year ranges
+\end{itemize}
+
+\subsection{Forecasting Methods}
+\begin{itemize}
+\item \textbf{ARIMA}: AutoRegressive Integrated Moving Average, a classical statistical method
+\item \textbf{Chronos Base}: Pre-trained time series foundation model from Amazon
+\item \textbf{FM}: Foundation Model approach for time series forecasting
+\item \textbf{Naive}: Simple baseline using last observed value
+\item \textbf{Sundial}: Specialized time series forecasting model
+\end{itemize}
+
+\subsection{Evaluation Metrics}
+Performance was assessed using:
+\begin{itemize}
+\item \textbf{MSE}: Mean Squared Error
+\item \textbf{MAE}: Mean Absolute Error  
+\item \textbf{RMSE}: Root Mean Squared Error
+\item \textbf{MAPE}: Mean Absolute Percentage Error
+\end{itemize}
+
+\section{Daily Timeframe Analysis (1d)}
+
+\subsection{Overview}
+The daily analysis provides insights into long-term forecasting capabilities. Figure \ref{fig:1d_metrics} shows the relationship between training duration and prediction accuracy across all methods.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.33\textwidth}
+\includegraphics[width=\textwidth]{figures/MSFT/1d/metrics_analysis/MAE_vs_training_days.png}
+\caption{MAE vs Training Days}
+\end{subfigure}
+\begin{subfigure}{0.33\textwidth}
+\includegraphics[width=\textwidth]{figures/MSFT/1d/metrics_analysis/MAPE_vs_training_days.png}
+\caption{MAPE vs Training Days}
+\end{subfigure}
+\begin{subfigure}{0.33\textwidth}
+\includegraphics[width=\textwidth]{figures/MSFT/1d/metrics_analysis/RMSE_vs_training_days.png}
+\caption{RMSE vs Training Days}
+\end{subfigure}
+\caption{Performance metrics across training periods for daily data}
+\label{fig:1d_metrics}
+\end{figure}
+
+\subsection{ACF and PACF Analysis}
+The autocorrelation and partial autocorrelation functions reveal the underlying time series structure (Figure \ref{fig:1d_acf}).
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=\textwidth]{figures/MSFT/1d/MSFT_1d_acf_pacf.png}
+\caption{Price ACF/PACF}
+\end{subfigure}
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=\textwidth]{figures/MSFT/1d/MSFT_1d_returns_acf_pacf.png}
+\caption{Returns ACF/PACF}
+\end{subfigure}
+\caption{Autocorrelation analysis for daily MSFT data}
+\label{fig:1d_acf}
+\end{figure}
+
+\subsection{Train-Less-Year-Linear Experiment}
+
+\subsubsection{ARIMA Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-linear/arima_varying_horizon_predictions.png}
+\caption{ARIMA predictions across varying horizons for linear training configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/arima/train-less-year-linear/arima_MSFT_h1_metrics.tex}
+
+\textbf{Key Observations:}
+\begin{itemize}
+\item ARIMA shows significant improvement with increased training data up to 75 days
+\item Performance stabilizes after 100 days of training
+\item MAPE reaches as low as 1.22\% with optimal training periods
+\end{itemize}
+
+\subsubsection{Chronos Base Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-linear/chronos_base_varying_horizon_predictions.png}
+\caption{Chronos Base predictions across varying horizons for linear training configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/chronos_base/train-less-year-linear/chronos_base_MSFT_h1_metrics.tex}
+
+\textbf{Key Observations:}
+\begin{itemize}
+\item Chronos Base demonstrates consistent performance across training periods
+\item Lower variance compared to ARIMA (MAPE around 1.28-1.31\%)
+\item Minimal sensitivity to training duration changes
+\end{itemize}
+
+\subsubsection{FM Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-linear/fm_varying_horizon_predictions.png}
+\caption{FM predictions across varying horizons for linear training configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/fm/train-less-year-linear/fm_MSFT_h1_metrics.tex}
+
+\subsubsection{Naive Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-linear/naive_varying_horizon_predictions.png}
+\caption{Naive predictions across varying horizons for linear training configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/naive/train-less-year-linear/naive_MSFT_h1_metrics.tex}
+
+\subsubsection{Sundial Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-linear/sundial_varying_horizon_predictions.png}
+\caption{Sundial predictions across varying horizons for linear training configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/sundial/train-less-year-linear/sundial_MSFT_h1_metrics.tex}
+
+\subsection{Train-Less-Year-Log Experiment}
+
+\subsubsection{ARIMA Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-log/arima_varying_horizon_predictions.png}
+\caption{ARIMA predictions across varying horizons for logarithmic training configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/arima/train-less-year-log/arima_MSFT_h1_metrics.tex}
+
+\subsubsection{Chronos Base Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-log/chronos_base_varying_horizon_predictions.png}
+\caption{Chronos Base predictions across varying horizons for logarithmic training configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/chronos_base/train-less-year-log/chronos_base_MSFT_h1_metrics.tex}
+
+\subsubsection{FM Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-log/fm_varying_horizon_predictions.png}
+\caption{FM predictions across varying horizons for logarithmic training configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/fm/train-less-year-log/fm_MSFT_h1_metrics.tex}
+
+\subsubsection{Naive Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-log/naive_varying_horizon_predictions.png}
+\caption{Naive predictions across varying horizons for logarithmic training configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/naive/train-less-year-log/naive_MSFT_h1_metrics.tex}
+
+\subsubsection{Sundial Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-log/sundial_varying_horizon_predictions.png}
+\caption{Sundial predictions across varying horizons for logarithmic training configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/sundial/train-less-year-log/sundial_MSFT_h1_metrics.tex}
+
+\subsection{Train-Restricted-Years Experiment}
+
+\subsubsection{ARIMA Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-restricted-years/arima_varying_horizon_predictions.png}
+\caption{ARIMA predictions across varying horizons for restricted years configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/arima/train-restricted-years/arima_MSFT_h1_metrics.tex}
+
+\subsubsection{Chronos Base Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-restricted-years/chronos_base_varying_horizon_predictions.png}
+\caption{Chronos Base predictions across varying horizons for restricted years configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/chronos_base/train-restricted-years/chronos_base_MSFT_h1_metrics.tex}
+
+\subsubsection{FM Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-restricted-years/fm_varying_horizon_predictions.png}
+\caption{FM predictions across varying horizons for restricted years configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/fm/train-restricted-years/fm_MSFT_h1_metrics.tex}
+
+\subsubsection{Naive Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-restricted-years/naive_varying_horizon_predictions.png}
+\caption{Naive predictions across varying horizons for restricted years configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/naive/train-restricted-years/naive_MSFT_h1_metrics.tex}
+
+\subsubsection{Sundial Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-restricted-years/sundial_varying_horizon_predictions.png}
+\caption{Sundial predictions across varying horizons for restricted years configuration}
+\end{figure}
+
+\input{tables/MSFT/1d/sundial/train-restricted-years/sundial_MSFT_h1_metrics.tex}
+
+\section{Hourly Timeframe Analysis (1h)}
+
+\subsection{Overview}
+The hourly analysis focuses on short-term forecasting capabilities with higher frequency data. Figure \ref{fig:1h_metrics} illustrates performance patterns for intraday predictions.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.33\textwidth}
+\includegraphics[width=\textwidth]{figures/MSFT/1h/metrics_analysis/MAE_vs_training_days.png}
+\caption{MAE vs Training Days}
+\end{subfigure}
+\begin{subfigure}{0.33\textwidth}
+\includegraphics[width=\textwidth]{figures/MSFT/1h/metrics_analysis/MAPE_vs_training_days.png}
+\caption{MAPE vs Training Days}
+\end{subfigure}
+\begin{subfigure}{0.33\textwidth}
+\includegraphics[width=\textwidth]{figures/MSFT/1h/metrics_analysis/RMSE_vs_training_days.png}
+\caption{RMSE vs Training Days}
+\end{subfigure}
+\caption{Performance metrics across training periods for hourly data}
+\label{fig:1h_metrics}
+\end{figure}
+
+\subsection{ACF and PACF Analysis}
+The intraday autocorrelation structure differs significantly from daily patterns (Figure \ref{fig:1h_acf}).
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=\textwidth]{figures/MSFT/1h/MSFT_1h_acf_pacf.png}
+\caption{Price ACF/PACF}
+\end{subfigure}
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=\textwidth]{figures/MSFT/1h/MSFT_1h_returns_acf_pacf.png}
+\caption{Returns ACF/PACF}
+\end{subfigure}
+\caption{Autocorrelation analysis for hourly MSFT data}
+\label{fig:1h_acf}
+\end{figure}
+
+\subsection{Train-Less-Year-Linear Experiment}
+
+\subsubsection{ARIMA Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/arima_predictions.png}
+\caption{ARIMA predictions for hourly data with linear training configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/arima/train-less-year-linear/arima_MSFT_h1_metrics.tex}
+
+\subsubsection{Chronos Base Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/chronos_base_predictions.png}
+\caption{Chronos Base predictions for hourly data with linear training configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/chronos_base/train-less-year-linear/chronos_base_MSFT_h1_metrics.tex}
+
+\subsubsection{FM Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/fm_predictions.png}
+\caption{FM predictions for hourly data with linear training configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/fm/train-less-year-linear/fm_MSFT_h1_metrics.tex}
+
+\subsubsection{Naive Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/naive_predictions.png}
+\caption{Naive predictions for hourly data with linear training configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/naive/train-less-year-linear/naive_MSFT_h1_metrics.tex}
+
+\subsubsection{Sundial Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/sundial_predictions.png}
+\caption{Sundial predictions for hourly data with linear training configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/sundial/train-less-year-linear/sundial_MSFT_h1_metrics.tex}
+
+\subsection{Train-Less-Year-Log Experiment}
+
+\subsubsection{ARIMA Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/arima_predictions.png}
+\caption{ARIMA predictions for hourly data with logarithmic training configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/arima/train-less-year-log/arima_MSFT_h1_metrics.tex}
+
+\subsubsection{Chronos Base Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/chronos_base_predictions.png}
+\caption{Chronos Base predictions for hourly data with logarithmic training configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/chronos_base/train-less-year-log/chronos_base_MSFT_h1_metrics.tex}
+
+\subsubsection{FM Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/fm_predictions.png}
+\caption{FM predictions for hourly data with logarithmic training configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/fm/train-less-year-log/fm_MSFT_h1_metrics.tex}
+
+\subsubsection{Naive Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/naive_predictions.png}
+\caption{Naive predictions for hourly data with logarithmic training configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/naive/train-less-year-log/naive_MSFT_h1_metrics.tex}
+
+\subsubsection{Sundial Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/sundial_predictions.png}
+\caption{Sundial predictions for hourly data with logarithmic training configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/sundial/train-less-year-log/sundial_MSFT_h1_metrics.tex}
+
+\subsection{Train-Restricted-Years Experiment}
+
+\subsubsection{ARIMA Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/arima_predictions.png}
+\caption{ARIMA predictions for hourly data with restricted years configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/arima/train-restricted-years/arima_MSFT_h1_metrics.tex}
+
+\subsubsection{Chronos Base Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/chronos_base_predictions.png}
+\caption{Chronos Base predictions for hourly data with restricted years configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/chronos_base/train-restricted-years/chronos_base_MSFT_h1_metrics.tex}
+
+\subsubsection{FM Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/fm_predictions.png}
+\caption{FM predictions for hourly data with restricted years configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/fm/train-restricted-years/fm_MSFT_h1_metrics.tex}
+
+\subsubsection{Naive Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/naive_predictions.png}
+\caption{Naive predictions for hourly data with restricted years configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/naive/train-restricted-years/naive_MSFT_h1_metrics.tex}
+
+\subsubsection{Sundial Method}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/sundial_predictions.png}
+\caption{Sundial predictions for hourly data with restricted years configuration}
+\end{figure}
+
+\input{tables/MSFT/1h/sundial/train-restricted-years/sundial_MSFT_h1_metrics.tex}
+
+\section{Comparative Analysis}
+
+\subsection{Method Performance Comparison}
+
+\subsubsection{Daily Forecasting}
+Based on the comprehensive analysis across all experiments:
+
+\begin{itemize}
+\item \textbf{Best Overall Performance}: Chronos Base demonstrates consistent performance with MAPE typically around 1.28-1.31\% across all training configurations
+\item \textbf{Most Variable}: ARIMA shows high variability, with performance heavily dependent on training period (MAPE ranging from 1.22\% to 5.97\%)
+\item \textbf{Baseline Performance}: Naive method provides a reasonable baseline with stable but suboptimal performance
+\item \textbf{Training Sensitivity}: Classical methods (ARIMA) show higher sensitivity to training duration compared to foundation models
+\end{itemize}
+
+\subsubsection{Hourly Forecasting}
+Hourly predictions present different challenges:
+
+\begin{itemize}
+\item \textbf{Increased Volatility}: All methods show higher error rates for hourly predictions compared to daily
+\item \textbf{Foundation Model Advantage}: Chronos Base and FM maintain relative stability in the higher frequency domain
+\item \textbf{ARIMA Challenges}: Traditional statistical methods struggle with intraday noise and microstructure effects
+\end{itemize}
+
+\subsection{Training Configuration Impact}
+
+\subsubsection{Linear vs Logarithmic Scaling}
+\begin{itemize}
+\item \textbf{Linear Configuration}: Better for shorter training periods, shows clear improvement patterns
+\item \textbf{Logarithmic Configuration}: More stable performance across varying training sizes
+\item \textbf{Optimal Training}: 75-100 days appears optimal for most methods in daily timeframe
+\end{itemize}
+
+\subsubsection{Restricted Years}
+\begin{itemize}
+\item \textbf{Data Quality Impact}: Performance varies significantly based on the specific years included
+\item \textbf{Market Regime Sensitivity}: Methods show different sensitivities to market conditions in different periods
+\end{itemize}
+
+\section{Conclusions and Recommendations}
+
+\subsection{Key Findings}
+
+\begin{enumerate}
+\item \textbf{Foundation Models Superiority}: Chronos Base and FM consistently outperform traditional methods across most configurations
+\item \textbf{Training Period Optimization}: Optimal training periods exist for each method, typically 75-100 days for daily data
+\item \textbf{Frequency Dependency}: Method performance varies significantly between daily and hourly timeframes
+\item \textbf{Configuration Sensitivity}: Training configuration impacts classical methods more than foundation models
+\end{enumerate}
+
+\subsection{Practical Recommendations}
+
+\begin{itemize}
+\item \textbf{For Daily Forecasting}: Use Chronos Base with 75-100 days of training data
+\item \textbf{For Hourly Forecasting}: Foundation models (Chronos Base or FM) are strongly recommended
+\item \textbf{Resource Constraints}: Naive method provides acceptable baseline performance with minimal computational requirements
+\item \textbf{Model Selection}: Consider Chronos Base for consistent performance across different market conditions
+\end{itemize}
+
+\subsection{Future Research Directions}
+
+\begin{itemize}
+\item \textbf{Hybrid Approaches}: Combining foundation models with traditional statistical methods
+\item \textbf{Multi-horizon Optimization}: Joint optimization across different prediction horizons
+\item \textbf{Market Regime Adaptation}: Dynamic model selection based on market conditions
+\item \textbf{Real-time Implementation}: Deployment considerations for production environments
+\end{itemize}
+
+\end{document}
