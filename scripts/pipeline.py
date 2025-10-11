@@ -308,8 +308,8 @@ experiment_settings = {
         "mae": mae,
         "rmse": rmse,
         "mape": mape * 100,
-        "smape": smape,
-        "mean_directional_accuracy": mda * 100,
+        "smape": float(smape),
+        "mean_directional_accuracy": float(mda * 100),
     },
 }
 
