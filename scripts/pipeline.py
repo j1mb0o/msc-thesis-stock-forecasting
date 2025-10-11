@@ -12,6 +12,8 @@ from sklearn.metrics import (
     # root_mean_squared_error, # Available in scikit-learn >= 1.0
     mean_absolute_percentage_error,
 )
+from pmdarima.metrics import smape
+import numpy as np
 
 # For older scikit-learn versions, define root_mean_squared_error if not present
 try:
@@ -21,6 +23,8 @@ except ImportError:
 
     def root_mean_squared_error(y_true, y_pred):
         return np.sqrt(mean_squared_error(y_true, y_pred))
+
+
 
 
 from utils.download_data import download_data
@@ -242,12 +246,14 @@ mae = mean_absolute_error(test_data, forecasts_series)
 rmse = root_mean_squared_error(test_data, forecasts_series)
 mape = mean_absolute_percentage_error(test_data, forecasts_series)
 mse = mean_squared_error(test_data, forecasts_series)
+smape = smape(test_data, forecasts_series)
 
 logging.info(f"Evaluation Metrics for {args.method} Forecast:")
 logging.info(f"  MSE:  {mse:.4f}")
 logging.info(f"  MAE:  {mae:.4f}")
 logging.info(f"  RMSE: {rmse:.4f}")
 logging.info(f"  MAPE: {mape * 100:.4f}%")  # Display MAPE as percentage
+logging.info(f"  SMAPE: {smape :.4f}%")  # Display SMAPE as percentage
 
 results_df = pd.DataFrame(
     {"Actual": test_data, f"{args.method}_Forecast": forecasts_series}
@@ -280,7 +286,7 @@ experiment_settings = {
     "percentage_change_applied": args.pct_change,
     "results_file_path": str(results_file_path.resolve()),
     "arima_order": arima_order_info,
-    "evaluation_metrics": {"mse": mse, "mae": mae, "rmse": rmse, "mape": mape * 100},
+    "evaluation_metrics": {"mse": mse, "mae": mae, "rmse": rmse, "mape": mape * 100, "smape": smape},
 }
 
 save_experiment_config(
