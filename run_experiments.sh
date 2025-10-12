@@ -7,7 +7,7 @@
 
 # --- Configuration ---
 TICKER="MSFT"
-TIMEFREQ="1d"
+TIMEFREQ="1h"
 METHOD=${1:-"naive"}
 # HORIZON_LEN=1
 # Set to false to run for a single horizon length of 1
