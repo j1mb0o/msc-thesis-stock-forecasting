@@ -22,7 +22,7 @@ fi
 
 # --- Experiment Loop ---
 for HORIZON_LEN in $HORIZONS; do
-  for exp_name in "train-restricted-years" "train-less-year-log" "train-less-year-linear" "train-restricted-years-pct" "train-less-year-log-pct" "train-less-year-linear-pct"; do
+  for exp_name in "train-restricted-years-pct" "train-less-year-log-pct" "train-less-year-linear-pct"; do
     echo "===== Running Experiment: $exp_name for method $METHOD, Horizon: $HORIZON_LEN ====="
 
     # Determine training parameters based on experiment name
