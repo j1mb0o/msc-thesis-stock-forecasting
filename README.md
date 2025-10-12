@@ -25,7 +25,7 @@ This project uses `pyproject.toml` to manage dependencies with different groups 
 
 **Install base dependencies:**
 ```bash
-pip install -e .
+uv pip install {target config}
 ```
 
 **Install dependencies for a specific model:**
