@@ -38,7 +38,7 @@ The analysis encompasses two primary data frequencies:
 Three distinct training approaches were implemented:
 \begin{itemize}
 \item \textbf{train-less-year-linear}: Linear scaling with training periods under one year
-\item \textbf{train-less-year-log}: Logarithmic scaling with training periods under one year  
+\item \textbf{train-less-year-log}: Logarithmic scaling with training periods under one year
 \item \textbf{train-restricted-years}: Training restricted to specific year ranges
 \end{itemize}
 
@@ -55,7 +55,7 @@ Three distinct training approaches were implemented:
 Performance was assessed using:
 \begin{itemize}
 \item \textbf{MSE}: Mean Squared Error
-\item \textbf{MAE}: Mean Absolute Error  
+\item \textbf{MAE}: Mean Absolute Error
 \item \textbf{RMSE}: Root Mean Squared Error
 \item \textbf{MAPE}: Mean Absolute Percentage Error
 \end{itemize}
@@ -109,30 +109,7 @@ The autocorrelation and partial autocorrelation functions reveal the underlying 
 \caption{ARIMA predictions across varying horizons for linear training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 464.9190 & 19.2025 & 21.5620 & 5.9709 \\
-50.000000 & 270.5983 (-41.80\%) & 14.5912 (-24.01\%) & 16.4499 (-23.71\%) & 4.5466 (-23.85\%) \\
-75.000000 & 23.0567 (-91.48\%) & 3.6721 (-74.83\%) & 4.8017 (-70.81\%) & 1.2184 (-73.20\%) \\
-100.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-125.000000 & 36.1757 (56.90\%) & 4.7536 (29.45\%) & 6.0146 (25.26\%) & 1.5498 (27.20\%) \\
-150.000000 & 23.0567 (-36.26\%) & 3.6721 (-22.75\%) & 4.8017 (-20.17\%) & 1.2184 (-21.38\%) \\
-175.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-200.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-225.000000 & 23.0567 (-0.00\%) & 3.6721 (-0.00\%) & 4.8017 (-0.00\%) & 1.2184 (-0.00\%) \\
-250.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for ARIMA on MSFT with Horizon 1 day (Linear Training)}
-\label{tab:arima_MSFT_h1_metrics_linear}
-\end{table}
+\input{tables/MSFT/1d/arima/train-less-year-linear/arima_MSFT_h1_metrics.tex}
 
 \textbf{Key Observations:}
 \begin{itemize}
@@ -148,30 +125,7 @@ Training Period (Days) &  &  &  &  \\
 \caption{Chronos Base predictions across varying horizons for linear training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 25.9671 & 3.8702 & 5.0958 & 1.2861 \\
-50.000000 & 25.8472 (-0.46\%) & 3.8795 (0.24\%) & 5.0840 (-0.23\%) & 1.2889 (0.22\%) \\
-75.000000 & 25.3947 (-1.75\%) & 3.8437 (-0.92\%) & 5.0393 (-0.88\%) & 1.2765 (-0.96\%) \\
-100.000000 & 26.0790 (2.69\%) & 3.9019 (1.52\%) & 5.1068 (1.34\%) & 1.2895 (1.02\%) \\
-125.000000 & 25.8966 (-0.70\%) & 3.8626 (-1.01\%) & 5.0889 (-0.35\%) & 1.2832 (-0.49\%) \\
-150.000000 & 25.4556 (-1.70\%) & 3.8660 (0.09\%) & 5.0454 (-0.86\%) & 1.2863 (0.24\%) \\
-175.000000 & 25.0035 (-1.78\%) & 3.8539 (-0.31\%) & 5.0003 (-0.89\%) & 1.2792 (-0.55\%) \\
-200.000000 & 24.8855 (-0.47\%) & 3.8560 (0.05\%) & 4.9885 (-0.24\%) & 1.2784 (-0.07\%) \\
-225.000000 & 25.3996 (2.07\%) & 3.8969 (1.06\%) & 5.0398 (1.03\%) & 1.2931 (1.15\%) \\
-250.000000 & 25.6245 (0.89\%) & 3.9560 (1.52\%) & 5.0621 (0.44\%) & 1.3115 (1.42\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for CHRONOS\_BASE on MSFT with Horizon 1 day (Linear Training)}
-\label{tab:chronos_base_MSFT_h1_metrics_linear}
-\end{table}
+\input{tables/MSFT/1d/chronos_base/train-less-year-linear/chronos_base_MSFT_h1_metrics.tex}
 
 \textbf{Key Observations:}
 \begin{itemize}
@@ -187,30 +141,7 @@ Training Period (Days) &  &  &  &  \\
 \caption{FM predictions across varying horizons for linear training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 25.9671 & 3.8702 & 5.0958 & 1.2861 \\
-50.000000 & 25.8472 (-0.46\%) & 3.8795 (0.24\%) & 5.0840 (-0.23\%) & 1.2889 (0.22\%) \\
-75.000000 & 25.3947 (-1.75\%) & 3.8437 (-0.92\%) & 5.0393 (-0.88\%) & 1.2765 (-0.96\%) \\
-100.000000 & 26.0790 (2.69\%) & 3.9019 (1.52\%) & 5.1068 (1.34\%) & 1.2895 (1.02\%) \\
-125.000000 & 25.8966 (-0.70\%) & 3.8626 (-1.01\%) & 5.0889 (-0.35\%) & 1.2832 (-0.49\%) \\
-150.000000 & 25.4556 (-1.70\%) & 3.8660 (0.09\%) & 5.0454 (-0.86\%) & 1.2863 (0.24\%) \\
-175.000000 & 25.0035 (-1.78\%) & 3.8539 (-0.31\%) & 5.0003 (-0.89\%) & 1.2792 (-0.55\%) \\
-200.000000 & 24.8855 (-0.47\%) & 3.8560 (0.05\%) & 4.9885 (-0.24\%) & 1.2784 (-0.07\%) \\
-225.000000 & 25.3996 (2.07\%) & 3.8969 (1.06\%) & 5.0398 (1.03\%) & 1.2931 (1.15\%) \\
-250.000000 & 25.6245 (0.89\%) & 3.9560 (1.52\%) & 5.0621 (0.44\%) & 1.3115 (1.42\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for FM on MSFT with Horizon 1 day (Linear Training)}
-\label{tab:fm_MSFT_h1_metrics_linear}
-\end{table}
+\input{tables/MSFT/1d/fm/train-less-year-linear/fm_MSFT_h1_metrics.tex}
 
 \subsubsection{Naive Method}
 \begin{figure}[H]
@@ -219,30 +150,7 @@ Training Period (Days) &  &  &  &  \\
 \caption{Naive predictions across varying horizons for linear training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 23.0567 & 3.6721 & 4.8017 & 1.2184 \\
-50.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-75.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-100.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-125.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-150.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-175.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-200.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-225.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-250.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for NAIVE on MSFT with Horizon 1 day (Linear Training)}
-\label{tab:naive_MSFT_h1_metrics_linear}
-\end{table}
+\input{tables/MSFT/1d/naive/train-less-year-linear/naive_MSFT_h1_metrics.tex}
 
 \subsubsection{Sundial Method}
 \begin{figure}[H]
@@ -251,30 +159,7 @@ Training Period (Days) &  &  &  &  \\
 \caption{Sundial predictions across varying horizons for linear training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 25.9671 & 3.8702 & 5.0958 & 1.2861 \\
-50.000000 & 25.8472 (-0.46\%) & 3.8795 (0.24\%) & 5.0840 (-0.23\%) & 1.2889 (0.22\%) \\
-75.000000 & 25.3947 (-1.75\%) & 3.8437 (-0.92\%) & 5.0393 (-0.88\%) & 1.2765 (-0.96\%) \\
-100.000000 & 26.0790 (2.69\%) & 3.9019 (1.52\%) & 5.1068 (1.34\%) & 1.2895 (1.02\%) \\
-125.000000 & 25.8966 (-0.70\%) & 3.8626 (-1.01\%) & 5.0889 (-0.35\%) & 1.2832 (-0.49\%) \\
-150.000000 & 25.4556 (-1.70\%) & 3.8660 (0.09\%) & 5.0454 (-0.86\%) & 1.2863 (0.24\%) \\
-175.000000 & 25.0035 (-1.78\%) & 3.8539 (-0.31\%) & 5.0003 (-0.89\%) & 1.2792 (-0.55\%) \\
-200.000000 & 24.8855 (-0.47\%) & 3.8560 (0.05\%) & 4.9885 (-0.24\%) & 1.2784 (-0.07\%) \\
-225.000000 & 25.3996 (2.07\%) & 3.8969 (1.06\%) & 5.0398 (1.03\%) & 1.2931 (1.15\%) \\
-250.000000 & 25.6245 (0.89\%) & 3.9560 (1.52\%) & 5.0621 (0.44\%) & 1.3115 (1.42\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for SUNDIAL on MSFT with Horizon 1 day (Linear Training)}
-\label{tab:sundial_MSFT_h1_metrics_linear}
-\end{table}
+\input{tables/MSFT/1d/sundial/train-less-year-linear/sundial_MSFT_h1_metrics.tex}
 
 \subsection{Train-Less-Year-Log Experiment}
 
@@ -282,161 +167,46 @@ Training Period (Days) &  &  &  &  \\
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-log/arima_varying_horizon_predictions.png}
-\caption{ARIMA predictions across varying horizons for logarithmic training configuration}
+\caption{ARIMA predictions for logarithmic training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 464.9190 & 19.2025 & 21.5620 & 5.9709 \\
-32.000000 & 23.0567 (-95.04\%) & 3.6721 (-80.88\%) & 4.8017 (-77.73\%) & 1.2184 (-79.59\%) \\
-41.000000 & 389.9709 (1591.35\%) & 17.5858 (378.90\%) & 19.7477 (311.26\%) & 5.4695 (348.92\%) \\
-53.000000 & 211.9786 (-45.64\%) & 12.8586 (-26.88\%) & 14.5595 (-26.27\%) & 4.0142 (-26.61\%) \\
-69.000000 & 23.0567 (-89.12\%) & 3.6721 (-71.44\%) & 4.8017 (-67.02\%) & 1.2184 (-69.65\%) \\
-89.000000 & 23.0567 (-0.00\%) & 3.6721 (0.00\%) & 4.8017 (-0.00\%) & 1.2184 (0.00\%) \\
-116.000000 & 60.2039 (161.11\%) & 6.4905 (76.75\%) & 7.7591 (61.59\%) & 2.0770 (70.47\%) \\
-149.000000 & 23.0567 (-61.70\%) & 3.6721 (-43.42\%) & 4.8017 (-38.11\%) & 1.2184 (-41.34\%) \\
-193.000000 & 23.0567 (0.00\%) & 3.6721 (-0.00\%) & 4.8017 (0.00\%) & 1.2184 (-0.00\%) \\
-249.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for ARIMA on MSFT with Horizon 1 day (Log Training)}
-\label{tab:arima_MSFT_h1_metrics_log}
-\end{table}
+\input{tables/MSFT/1d/arima/train-less-year-log/arima_MSFT_h1_metrics.tex}
 
 \subsubsection{Chronos Base Method}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-log/chronos_base_varying_horizon_predictions.png}
-\caption{Chronos Base predictions across varying horizons for logarithmic training configuration}
+\caption{Chronos Base predictions for logarithmic training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 25.9671 & 3.8702 & 5.0958 & 1.2861 \\
-32.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-41.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-53.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-69.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-89.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-116.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-149.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-193.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-249.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for CHRONOS\_BASE on MSFT with Horizon 1 day (Log Training)}
-\label{tab:chronos_base_MSFT_h1_metrics_log}
-\end{table}
+\input{tables/MSFT/1d/chronos_base/train-less-year-log/chronos_base_MSFT_h1_metrics.tex}
 
 \subsubsection{FM Method}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-log/fm_varying_horizon_predictions.png}
-\caption{FM predictions across varying horizons for logarithmic training configuration}
+\caption{FM predictions for logarithmic training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 25.9671 & 3.8702 & 5.0958 & 1.2861 \\
-32.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-41.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-53.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-69.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-89.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-116.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-149.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-193.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-249.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for FM on MSFT with Horizon 1 day (Log Training)}
-\label{tab:fm_MSFT_h1_metrics_log}
-\end{table}
+\input{tables/MSFT/1d/fm/train-less-year-log/fm_MSFT_h1_metrics.tex}
 
 \subsubsection{Naive Method}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-log/naive_varying_horizon_predictions.png}
-\caption{Naive predictions across varying horizons for logarithmic training configuration}
+\caption{Naive predictions for logarithmic training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 23.0567 & 3.6721 & 4.8017 & 1.2184 \\
-32.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-41.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-53.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-69.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-89.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-116.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-149.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-193.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-249.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for NAIVE on MSFT with Horizon 1 day (Log Training)}
-\label{tab:naive_MSFT_h1_metrics_log}
-\end{table}
+\input{tables/MSFT/1d/naive/train-less-year-log/naive_MSFT_h1_metrics.tex}
 
 \subsubsection{Sundial Method}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-less-year-log/sundial_varying_horizon_predictions.png}
-\caption{Sundial predictions across varying horizons for logarithmic training configuration}
+\caption{Sundial predictions for logarithmic training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 25.9671 & 3.8702 & 5.0958 & 1.2861 \\
-32.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-41.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-53.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-69.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-89.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-116.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-149.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-193.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-249.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for SUNDIAL on MSFT with Horizon 1 day (Log Training)}
-\label{tab:sundial_MSFT_h1_metrics_log}
-\end{table}
+\input{tables/MSFT/1d/sundial/train-less-year-log/sundial_MSFT_h1_metrics.tex}
 
 \subsection{Train-Restricted-Years Experiment}
 
@@ -444,166 +214,51 @@ Training Period (Days) &  &  &  &  \\
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-restricted-years/arima_varying_horizon_predictions.png}
-\caption{ARIMA predictions across varying horizons for restricted years configuration}
+\caption{ARIMA predictions for restricted years configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-1.000000 & 23.0567 & 3.6721 & 4.8017 & 1.2184 \\
-2.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-3.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-4.000000 & 22.8310 (-0.98\%) & 3.6551 (-0.46\%) & 4.7782 (-0.49\%) & 1.2131 (-0.43\%) \\
-5.000000 & 22.6352 (-0.86\%) & 3.6417 (-0.37\%) & 4.7576 (-0.43\%) & 1.2090 (-0.34\%) \\
-6.000000 & 22.6437 (0.04\%) & 3.6421 (0.01\%) & 4.7585 (0.02\%) & 1.2091 (0.01\%) \\
-7.000000 & 22.6624 (0.08\%) & 3.6433 (0.03\%) & 4.7605 (0.04\%) & 1.2095 (0.03\%) \\
-8.000000 & 22.6720 (0.04\%) & 3.6441 (0.02\%) & 4.7615 (0.02\%) & 1.2097 (0.02\%) \\
-9.000000 & 22.6826 (0.05\%) & 3.6448 (0.02\%) & 4.7626 (0.02\%) & 1.2099 (0.02\%) \\
-10.000000 & 22.6916 (0.04\%) & 3.6454 (0.02\%) & 4.7636 (0.02\%) & 1.2101 (0.01\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for ARIMA on MSFT with Horizon 1 day (Restricted Years)}
-\label{tab:arima_MSFT_h1_metrics_restricted}
-\end{table}
+\input{tables/MSFT/1d/arima/train-restricted-years/arima_MSFT_h1_metrics.tex}
 
 \subsubsection{Chronos Base Method}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-restricted-years/chronos_base_varying_horizon_predictions.png}
-\caption{Chronos Base predictions across varying horizons for restricted years configuration}
+\caption{Chronos Base predictions for restricted years configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-1.000000 & 25.9671 & 3.8702 & 5.0958 & 1.2861 \\
-2.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-3.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-4.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-5.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-6.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-7.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-8.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-9.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-10.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for CHRONOS\_BASE on MSFT with Horizon 1 day (Restricted Years)}
-\label{tab:chronos_base_MSFT_h1_metrics_restricted}
-\end{table}
+\input{tables/MSFT/1d/chronos_base/train-restricted-years/chronos_base_MSFT_h1_metrics.tex}
 
 \subsubsection{FM Method}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-restricted-years/fm_varying_horizon_predictions.png}
-\caption{FM predictions across varying horizons for restricted years configuration}
+\caption{FM predictions for restricted years configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-1.000000 & 25.9671 & 3.8702 & 5.0958 & 1.2861 \\
-2.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-3.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-4.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-5.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-6.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-7.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-8.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-9.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-10.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for FM on MSFT with Horizon 1 day (Restricted Years)}
-\label{tab:fm_MSFT_h1_metrics_restricted}
-\end{table}
+\input{tables/MSFT/1d/fm/train-restricted-years/fm_MSFT_h1_metrics.tex}
 
 \subsubsection{Naive Method}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-restricted-years/naive_varying_horizon_predictions.png}
-\caption{Naive predictions across varying horizons for restricted years configuration}
+\caption{Naive predictions for restricted years configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-1.000000 & 23.0567 & 3.6721 & 4.8017 & 1.2184 \\
-2.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-3.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-4.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-5.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-6.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-7.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-8.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-9.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-10.000000 & 23.0567 (0.00\%) & 3.6721 (0.00\%) & 4.8017 (0.00\%) & 1.2184 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for NAIVE on MSFT with Horizon 1 day (Restricted Years)}
-\label{tab:naive_MSFT_h1_metrics_restricted}
-\end{table}
+\input{tables/MSFT/1d/naive/train-restricted-years/naive_MSFT_h1_metrics.tex}
 
 \subsubsection{Sundial Method}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/MSFT/1d/train-restricted-years/sundial_varying_horizon_predictions.png}
-\caption{Sundial predictions across varying horizons for restricted years configuration}
+\caption{Sundial predictions for restricted years configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-1.000000 & 25.9671 & 3.8702 & 5.0958 & 1.2861 \\
-2.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-3.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-4.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-5.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-6.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-7.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-8.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-9.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-10.000000 & 25.9671 (0.00\%) & 3.8702 (0.00\%) & 5.0958 (0.00\%) & 1.2861 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for SUNDIAL on MSFT with Horizon 1 day (Restricted Years)}
-\label{tab:sundial_MSFT_h1_metrics_restricted}
-\end{table}
+\input{tables/MSFT/1d/sundial/train-restricted-years/sundial_MSFT_h1_metrics.tex}
 
 \section{Hourly Timeframe Analysis (1h)}
 
 \subsection{Overview}
-The hourly analysis focuses on short-term forecasting capabilities with higher frequency data. Figure \ref{fig:1h_metrics} illustrates performance patterns for intraday predictions.
+The hourly analysis focuses on short-term forecasting capabilities. Figure \ref{fig:1h_metrics} presents the performance metrics across different training periods.
 
 \begin{figure}[H]
 \centering
@@ -624,7 +279,6 @@ The hourly analysis focuses on short-term forecasting capabilities with higher f
 \end{figure}
 
 \subsection{ACF and PACF Analysis}
-The intraday autocorrelation structure differs significantly from daily patterns (Figure \ref{fig:1h_acf}).
 
 \begin{figure}[H]
 \centering
@@ -645,552 +299,206 @@ The intraday autocorrelation structure differs significantly from daily patterns
 \subsubsection{ARIMA Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/arima_predictions.png}
-\caption{ARIMA predictions for hourly data with linear training configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/arima_varying_horizon_predictions.png}
+\caption{ARIMA hourly predictions for linear training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-50.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-75.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-100.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-125.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-150.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-175.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-200.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (-0.00\%) \\
-225.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-250.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for ARIMA on MSFT with Horizon 1 hour (Linear Training)}
-\label{tab:arima_MSFT_h1_metrics_1h_linear}
-\end{table}
+\input{tables/MSFT/1h/arima/train-less-year-linear/arima_MSFT_h1_metrics.tex}
 
 \subsubsection{Chronos Base Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/chronos_base_predictions.png}
-\caption{Chronos Base predictions for hourly data with linear training configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/chronos_base_varying_horizon_predictions.png}
+\caption{Chronos Base hourly predictions for linear training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-50.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-75.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-100.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-125.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-150.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-175.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-200.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (-0.00\%) \\
-225.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-250.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for CHRONOS\_BASE on MSFT with Horizon 1 hour (Linear Training)}
-\label{tab:chronos_base_MSFT_h1_metrics_1h_linear}
-\end{table}
+\input{tables/MSFT/1h/chronos_base/train-less-year-linear/chronos_base_MSFT_h1_metrics.tex}
 
 \subsubsection{FM Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/fm_predictions.png}
-\caption{FM predictions for hourly data with linear training configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/fm_varying_horizon_predictions.png}
+\caption{FM hourly predictions for linear training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-50.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-75.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-100.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-125.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-150.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-175.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-200.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (-0.00\%) \\
-225.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-250.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for FM on MSFT with Horizon 1 hour (Linear Training)}
-\label{tab:fm_MSFT_h1_metrics_1h_linear}
-\end{table}
+\input{tables/MSFT/1h/fm/train-less-year-linear/fm_MSFT_h1_metrics.tex}
 
 \subsubsection{Naive Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/naive_predictions.png}
-\caption{Naive predictions for hourly data with linear training configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/naive_varying_horizon_predictions.png}
+\caption{Naive hourly predictions for linear training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-50.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-75.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-100.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-125.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-150.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-175.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-200.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (-0.00\%) \\
-225.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-250.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for NAIVE on MSFT with Horizon 1 hour (Linear Training)}
-\label{tab:naive_MSFT_h1_metrics_1h_linear}
-\end{table}
+\input{tables/MSFT/1h/naive/train-less-year-linear/naive_MSFT_h1_metrics.tex}
 
 \subsubsection{Sundial Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/sundial_predictions.png}
-\caption{Sundial predictions for hourly data with linear training configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-linear/sundial_varying_horizon_predictions.png}
+\caption{Sundial hourly predictions for linear training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-50.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-75.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-100.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-125.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-150.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-175.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-200.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (-0.00\%) \\
-225.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-250.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for SUNDIAL on MSFT with Horizon 1 hour (Linear Training)}
-\label{tab:sundial_MSFT_h1_metrics_1h_linear}
-\end{table}
+\input{tables/MSFT/1h/sundial/train-less-year-linear/sundial_MSFT_h1_metrics.tex}
 
 \subsection{Train-Less-Year-Log Experiment}
 
 \subsubsection{ARIMA Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/arima_predictions.png}
-\caption{ARIMA predictions for hourly data with logarithmic training configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/arima_varying_horizon_predictions.png}
+\caption{ARIMA hourly predictions for logarithmic training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-32.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-41.000000 & 3.2787 (0.00\%) & 1.2276 (-0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-53.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-69.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-89.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-116.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-149.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-193.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-249.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for ARIMA on MSFT with Horizon 1 hour (Log Training)}
-\label{tab:arima_MSFT_h1_metrics_1h_log}
-\end{table}
+\input{tables/MSFT/1h/arima/train-less-year-log/arima_MSFT_h1_metrics.tex}
 
 \subsubsection{Chronos Base Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/chronos_base_predictions.png}
-\caption{Chronos Base predictions for hourly data with logarithmic training configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/chronos_base_varying_horizon_predictions.png}
+\caption{Chronos Base hourly predictions for logarithmic training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-32.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-41.000000 & 3.2787 (0.00\%) & 1.2276 (-0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-53.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-69.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-89.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-116.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-149.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-193.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-249.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for CHRONOS\_BASE on MSFT with Horizon 1 hour (Log Training)}
-\label{tab:chronos_base_MSFT_h1_metrics_1h_log}
-\end{table}
+\input{tables/MSFT/1h/chronos_base/train-less-year-log/chronos_base_MSFT_h1_metrics.tex}
 
 \subsubsection{FM Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/fm_predictions.png}
-\caption{FM predictions for hourly data with logarithmic training configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/fm_varying_horizon_predictions.png}
+\caption{FM hourly predictions for logarithmic training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-32.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-41.000000 & 3.2787 (0.00\%) & 1.2276 (-0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-53.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-69.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-89.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-116.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-149.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-193.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-249.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for FM on MSFT with Horizon 1 hour (Log Training)}
-\label{tab:fm_MSFT_h1_metrics_1h_log}
-\end{table}
+\input{tables/MSFT/1h/fm/train-less-year-log/fm_MSFT_h1_metrics.tex}
 
 \subsubsection{Naive Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/naive_predictions.png}
-\caption{Naive predictions for hourly data with logarithmic training configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/naive_varying_horizon_predictions.png}
+\caption{Naive hourly predictions for logarithmic training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-32.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-41.000000 & 3.2787 (0.00\%) & 1.2276 (-0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-53.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-69.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-89.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-116.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-149.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-193.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-249.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for NAIVE on MSFT with Horizon 1 hour (Log Training)}
-\label{tab:naive_MSFT_h1_metrics_1h_log}
-\end{table}
+\input{tables/MSFT/1h/naive/train-less-year-log/naive_MSFT_h1_metrics.tex}
 
 \subsubsection{Sundial Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/sundial_predictions.png}
-\caption{Sundial predictions for hourly data with logarithmic training configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-less-year-log/sundial_varying_horizon_predictions.png}
+\caption{Sundial hourly predictions for logarithmic training configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-25.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-32.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-41.000000 & 3.2787 (0.00\%) & 1.2276 (-0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-53.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-69.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (0.00\%) \\
-89.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-116.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-149.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-193.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-249.000000 & 3.2787 (0.00\%) & 1.2276 (0.00\%) & 1.8107 (0.00\%) & 0.3994 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for SUNDIAL on MSFT with Horizon 1 hour (Log Training)}
-\label{tab:sundial_MSFT_h1_metrics_1h_log}
-\end{table}
+\input{tables/MSFT/1h/sundial/train-less-year-log/sundial_MSFT_h1_metrics.tex}
 
 \subsection{Train-Restricted-Years Experiment}
 
 \subsubsection{ARIMA Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/arima_predictions.png}
-\caption{ARIMA predictions for hourly data with restricted years configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/arima_varying_horizon_predictions.png}
+\caption{ARIMA hourly predictions for restricted years configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-1.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-2.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-3.000000 & 3.2866 (0.24\%) & 1.2278 (0.01\%) & 1.8129 (0.12\%) & 0.3995 (0.04\%) \\
-4.000000 & 3.2865 (-0.00\%) & 1.2277 (-0.00\%) & 1.8129 (-0.00\%) & 0.3995 (-0.00\%) \\
-5.000000 & 3.2869 (0.01\%) & 1.2278 (0.00\%) & 1.8130 (0.01\%) & 0.3995 (0.00\%) \\
-6.000000 & 3.2868 (-0.00\%) & 1.2277 (-0.00\%) & 1.8129 (-0.00\%) & 0.3995 (-0.00\%) \\
-7.000000 & 3.2832 (-0.11\%) & 1.2268 (-0.08\%) & 1.8120 (-0.05\%) & 0.3992 (-0.07\%) \\
-8.000000 & 3.2833 (0.00\%) & 1.2268 (0.00\%) & 1.8120 (0.00\%) & 0.3992 (0.00\%) \\
-9.000000 & 3.2834 (0.00\%) & 1.2268 (0.00\%) & 1.8120 (0.00\%) & 0.3992 (0.00\%) \\
-10.000000 & 3.2836 (0.00\%) & 1.2268 (0.00\%) & 1.8121 (0.00\%) & 0.3992 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for ARIMA on MSFT with Horizon 1 hour (Restricted Years)}
-\label{tab:arima_MSFT_h1_metrics_1h_restricted}
-\end{table}
+\input{tables/MSFT/1h/arima/train-restricted-years/arima_MSFT_h1_metrics.tex}
 
 \subsubsection{Chronos Base Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/chronos_base_predictions.png}
-\caption{Chronos Base predictions for hourly data with restricted years configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/chronos_base_varying_horizon_predictions.png}
+\caption{Chronos Base hourly predictions for restricted years configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-1.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-2.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-3.000000 & 3.2866 (0.24\%) & 1.2278 (0.01\%) & 1.8129 (0.12\%) & 0.3995 (0.04\%) \\
-4.000000 & 3.2865 (-0.00\%) & 1.2277 (-0.00\%) & 1.8129 (-0.00\%) & 0.3995 (-0.00\%) \\
-5.000000 & 3.2869 (0.01\%) & 1.2278 (0.00\%) & 1.8130 (0.01\%) & 0.3995 (0.00\%) \\
-6.000000 & 3.2868 (-0.00\%) & 1.2277 (-0.00\%) & 1.8129 (-0.00\%) & 0.3995 (-0.00\%) \\
-7.000000 & 3.2832 (-0.11\%) & 1.2268 (-0.08\%) & 1.8120 (-0.05\%) & 0.3992 (-0.07\%) \\
-8.000000 & 3.2833 (0.00\%) & 1.2268 (0.00\%) & 1.8120 (0.00\%) & 0.3992 (0.00\%) \\
-9.000000 & 3.2834 (0.00\%) & 1.2268 (0.00\%) & 1.8120 (0.00\%) & 0.3992 (0.00\%) \\
-10.000000 & 3.2836 (0.00\%) & 1.2268 (0.00\%) & 1.8121 (0.00\%) & 0.3992 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for CHRONOS\_BASE on MSFT with Horizon 1 hour (Restricted Years)}
-\label{tab:chronos_base_MSFT_h1_metrics_1h_restricted}
-\end{table}
+\input{tables/MSFT/1h/chronos_base/train-restricted-years/chronos_base_MSFT_h1_metrics.tex}
 
 \subsubsection{FM Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/fm_predictions.png}
-\caption{FM predictions for hourly data with restricted years configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/fm_varying_horizon_predictions.png}
+\caption{FM hourly predictions for restricted years configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-1.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-2.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-3.000000 & 3.2866 (0.24\%) & 1.2278 (0.01\%) & 1.8129 (0.12\%) & 0.3995 (0.04\%) \\
-4.000000 & 3.2865 (-0.00\%) & 1.2277 (-0.00\%) & 1.8129 (-0.00\%) & 0.3995 (-0.00\%) \\
-5.000000 & 3.2869 (0.01\%) & 1.2278 (0.00\%) & 1.8130 (0.01\%) & 0.3995 (0.00\%) \\
-6.000000 & 3.2868 (-0.00\%) & 1.2277 (-0.00\%) & 1.8129 (-0.00\%) & 0.3995 (-0.00\%) \\
-7.000000 & 3.2832 (-0.11\%) & 1.2268 (-0.08\%) & 1.8120 (-0.05\%) & 0.3992 (-0.07\%) \\
-8.000000 & 3.2833 (0.00\%) & 1.2268 (0.00\%) & 1.8120 (0.00\%) & 0.3992 (0.00\%) \\
-9.000000 & 3.2834 (0.00\%) & 1.2268 (0.00\%) & 1.8120 (0.00\%) & 0.3992 (0.00\%) \\
-10.000000 & 3.2836 (0.00\%) & 1.2268 (0.00\%) & 1.8121 (0.00\%) & 0.3992 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for FM on MSFT with Horizon 1 hour (Restricted Years)}
-\label{tab:fm_MSFT_h1_metrics_1h_restricted}
-\end{table}
+\input{tables/MSFT/1h/fm/train-restricted-years/fm_MSFT_h1_metrics.tex}
 
 \subsubsection{Naive Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/naive_predictions.png}
-\caption{Naive predictions for hourly data with restricted years configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/naive_varying_horizon_predictions.png}
+\caption{Naive hourly predictions for restricted years configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-1.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-2.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-3.000000 & 3.2866 (0.24\%) & 1.2278 (0.01\%) & 1.8129 (0.12\%) & 0.3995 (0.04\%) \\
-4.000000 & 3.2865 (-0.00\%) & 1.2277 (-0.00\%) & 1.8129 (-0.00\%) & 0.3995 (-0.00\%) \\
-5.000000 & 3.2869 (0.01\%) & 1.2278 (0.00\%) & 1.8130 (0.01\%) & 0.3995 (0.00\%) \\
-6.000000 & 3.2868 (-0.00\%) & 1.2277 (-0.00\%) & 1.8129 (-0.00\%) & 0.3995 (-0.00\%) \\
-7.000000 & 3.2832 (-0.11\%) & 1.2268 (-0.08\%) & 1.8120 (-0.05\%) & 0.3992 (-0.07\%) \\
-8.000000 & 3.2833 (0.00\%) & 1.2268 (0.00\%) & 1.8120 (0.00\%) & 0.3992 (0.00\%) \\
-9.000000 & 3.2834 (0.00\%) & 1.2268 (0.00\%) & 1.8120 (0.00\%) & 0.3992 (0.00\%) \\
-10.000000 & 3.2836 (0.00\%) & 1.2268 (0.00\%) & 1.8121 (0.00\%) & 0.3992 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for NAIVE on MSFT with Horizon 1 hour (Restricted Years)}
-\label{tab:naive_MSFT_h1_metrics_1h_restricted}
-\end{table}
+\input{tables/MSFT/1h/naive/train-restricted-years/naive_MSFT_h1_metrics.tex}
 
 \subsubsection{Sundial Method}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/sundial_predictions.png}
-\caption{Sundial predictions for hourly data with restricted years configuration}
+\includegraphics[width=0.8\textwidth]{figures/MSFT/1h/train-restricted-years/sundial_varying_horizon_predictions.png}
+\caption{Sundial hourly predictions for restricted years configuration}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lllll}
-\toprule
- & MSE & MAE & RMSE & MAPE (\%) \\
-Training Period (Days) &  &  &  &  \\
-\midrule
-1.000000 & 3.2787 & 1.2276 & 1.8107 & 0.3994 \\
-2.000000 & 3.2787 (-0.00\%) & 1.2276 (-0.00\%) & 1.8107 (-0.00\%) & 0.3994 (-0.00\%) \\
-3.000000 & 3.2866 (0.24\%) & 1.2278 (0.01\%) & 1.8129 (0.12\%) & 0.3995 (0.04\%) \\
-4.000000 & 3.2865 (-0.00\%) & 1.2277 (-0.00\%) & 1.8129 (-0.00\%) & 0.3995 (-0.00\%) \\
-5.000000 & 3.2869 (0.01\%) & 1.2278 (0.00\%) & 1.8130 (0.01\%) & 0.3995 (0.00\%) \\
-6.000000 & 3.2868 (-0.00\%) & 1.2277 (-0.00\%) & 1.8129 (-0.00\%) & 0.3995 (-0.00\%) \\
-7.000000 & 3.2832 (-0.11\%) & 1.2268 (-0.08\%) & 1.8120 (-0.05\%) & 0.3992 (-0.07\%) \\
-8.000000 & 3.2833 (0.00\%) & 1.2268 (0.00\%) & 1.8120 (0.00\%) & 0.3992 (0.00\%) \\
-9.000000 & 3.2834 (0.00\%) & 1.2268 (0.00\%) & 1.8120 (0.00\%) & 0.3992 (0.00\%) \\
-10.000000 & 3.2836 (0.00\%) & 1.2268 (0.00\%) & 1.8121 (0.00\%) & 0.3992 (0.00\%) \\
-\bottomrule
-\end{tabular}
-}
-\caption{Evaluation Metrics for SUNDIAL on MSFT with Horizon 1 hour (Restricted Years)}
-\label{tab:sundial_MSFT_h1_metrics_1h_restricted}
-\end{table}
+\input{tables/MSFT/1h/sundial/train-restricted-years/sundial_MSFT_h1_metrics.tex}
 
 \section{Comparative Analysis}
 
 \subsection{Method Performance Comparison}
 
 \subsubsection{Daily Forecasting}
-Based on the comprehensive analysis across all experiments:
-
+Across all daily forecasting experiments, several patterns emerge:
 \begin{itemize}
-\item \textbf{Best Overall Performance}: Chronos Base demonstrates consistent performance with MAPE typically around 1.28-1.31\% across all training configurations
-\item \textbf{Most Variable}: ARIMA shows high variability, with performance heavily dependent on training period (MAPE ranging from 1.22\% to 5.97\%)
-\item \textbf{Baseline Performance}: Naive method provides a reasonable baseline with stable but suboptimal performance
-\item \textbf{Training Sensitivity}: Classical methods (ARIMA) show higher sensitivity to training duration compared to foundation models
+\item ARIMA and Naive methods achieve the lowest MAPE values (around 1.22\%)
+\item Foundation models (Chronos, FM, Sundial) show consistent but slightly higher error rates
+\item Training period length has varying impact across methods
 \end{itemize}
 
 \subsubsection{Hourly Forecasting}
-Hourly predictions present different challenges:
-
+The hourly timeframe presents different characteristics:
 \begin{itemize}
-\item \textbf{Increased Volatility}: All methods show higher error rates for hourly predictions compared to daily
-\item \textbf{Foundation Model Advantage}: Chronos Base and FM maintain relative stability in the higher frequency domain
-\item \textbf{ARIMA Challenges}: Traditional statistical methods struggle with intraday noise and microstructure effects
+\item All methods face increased difficulty with shorter-term predictions
+\item Performance variance increases compared to daily forecasts
+\item Model rankings may differ from daily results
 \end{itemize}
 
 \subsection{Training Configuration Impact}
 
 \subsubsection{Linear vs Logarithmic Scaling}
+Comparing the two sub-year training approaches:
 \begin{itemize}
-\item \textbf{Linear Configuration}: Better for shorter training periods, shows clear improvement patterns
-\item \textbf{Logarithmic Configuration}: More stable performance across varying training sizes
-\item \textbf{Optimal Training}: 75-100 days appears optimal for most methods in daily timeframe
+\item Linear scaling provides more uniform coverage of training durations
+\item Logarithmic scaling focuses on early training period differences
+\item Both reveal similar overall performance patterns
 \end{itemize}
 
 \subsubsection{Restricted Years}
+The multi-year training experiments show:
 \begin{itemize}
-\item \textbf{Data Quality Impact}: Performance varies significantly based on the specific years included
-\item \textbf{Market Regime Sensitivity}: Methods show different sensitivities to market conditions in different periods
+\item Extended training data benefits vary by method
+\item Some models plateau in performance after certain durations
+\item Traditional methods may be more data-efficient
 \end{itemize}
 
 \section{Conclusions and Recommendations}
 
 \subsection{Key Findings}
-
-\begin{enumerate}
-\item \textbf{Foundation Models Superiority}: Chronos Base and FM consistently outperform traditional methods across most configurations
-\item \textbf{Training Period Optimization}: Optimal training periods exist for each method, typically 75-100 days for daily data
-\item \textbf{Frequency Dependency}: Method performance varies significantly between daily and hourly timeframes
-\item \textbf{Configuration Sensitivity}: Training configuration impacts classical methods more than foundation models
-\end{enumerate}
+\begin{itemize}
+\item Traditional methods (ARIMA, Naive) remain competitive for stock price forecasting
+\item Foundation models offer consistency but not necessarily superior accuracy
+\item Training data quantity shows diminishing returns beyond certain thresholds
+\item Hourly forecasting is substantially more challenging than daily
+\item No single method dominates across all configurations and horizons
+\end{itemize}
 
 \subsection{Practical Recommendations}
-
 \begin{itemize}
-\item \textbf{For Daily Forecasting}: Use Chronos Base with 75-100 days of training data
-\item \textbf{For Hourly Forecasting}: Foundation models (Chronos Base or FM) are strongly recommended
-\item \textbf{Resource Constraints}: Naive method provides acceptable baseline performance with minimal computational requirements
-\item \textbf{Model Selection}: Consider Chronos Base for consistent performance across different market conditions
+\item For production systems, consider ensemble approaches combining multiple methods
+\item Match training duration to available computational resources
+\item Naive baselines should always be included for comparison
+\item Daily forecasting is more reliable than hourly for most applications
 \end{itemize}
 
 \subsection{Future Research Directions}
-
 \begin{itemize}
-\item \textbf{Hybrid Approaches}: Combining foundation models with traditional statistical methods
-\item \textbf{Multi-horizon Optimization}: Joint optimization across different prediction horizons
-\item \textbf{Market Regime Adaptation}: Dynamic model selection based on market conditions
-\item \textbf{Real-time Implementation}: Deployment considerations for production environments
+\item Investigate hybrid models combining traditional and foundation model approaches
+\item Explore additional feature engineering and exogenous variables
+\item Test on broader range of stocks and market conditions
+\item Evaluate ensemble and model averaging strategies
+\item Study computational efficiency and deployment considerations
 \end{itemize}
 
 \end{document}
