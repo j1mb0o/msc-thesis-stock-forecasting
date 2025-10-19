@@ -14,7 +14,7 @@ To activate the environment, run the following commands in your terminal:
 
 ```bash
 # Create the virtual environment
-python -m venv .venv
+uv venv -p python3.11 {ENV NAME}
 
 # Activate the virtual environment
 source .venv/bin/activate
@@ -25,7 +25,7 @@ This project uses `pyproject.toml` to manage dependencies with different groups 
 
 **Install base dependencies:**
 ```bash
-pip install -e .
+uv pip install {target config}
 ```
 
 **Install dependencies for a specific model:**
