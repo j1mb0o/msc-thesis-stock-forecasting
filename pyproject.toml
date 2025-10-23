@@ -16,6 +16,7 @@ dependencies = [
     "tqdm>=4.66.3,<5.0.0",
     "yfinance>=0.2.61,<0.3.0",
     "numpy==1.26.4",
+    "alpaca-py>=0.29.2,<1.0.0",
 ]
 
 [project.optional-dependencies]
@@ -38,6 +39,7 @@ times = [
 dev = [
     "jupyter>=1.0",
     "black>=24.0",
+    "python-dotenv>=1.0.0",
 ]
 
 # Add this new section below to guide the builder
