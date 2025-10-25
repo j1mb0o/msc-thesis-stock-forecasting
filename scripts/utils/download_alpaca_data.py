@@ -101,7 +101,7 @@ def download_alpaca_data(
     # Set up file path
     ticker_dir = base_dir / ticker
     ticker_dir.mkdir(parents=True, exist_ok=True)
-    file_path = ticker_dir / f"{ticker}_{timeframe}.csv"
+    file_path = ticker_dir / f"{ticker}_{timeframe}_v2.csv"
 
     # Check if data already exists
     if file_path.exists():
@@ -192,11 +192,13 @@ if __name__ == "__main__":
 
     # For free tier, request data ending at least 15 minutes ago
     # Or specify a date range that ends before today
-    end_date = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+    start_date = "2014-01-01"
+    end_date = "2024-01-01"
 
     df = download_alpaca_data(
         ticker="MSFT",
         timeframe="15min",
+        start_date="2023-01-01",
         end_date=end_date  # End yesterday to avoid real-time data restrictions
     )
 
