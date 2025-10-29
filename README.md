@@ -74,3 +74,19 @@ To generate plots and tables from the experiment results, you can use the `gen_p
 python scripts/gen_plots.py
 python scripts/gen_tables.py
 ```
+
+## Compiling the Presentation
+To compile the LaTeX presentation without stopping at warnings, use the following command:
+
+```bash
+pdflatex -interaction=nonstopmode presentation.tex && \
+pdflatex -interaction=nonstopmode presentation.tex
+```
+
+The command runs pdflatex twice to ensure all references and cross-references are properly resolved. The `-interaction=nonstopmode` flag prevents compilation from stopping at warnings.
+
+**Alternative compilation modes:**
+- `nonstopmode` - Scrolls past warnings and errors (recommended)
+- `batchmode` - Silent mode, suppresses all output except errors
+- `scrollmode` - Stops only on missing files
+- `errorstopmode` - Stops on every error (default)
