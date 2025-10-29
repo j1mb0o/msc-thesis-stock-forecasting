@@ -1,0 +1,25 @@
+\begin{table}[htbp]
+\centering
+\caption{Model Comparison: Mean Squared Error (MSE) for MSFT (1h data, Train Less Year Log, Horizon=1)}
+\label{tab:comparison_MSFT_1h_train-less-year-log_h1_MSE}
+\small
+\begin{tabular}{lrrrrrl}
+\toprule
+Training Days & ARIMA & Chronos & Sundial & TimesFM & Naive & Best Model \\
+\midrule
+25 & \textbf{3.2787} & 4.5655 & 3.5971 & 3.8698 & 3.2787 & ARIMA \\
+32 & \textbf{3.2787} & 4.6020 & 3.6189 & 3.7805 & 3.2787 & ARIMA \\
+41 & \textbf{3.2787} & 4.5860 & 3.6464 & 3.7968 & 3.2787 & ARIMA \\
+53 & 3.2787 & 4.5748 & 3.5965 & 3.8081 & \textbf{3.2787} & Naive \\
+69 & \textbf{3.2787} & 4.6508 & 3.5819 & 3.8671 & 3.2787 & ARIMA \\
+89 & \textbf{3.2787} & 4.5866 & 3.5607 & 3.9687 & 3.2787 & ARIMA \\
+116 & \textbf{3.2787} & 4.7029 & 3.6098 & 3.8409 & 3.2787 & ARIMA \\
+149 & \textbf{3.2787} & 5.0114 & 3.6035 & 3.6659 & 3.2787 & ARIMA \\
+193 & \textbf{3.2787} & 5.0187 & 3.5735 & 3.7708 & 3.2787 & ARIMA \\
+249 & \textbf{3.2787} & 5.1376 & 3.6212 & 3.7449 & 3.2787 & ARIMA \\
+\midrule
+\textit{Mean} & \textbf{3.2787} & 4.7436 & 3.6010 & 3.8114 & 3.2787 & ARIMA \\
+\textit{\# Best} & 9 & 0 & 0 & 0 & 1 & -- \\
+\bottomrule
+\end{tabular}
+\end{table}

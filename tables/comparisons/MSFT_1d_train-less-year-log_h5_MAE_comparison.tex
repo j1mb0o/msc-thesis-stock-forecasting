@@ -1,0 +1,25 @@
+\begin{table}[htbp]
+\centering
+\caption{Model Comparison: Mean Absolute Error (MAE) for MSFT (1d data, Train Less Year Log, Horizon=5)}
+\label{tab:comparison_MSFT_1d_train-less-year-log_h5_MAE}
+\small
+\begin{tabular}{lrrrrrl}
+\toprule
+Training Days & ARIMA & Chronos & Sundial & TimesFM & Naive & Best Model \\
+\midrule
+25 & 32.1642 & 6.5058 & 7.3684 & \textbf{6.1933} & 6.1980 & TimesFM \\
+32 & \textbf{6.1980} & 6.4658 & 7.3523 & 6.2535 & 6.1980 & ARIMA \\
+41 & 31.6597 & 6.4646 & 7.3681 & 6.2879 & \textbf{6.1980} & Naive \\
+53 & 27.1676 & 6.4387 & 7.4117 & 6.3794 & \textbf{6.1980} & Naive \\
+69 & \textbf{6.1980} & 6.4789 & 7.6574 & 6.3813 & 6.1980 & ARIMA \\
+89 & \textbf{6.1980} & 6.5051 & 7.6802 & 6.3959 & 6.1980 & ARIMA \\
+116 & 17.5242 & 6.5113 & 7.7502 & 6.3785 & \textbf{6.1980} & Naive \\
+149 & \textbf{6.1980} & 6.3784 & 7.1766 & 6.3128 & 6.1980 & ARIMA \\
+193 & 6.1980 & 6.3057 & 7.1742 & 6.5310 & \textbf{6.1980} & Naive \\
+249 & \textbf{6.1980} & 6.3534 & 7.5114 & 6.3156 & 6.1980 & ARIMA \\
+\midrule
+\textit{Mean} & 14.5704 & 6.4408 & 7.4451 & 6.3429 & \textbf{6.1980} & Naive \\
+\textit{\# Best} & 5 & 0 & 0 & 1 & 4 & -- \\
+\bottomrule
+\end{tabular}
+\end{table}

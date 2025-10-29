@@ -1,0 +1,25 @@
+\begin{table}[htbp]
+\centering
+\caption{Model Comparison: Root Mean Squared Error (RMSE) for MSFT (1d data, Train Less Year Log, Horizon=5)}
+\label{tab:comparison_MSFT_1d_train-less-year-log_h5_RMSE}
+\small
+\begin{tabular}{lrrrrrl}
+\toprule
+Training Days & ARIMA & Chronos & Sundial & TimesFM & Naive & Best Model \\
+\midrule
+25 & 36.8493 & 8.4202 & 9.4279 & \textbf{7.9065} & 7.9955 & TimesFM \\
+32 & \textbf{7.9955} & 8.3959 & 9.3765 & 8.0209 & 7.9955 & ARIMA \\
+41 & 36.4550 & 8.3439 & 9.3674 & 8.0560 & \textbf{7.9955} & Naive \\
+53 & 31.7377 & 8.2739 & 9.4558 & 8.1643 & \textbf{7.9955} & Naive \\
+69 & \textbf{7.9955} & 8.3521 & 9.6495 & 8.1375 & 7.9955 & ARIMA \\
+89 & \textbf{7.9955} & 8.4938 & 9.7302 & 8.1273 & 7.9955 & ARIMA \\
+116 & 21.0934 & 8.3822 & 9.7664 & 8.2254 & \textbf{7.9955} & Naive \\
+149 & \textbf{7.9955} & 8.2185 & 8.9598 & 8.0276 & 7.9955 & ARIMA \\
+193 & \textbf{7.9955} & 8.1834 & 8.9817 & 8.3117 & 7.9955 & ARIMA \\
+249 & \textbf{7.9955} & 8.2126 & 9.4886 & 8.1379 & 7.9955 & ARIMA \\
+\midrule
+\textit{Mean} & 17.4108 & 8.3277 & 9.4204 & 8.1115 & \textbf{7.9955} & Naive \\
+\textit{\# Best} & 6 & 0 & 0 & 1 & 3 & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
