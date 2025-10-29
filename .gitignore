@@ -190,3 +190,4 @@ AGENTS.md
 *.synctex.gz
 *.bbl
 *.blg
+*.dvi
