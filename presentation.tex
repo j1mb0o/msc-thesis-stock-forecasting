@@ -124,38 +124,31 @@ TimesFM & Foundation & Google's large-scale time-series foundation model \\ \bot
 \item Short-term: 25-250 days (linear and logarithmic spacing)
 \item Long-term: 1-10 years
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Data Transformations}
+\textbf{Two transformations tested:}
+\begin{itemize}
+\item \textbf{Raw prices:} Original closing prices
+\item \textbf{Percentage change:} Relative change between consecutive observations
+\end{itemize}
 
 \vspace{1em}
 
-\textbf{Data Transformations:}
-\begin{itemize}
-\item Raw prices (original closing prices)
-\item Percentage change (fractional change between current and prior element)
-\end{itemize}
-\end{frame}
+\textbf{Percentage Change Formula:}
+\[
+\text{Relative Change} = \frac{\text{New Value} - \text{Old Value}}{\text{Old Value}}
+\]
 
-\begin{frame}{Why Percentage Change Transformation?}
-\textbf{Motivation:}
+\vspace{1em}
+
+\textbf{Why Percentage Change?}
 \begin{itemize}
 \item \textbf{Stationarity:} Percentage changes are more stationary than raw prices
 \item \textbf{Scale normalization:} Makes different stocks/time periods comparable
 \item \textbf{Financial relevance:} Returns are more meaningful than absolute prices for trading decisions
 \end{itemize}
-
-\vspace{1em}
-
-\textbf{Comparison:}
-\begin{itemize}
-\item \textbf{Raw prices:} Test models on absolute price prediction
-\item \textbf{Percentage change:} Test models on return prediction
-\end{itemize}
-
-\vspace{1em}
-
-% \begin{block}{Research Question}
-% Do foundation models perform better on raw prices or percentage changes compared to traditional methods?
-% \end{block}
-% \end{frame}
+\end{frame}
 
 % ============================================================
 \section{Experimental Design}
@@ -232,19 +225,19 @@ Rolling forecast updating context with actual observations
 
 \vspace{0.5em}
 
-\item \textbf{Data collection and processing complete:}
-\begin{itemize}
-\item Full pipeline from data download to evaluation
-\item Automated experiment tracking and configuration management
-\item \textbf{Total:} 5 models × 3 training types × 2 frequencies × 2 transformations = extensive experimental coverage
-\end{itemize}
+% \item \textbf{Data collection and processing complete:}
+% \begin{itemize}
+% \item Full pipeline from data download to evaluation
+% \item Automated experiment tracking and configuration management
+% \item \textbf{Total:} 5 models × 3 training types × 2 frequencies × 2 transformations = extensive experimental coverage
+% \end{itemize}
 \end{itemize}
 
-\vspace{1em}
+% \vspace{1em}
 
-\begin{block}{Status}
-Results analysis and interpretation in progress
-\end{block}
+% \begin{block}{Status}
+% Results analysis and interpretation in progress
+% \end{block}
 \end{frame}
 
 % ============================================================
@@ -298,7 +291,7 @@ Rigorous experimental design, multiple evaluation metrics, baseline comparisons
 \end{frame}
 
 % ============================================================
-\section{Timeline}
+% \section{Timeline}
 % ============================================================
 
 \begin{frame}{Project Timeline}
@@ -320,13 +313,13 @@ Rigorous experimental design, multiple evaluation metrics, baseline comparisons
 \end{itemize}
 
 \vspace{1em}
-
+% TODO: This in another slide
 \textbf{Next:}
 \begin{itemize}
 \item Complete results analysis
 \item RQ2: Minute-level data experiments
 \item RQ3: High-volatility regime analysis
-\item Thesis writing
+% \item Thesis writing
 \end{itemize}
 \end{frame}
 
@@ -334,10 +327,10 @@ Rigorous experimental design, multiple evaluation metrics, baseline comparisons
 % Conclusion
 % ============================================================
 
-\begin{frame}[standout]
-Thank you!
-\\[1em]
-Questions?
-\end{frame}
+% \begin{frame}[standout]
+% Thank you!
+% \\[1em]
+% Questions?
+% \end{frame}
 
 \end{document}
