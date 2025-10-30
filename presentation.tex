@@ -1,0 +1,343 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and styling
+\usetheme{metropolis}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{xcolor}
+
+% Title page information
+\title{Thesis Update}
+\subtitle{Evaluating Foundation Models for Financial Time-Series Forecasting}
+\author{Dimitrios Kourntidis}
+\institute{Leiden University}
+\date{\today}
+
+% Custom colors
+\definecolor{LUBlue}{RGB}{0,48,87}
+\definecolor{LUGreen}{RGB}{120,190,32}
+
+\begin{document}
+
+% Title slide
+\begin{frame}
+\titlepage
+\end{frame}
+
+% Outline
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+% ============================================================
+\section{Introduction}
+% ============================================================
+
+\begin{frame}{Motivation}
+\begin{itemize}
+\item Financial time-series forecasting is critical for investment decisions
+\item Traditional statistical methods (ARIMA) vs. emerging foundation models
+\item \textbf{Key Question:} Can pretrained foundation models outperform traditional methods in stock price prediction?
+\end{itemize}
+
+\vspace{1em}
+
+\begin{block}{Research Gap}
+Limited comparative analysis of foundation models (Chronos, Sundial, TimesFM) against traditional baselines on financial data
+\end{block}
+\end{frame}
+
+\begin{frame}{Research Questions}
+\textbf{RQ1: Forecast Horizon Length Effects}
+\begin{itemize}
+\item How does forecast horizon length affect the relative performance of foundation models compared to traditional approaches?
+\end{itemize}
+
+\vspace{0.5em}
+
+\textbf{RQ2: Temporal Frequency Effects}
+\begin{itemize}
+\item How does temporal frequency of input data affect the relative performance of foundation models versus traditional approaches?
+\end{itemize}
+
+\vspace{0.5em}
+
+\textbf{RQ3: Market Disruption Resilience}
+\begin{itemize}
+\item How do foundation models compare to traditional approaches in maintaining accuracy during high-volatility market regimes?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Research Objectives}
+\begin{enumerate}
+\item \textbf{Compare predictive accuracy} across multiple model architectures
+\item \textbf{Evaluate generalizability} with varying training data sizes
+\item \textbf{Assess robustness} across different time horizons and frequencies
+\item \textbf{Benchmark performance} against naive and ARIMA baselines
+\end{enumerate}
+\end{frame}
+
+% ============================================================
+\section{Models}
+% ============================================================
+
+\begin{frame}{Models Under Evaluation}
+\begin{table}[]
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Model} & \textbf{Type} & \textbf{Description} \\ \midrule
+Naive & Baseline & Simple persistence model using last observation \\
+ARIMA & Statistical & Classical auto-regressive model with differencing \\
+Chronos & Foundation & Transformer-based pretrained model (Amazon) \\
+Sundial & Foundation & Zero-shot forecasting with pretraining \\
+TimesFM & Foundation & Google's large-scale time-series foundation model \\ \bottomrule
+\end{tabular}
+\end{table}
+\end{frame}
+
+% ============================================================
+\section{Data}
+% ============================================================
+
+\begin{frame}{Dataset}
+\textbf{Stock:} Microsoft (MSFT)
+
+\vspace{1em}
+
+\textbf{Time Frequencies:}
+\begin{itemize}
+\item \textbf{Hourly (1h):} High-frequency intraday trading data
+\item \textbf{Daily (1d):} End-of-day closing prices
+\end{itemize}
+
+\vspace{1em}
+
+\textbf{Test Period:} 2023
+
+\vspace{1em}
+
+\textbf{Training Periods:}
+\begin{itemize}
+\item Short-term: 25-250 days (linear and logarithmic spacing)
+\item Long-term: 1-10 years
+\end{itemize}
+
+\vspace{1em}
+
+\textbf{Data Transformations:}
+\begin{itemize}
+\item Raw prices (original closing prices)
+\item Percentage change (fractional change between current and prior element)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Why Percentage Change Transformation?}
+\textbf{Motivation:}
+\begin{itemize}
+\item \textbf{Stationarity:} Percentage changes are more stationary than raw prices
+\item \textbf{Scale normalization:} Makes different stocks/time periods comparable
+\item \textbf{Financial relevance:} Returns are more meaningful than absolute prices for trading decisions
+\end{itemize}
+
+\vspace{1em}
+
+\textbf{Comparison:}
+\begin{itemize}
+\item \textbf{Raw prices:} Test models on absolute price prediction
+\item \textbf{Percentage change:} Test models on return prediction
+\end{itemize}
+
+\vspace{1em}
+
+\begin{block}{Research Question}
+Do foundation models perform better on raw prices or percentage changes compared to traditional methods?
+\end{block}
+\end{frame}
+
+% ============================================================
+\section{Experimental Design}
+% ============================================================
+
+\begin{frame}{Experimental Design}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Training Configurations:}
+\begin{itemize}
+\item \textbf{Short-term:} 25-250 days
+\begin{itemize}
+\small
+\item Linear spacing
+\item Logarithmic spacing
+\end{itemize}
+\item \textbf{Long-term:} 1-10 years
+\end{itemize}
+
+\vspace{1em}
+
+\textbf{Forecast Horizons:}
+\begin{itemize}
+\item Hourly: 1 hour
+\item Daily: 1, 5, 21, 63 days
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Evaluation Metrics:}
+\begin{itemize}
+\item MAE (Mean Absolute Error)
+\item RMSE (Root Mean Squared Error)
+\item MAPE (Mean Absolute \% Error)
+\item MSE (Mean Squared Error)
+\item MDA (Mean Directional Accuracy)
+\end{itemize}
+
+\vspace{1em}
+
+\textbf{Transformations:}
+\begin{itemize}
+\item Raw prices
+\item Percentage change
+\end{itemize}
+\end{columns}
+
+\vspace{1em}
+\begin{block}{Forecasting Approach}
+Rolling forecast updating context with actual observations
+\end{block}
+\end{frame}
+
+% ============================================================
+\section{Current Progress}
+% ============================================================
+
+\begin{frame}{Experiments Completed}
+\begin{itemize}
+\item \textbf{All models implemented and tested:}
+\begin{itemize}
+\item Traditional: ARIMA, Naive baseline
+\item Foundation models: Chronos, Sundial, TimesFM
+\end{itemize}
+
+\vspace{0.5em}
+
+\item \textbf{Comprehensive experimental setup:}
+\begin{itemize}
+\item Multiple training configurations (25-250 days, 1-10 years)
+\item Multiple forecast horizons (1h, 1d, 5d, 21d, 63d)
+\item Two temporal frequencies (hourly, daily)
+\item Two data transformations (raw prices, percentage change)
+\end{itemize}
+
+\vspace{0.5em}
+
+\item \textbf{Data collection and processing complete:}
+\begin{itemize}
+\item Full pipeline from data download to evaluation
+\item Automated experiment tracking and configuration management
+\item \textbf{Total:} 5 models × 3 training types × 2 frequencies × 2 transformations = extensive experimental coverage
+\end{itemize}
+\end{itemize}
+
+\vspace{1em}
+
+\begin{block}{Status}
+Results analysis and interpretation in progress
+\end{block}
+\end{frame}
+
+% ============================================================
+\section{Next Steps}
+% ============================================================
+
+\begin{frame}{Next Steps}
+\textbf{RQ2: Temporal Frequency Effects}
+\begin{itemize}
+\item Extend experiments to minute-level data (higher frequency)
+\item Compare model performance across hourly, daily, and minute frequencies
+\item Analyze how different temporal resolutions affect foundation vs traditional models
+\end{itemize}
+
+\vspace{1em}
+
+\textbf{RQ3: Market Disruption Resilience}
+\begin{itemize}
+\item Identify high-volatility market regimes (e.g., COVID-19 crash, earnings announcements)
+\item Evaluate model performance during market disruptions
+\item Compare stability of foundation models vs traditional approaches under stress
+\end{itemize}
+
+\vspace{1em}
+
+\textbf{Analysis and Writing}
+\begin{itemize}
+\item Complete statistical significance testing
+\item Finalize results interpretation
+\item Thesis writing
+\end{itemize}
+\end{frame}
+
+% ============================================================
+\section{Challenges and Limitations}
+% ============================================================
+
+\begin{frame}{Challenges and Limitations}
+\begin{itemize}
+\item \textbf{Data:} Single stock (MSFT), limited market conditions
+\item \textbf{Model constraints:} Conflicting transformer versions (Chronos vs Sundial)
+\item \textbf{Computational:} Foundation models require significant resources
+\item \textbf{Financial markets:} High noise, non-stationarity, external factors
+\end{itemize}
+
+\vspace{1em}
+
+\begin{block}{Mitigation Strategies}
+Rigorous experimental design, multiple evaluation metrics, baseline comparisons
+\end{block}
+\end{frame}
+
+% ============================================================
+\section{Timeline}
+% ============================================================
+
+\begin{frame}{Project Timeline}
+\textbf{Completed:}
+\begin{itemize}
+\item Literature review and model selection
+\item Full experimental pipeline implementation
+\item Data collection and preprocessing
+\item All experimental runs (5 models × multiple configurations)
+\end{itemize}
+
+\vspace{1em}
+
+\textbf{In Progress:}
+\begin{itemize}
+\item Results analysis and interpretation
+\item Statistical significance testing
+\item Visualization refinement
+\end{itemize}
+
+\vspace{1em}
+
+\textbf{Next:}
+\begin{itemize}
+\item Complete results analysis
+\item RQ2: Minute-level data experiments
+\item RQ3: High-volatility regime analysis
+\item Thesis writing
+\end{itemize}
+\end{frame}
+
+% ============================================================
+% Conclusion
+% ============================================================
+
+\begin{frame}[standout]
+Thank you!
+\\[1em]
+Questions?
+\end{frame}
+
+\end{document}
