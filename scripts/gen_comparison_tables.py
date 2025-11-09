@@ -269,6 +269,18 @@ def main():
         ('mape', 'Mean Absolute Percentage Error (MAPE)', 'MAPE')
     ]
 
+    # Get training size range
+    min_train = int(df['training_size'].min())
+    max_train = int(df['training_size'].max())
+
+    # Format horizon with units
+    horizon_unit = "day" if args.timefreq == "1d" else "hour"
+    horizon_plural = "s" if args.horizon > 1 else ""
+    horizon_str = f"{args.horizon} {horizon_unit}{horizon_plural}"
+
+    # Format time frequency
+    timefreq_display = "Daily" if args.timefreq == "1d" else "Hourly"
+
     for metric_key, metric_name, metric_abbrev in metrics:
         # Generate filename
         filename = f"{args.ticker}_{args.timefreq}_{args.exp_type}_h{args.horizon}_{metric_abbrev}_comparison.tex"
@@ -276,7 +288,7 @@ def main():
 
         # Generate caption and label
         exp_name_display = args.exp_type.replace('-', ' ').title()
-        caption = f"Model Comparison: {metric_name} for {args.ticker} ({args.timefreq} data, {exp_name_display}, Horizon={args.horizon})"
+        caption = f"Model Comparison: {metric_name} for {args.ticker} ({timefreq_display} data, Training: {min_train}-{max_train} days, Forecast Horizon: {horizon_str})"
         label = f"tab:comparison_{args.ticker}_{args.timefreq}_{args.exp_type}_h{args.horizon}_{metric_abbrev}"
 
         # Generate table
