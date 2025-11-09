@@ -20,6 +20,48 @@
 - Dashed lines show severity thresholds
 - Same colored bands as top plot highlight crash periods
 
+## What is Drawdown and How is it Calculated?
+
+**Drawdown** measures how far the current price has fallen from the highest price seen up to that point in time (the peak).
+
+### Calculation:
+```python
+running_max = prices.expanding().max()  # Track the peak at each point
+drawdown = (prices - running_max) / running_max * 100  # % decline from peak
+```
+
+### Example:
+| Date | Price | Running Max | Drawdown |
+|------|-------|-------------|----------|
+| Jan 1 | $100 | $100 | 0% (at peak) |
+| Jan 2 | $95 | $100 | -5% |
+| Jan 3 | $80 | $100 | -20% |
+| Jan 4 | $90 | $100 | -10% (recovering) |
+| Jan 5 | $110 | $110 | 0% (new peak!) |
+
+## Why Use Drawdown Instead of Percentage Change?
+
+**Drawdown provides context that percentage change cannot:**
+
+### Problems with Percentage Change (hour-to-hour):
+1. **Too noisy** - Normal trading fluctuations look dramatic (+2%, -1.5%, +0.8%, -2.3%)
+2. **No context** - A -3% drop could be part of a larger crash or just normal volatility
+3. **Misses prolonged declines** - A slow crash (-2%, -3%, -2%, -4% over weeks) = -11% total drawdown but no single period looks severe
+
+### Advantages of Drawdown:
+1. **Cumulative impact** - Shows total damage from the peak
+2. **Recovery progress** - Clear view of how far back to breakeven
+3. **Crash severity** - -10%, -20%, -30% are universally understood thresholds
+4. **Duration visibility** - Easy to see when crashes start and end
+5. **Standard risk metric** - Used by financial professionals worldwide
+
+### Example: COVID-19 Crash
+**Percentage change** shows daily noise: -2.1%, -3.5%, -7.2%, +4.8%, -2.9%...
+
+**Drawdown** shows clear crash pattern: -5.2% → -8.5% → -15.1% → -28.6% (peak severity)
+
+For **RQ3 Market Disruption Resilience**, drawdown identifies **sustained market stress periods** rather than just daily volatility, making it ideal for testing foundation model performance during crises.
+
 ## Key Crashes Visible in 2018-2024:
 
 From the data, here are the significant crashes highlighted:
