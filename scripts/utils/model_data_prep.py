@@ -20,6 +20,7 @@ def prepare_data_for_modeling(
     n_train_years: Optional[float] = 10, # Can be None if days are used
     n_train_days: Optional[int] = None,  # New parameter for days
     n_test_years: float = 1,
+    n_test_days: Optional[int] = None,  # New parameter for test days
     base_dir: Path = BASE_DATA_DIR,
     diff: bool = False,
     pct_change: bool = False
@@ -27,7 +28,7 @@ def prepare_data_for_modeling(
     """
     Loads time series data, selects a target column, optionally differences it,
     and splits it into training and testing sets based on a relative date and specified durations.
-    Training duration can be specified in years or days, with days taking precedence.
+    Training and testing durations can be specified in years or days, with days taking precedence.
 
     Args:
         ticker (str): The stock ticker symbol.
@@ -38,7 +39,10 @@ def prepare_data_for_modeling(
                                         Used if n_train_days is None. Defaults to 10.
         n_train_days (Optional[int]): Number of days of training data before rel_date.
                                      If provided, this overrides n_train_years. Defaults to None.
-        n_test_years (float): Number of years of testing data from rel_date. Defaults to 1.
+        n_test_years (float): Number of years of testing data from rel_date.
+                             Used if n_test_days is None. Defaults to 1.
+        n_test_days (Optional[int]): Number of days of testing data from rel_date.
+                                    If provided, this overrides n_test_years. Defaults to None.
         base_dir (Path): The base directory for data.
         diff (bool): If True, computes the first difference of the series. Defaults to False.
         pct_change (bool): If True, computes the percentage change of the series. Defaults to False.
@@ -158,11 +162,29 @@ def prepare_data_for_modeling(
             train_period_value = 10
 
 
-    test_end_date = split_date + relativedelta(years=int(n_test_years)) # n_test_years is float, convert to int
+    # Determine test period end date based on days or years
+    test_period_unit = ""
+    test_period_value = 0
+
+    if n_test_days is not None and n_test_days > 0:
+        test_end_date = split_date + relativedelta(days=n_test_days)
+        test_period_unit = "days"
+        test_period_value = n_test_days
+        logging.info(f"Test period set to {n_test_days} days from {split_date.date()}.")
+    elif n_test_years is not None and n_test_years > 0:
+        test_end_date = split_date + relativedelta(years=int(n_test_years))
+        test_period_unit = "years"
+        test_period_value = int(n_test_years)
+        logging.info(f"Test period set to {int(n_test_years)} years from {split_date.date()}.")
+    else:
+        logging.error("Invalid test period: n_test_days or n_test_years must be positive. Using default 1 year.")
+        test_end_date = split_date + relativedelta(years=1)
+        test_period_unit = "years"
+        test_period_value = 1
 
     logging.info(f"Splitting data around reference date: {split_date.date()}")
     logging.info(f"Calculated train period start: {train_start_date.date()} (based on {train_period_value} {train_period_unit})")
-    logging.info(f"Requested test period end: {test_end_date.date()}")
+    logging.info(f"Calculated test period end: {test_end_date.date()} (based on {test_period_value} {test_period_unit})")
 
     # --- Split the data ---
     # Ensure train data ends *before* or *at* split_date, and starts *after* train_start_date.
@@ -283,6 +305,80 @@ if __name__ == "__main__":
         print("ERROR: Should have raised ValueError for mutual exclusivity!")
     except ValueError as e:
         print(f"SUCCESS: Correctly raised ValueError: {e}")
+
+    logging.info("\n--- Testing n_test_days parameter ---")
+    train_test_days, test_test_days = prepare_data_for_modeling(
+        ticker="DUMMY",
+        timefreq="1d",
+        rel_date="2022-01-01",
+        n_train_days=365,
+        n_test_days=180,  # Test with 180 days
+        n_test_years=5    # This should be ignored
+    )
+    if train_test_days is not None and test_test_days is not None:
+        print(f"Train: {len(train_test_days)} obs, Test: {len(test_test_days)} obs")
+        print(f"Test range: {test_test_days.index.min()} to {test_test_days.index.max()}")
+        # Verify test period is approximately 180 days (accounting for weekends/holidays)
+        test_days_actual = (test_test_days.index.max() - test_test_days.index.min()).days
+        print(f"Test period duration: {test_days_actual} calendar days (expected ~180)")
+        if test_days_actual >= 170 and test_days_actual <= 270:  # Allow some margin for business days
+            print("SUCCESS: Test period duration is reasonable for 180 business days")
+        else:
+            print(f"WARNING: Test period duration {test_days_actual} seems off for 180 days request")
+
+    logging.info("\n--- Testing n_test_days precedence over n_test_years ---")
+    train_precedence, test_precedence = prepare_data_for_modeling(
+        ticker="DUMMY",
+        timefreq="1d",
+        rel_date="2022-01-01",
+        n_train_years=2,
+        n_test_days=90,    # Should use this
+        n_test_years=2     # Should ignore this
+    )
+    if train_precedence is not None and test_precedence is not None:
+        print(f"Test range: {test_precedence.index.min()} to {test_precedence.index.max()}")
+        test_days_actual = (test_precedence.index.max() - test_precedence.index.min()).days
+        print(f"Test period duration: {test_days_actual} calendar days (expected ~90)")
+        if test_days_actual >= 85 and test_days_actual <= 135:  # Allow margin for business days
+            print("SUCCESS: n_test_days took precedence over n_test_years")
+        else:
+            print(f"WARNING: Test period seems incorrect, got {test_days_actual} days")
+
+    logging.info("\n--- Testing n_test_years when n_test_days is None ---")
+    train_years_test, test_years_test = prepare_data_for_modeling(
+        ticker="DUMMY",
+        timefreq="1d",
+        rel_date="2020-01-01",
+        n_train_years=2,
+        n_test_days=None,  # Explicitly None
+        n_test_years=1     # Should use this (1 year)
+    )
+    if train_years_test is not None and test_years_test is not None:
+        print(f"Test range: {test_years_test.index.min()} to {test_years_test.index.max()}")
+        test_days_actual = (test_years_test.index.max() - test_years_test.index.min()).days
+        print(f"Test period duration: {test_days_actual} calendar days (expected ~365)")
+        if test_days_actual >= 350 and test_days_actual <= 380:  # Allow margin
+            print("SUCCESS: n_test_years used when n_test_days is None")
+        else:
+            print(f"WARNING: Test period seems incorrect for 1 year, got {test_days_actual} days")
+
+    logging.info("\n--- Testing large n_test_days (600 days for crash recovery) ---")
+    train_crash, test_crash = prepare_data_for_modeling(
+        ticker="DUMMY",
+        timefreq="1d",
+        rel_date="2018-01-01",
+        n_train_days=250,
+        n_test_days=600  # Test 600 days recovery period
+    )
+    if train_crash is not None and test_crash is not None:
+        print(f"Train: {len(train_crash)} obs, Test: {len(test_crash)} obs")
+        print(f"Test range: {test_crash.index.min()} to {test_crash.index.max()}")
+        test_days_actual = (test_crash.index.max() - test_crash.index.min()).days
+        print(f"Test period duration: {test_days_actual} calendar days (expected ~600)")
+        if test_days_actual >= 550 and test_days_actual <= 850:  # Allow margin for business days
+            print("SUCCESS: Can handle large test periods like 600 days for crash recovery")
+        else:
+            print(f"WARNING: Test period seems incorrect, got {test_days_actual} days")
 
     # Cleanup dummy file
     import os
