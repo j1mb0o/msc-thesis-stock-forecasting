@@ -15,7 +15,13 @@ def get_pipeline_arguments():
         "--test_years",
         type=float,
         default=1,
-        help="Number of years to forecast for the test set.",
+        help="Number of years to forecast for the test set. This is overridden if --test_n_days is specified.",
+    )
+    parser.add_argument(
+        "--test_n_days",
+        type=int,
+        default=None,
+        help="Number of days to forecast for the test set. If specified, this overrides --test_years.",
     )
     parser.add_argument(
         "--train_last_n_years", # Renamed for clarity
@@ -64,8 +70,9 @@ if __name__ == '__main__':
     print(f"Ticker: {args.ticker}")
     print(f"Time Frequency: {args.timefreq}")
     print(f"Test Years: {args.test_years}")
+    print(f"Test N Days: {args.test_n_days}")
     print(f"Train Last N Years: {args.train_last_n_years}")
-    print(f"Train Last N Days: {args.train_last_n_days}") # New argument
+    print(f"Train Last N Days: {args.train_last_n_days}")
     print(f"Method: {args.method}")
     print(f"Target Column: {args.target_column}")
     print(f"Horizon Length: {args.horizon_len}")

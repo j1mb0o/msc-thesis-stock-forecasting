@@ -114,6 +114,15 @@ else:
     train_period_value = args.train_last_n_years
     train_period_unit = "years"
 
+# Determine test period unit and value for logging/config
+test_period_value = 0
+test_period_unit = ""
+if args.test_n_days is not None and args.test_n_days > 0:
+    test_period_value = args.test_n_days
+    test_period_unit = "days"
+else:
+    test_period_value = args.test_years
+    test_period_unit = "years"
 
 prepared_data = prepare_data_for_modeling(
     ticker=TICKER,
@@ -122,6 +131,7 @@ prepared_data = prepare_data_for_modeling(
     n_train_years=args.train_last_n_years,  # Pass years
     n_train_days=args.train_last_n_days,  # Pass days (will take precedence if set)
     n_test_years=args.test_years,
+    n_test_days=args.test_n_days,  # Pass days (will take precedence if set)
     target_column=TARGET_COLUMN,
     base_dir=BASE_DATA_DIR,
     diff=args.diff,
@@ -247,14 +257,17 @@ if len(test_data) != len(forecasts_series):
         exit()
 
 
-# Construct a filename that reflects the training period accurately
+# Construct a filename that reflects the training and test periods accurately
 train_period_str = (
     f"{int(train_period_value)}{train_period_unit[0]}"  # e.g., 10y or 365d
+)
+test_period_str = (
+    f"{int(test_period_value)}{test_period_unit[0]}"  # e.g., 1y or 600d
 )
 
 csv_name = (
     f"{timestamp}_{TICKER}_{TIMEFREQ}_{args.method}_split_{args.split_date}_"
-    f"train_{train_period_str}_test_{int(args.test_years)}y_horizon_{HORIZON}.csv"
+    f"train_{train_period_str}_test_{test_period_str}_horizon_{HORIZON}.csv"
 )
 
 mae = mean_absolute_error(test_data, forecasts_series)
@@ -296,7 +309,8 @@ experiment_settings = {
     "split_date": args.split_date,
     "training_period_value": train_period_value,
     "training_period_unit": train_period_unit,
-    "test_period_years": args.test_years,
+    "test_period_value": test_period_value,
+    "test_period_unit": test_period_unit,
     "forecasting_method": args.method,
     "horizon_length": HORIZON,
     "differencing_applied": args.diff,
