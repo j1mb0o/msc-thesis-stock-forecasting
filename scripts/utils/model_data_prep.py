@@ -76,7 +76,25 @@ def prepare_data_for_modeling(
             data = data.set_index('datetime')
             data = data.drop(columns=['Date', 'Time', 'Tickvol', 'Vol', 'Spread'])
         else:
-            data = pd.read_csv(file_path, index_col='Date', parse_dates=True)
+            # Try reading as tab-separated with angle-bracket headers first (new format)
+            try:
+                data = pd.read_csv(file_path, sep='\t', engine='python')
+                # Check if it has angle-bracket headers
+                if any('<' in col or '>' in col for col in data.columns):
+                    data.columns = data.columns.str.replace('[<>]', '', regex=True)
+                    data.columns = data.columns.str.title()
+                    data['Date'] = pd.to_datetime(data['Date'])
+                    data = data.set_index('Date')
+                    # Drop extra columns if they exist
+                    cols_to_drop = [col for col in ['Tickvol', 'Vol', 'Spread'] if col in data.columns]
+                    if cols_to_drop:
+                        data = data.drop(columns=cols_to_drop)
+                else:
+                    # Tab-separated but without angle brackets, try standard format
+                    raise ValueError("Not angle-bracket format")
+            except (ValueError, KeyError):
+                # Fall back to standard yfinance CSV format
+                data = pd.read_csv(file_path, index_col='Date', parse_dates=True)
         logging.info(f"Successfully loaded data for {ticker} ({timefreq}). Columns: {data.columns.tolist()}")
 
         if target_column not in data.columns:
