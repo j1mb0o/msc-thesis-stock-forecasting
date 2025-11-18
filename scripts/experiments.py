@@ -131,6 +131,7 @@ def RQ1():
 
 # RQ 2
 def RQ2():
+    print(args.method)
     timefreqs = ["1d"]
     for exp_name in [
         "train-restricted-years",
@@ -139,12 +140,12 @@ def RQ2():
     ]:
         print(exp_name)
 
-        # if exp_name == "train-restricted-years":
-        #     # horizon_lens = [1, 5, 21, 63]
-        #     horizon_lens = [1]
-        #     train_last_ns = [int(value) for value in np.linspace(1, 10, 10)]
-        #     days = False
-        if exp_name == "train-less-year-log":
+        if exp_name == "train-restricted-years":
+            # horizon_lens = [1, 5, 21, 63]
+            horizon_lens = [1]
+            train_last_ns = [int(value) for value in np.linspace(1, 10, 10)]
+            days = False
+        elif exp_name == "train-less-year-log":
             # horizon_lens = [1, 5, 21, 63]
             horizon_lens = [1]
             log_spaces_values = np.logspace(np.log10(25), np.log10(250), 10)
@@ -187,3 +188,6 @@ def RQ2():
                 print(f"Exception occured {e}")
                 exit()
         print(total_exp)
+
+
+RQ2()
