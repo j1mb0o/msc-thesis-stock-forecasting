@@ -158,7 +158,7 @@ def RQ2():
             train_last_ns = [int(value) for value in lineal_spaced_values]
             days = True
         else:
-            raise NameError("The experiment name is not supported")
+            raise NameError(f"The experiment {exp_name} is not supported")
 
         if args.pct_change:
             exp_name = exp_name + "-pct"
