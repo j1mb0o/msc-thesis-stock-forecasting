@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-17_15-09-19_MSFT_1d_chronos_base_split_2023-01-01_train_149d_test_1y_horizon_5
+run_timestamp: 2025-11-17_15-09-19
+ticker: MSFT
+timefreq: 1d
+target_column: Open
+split_date: '2023-01-01'
+training_period_value: 149
+training_period_unit: days
+test_period_value: 1
+test_period_unit: years
+forecasting_method: chronos_base
+horizon_length: 5
+differencing_applied: false
+percentage_change_applied: true
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1d/chronos_base/train-less-year-log-pct/2025-11-17_15-09-19_MSFT_1d_chronos_base_split_2023-01-01_train_149d_test_1y_horizon_5.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 0.00027614510504724585
+  mae: 0.012406758072569355
+  rmse: 0.016617614300712538
+  mape: 117.16483688116529
+  smape: 173.48845696313418
+  mean_directional_accuracy: 51.2

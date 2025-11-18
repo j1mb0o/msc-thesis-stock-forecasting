@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-17_11-56-34_MSFT_1d_sundial_split_2023-01-01_train_1y_test_1y_horizon_63
+run_timestamp: 2025-11-17_11-56-34
+ticker: MSFT
+timefreq: 1d
+target_column: Open
+split_date: '2023-01-01'
+training_period_value: 1.0
+training_period_unit: years
+test_period_value: 1
+test_period_unit: years
+forecasting_method: sundial
+horizon_length: 63
+differencing_applied: false
+percentage_change_applied: false
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1d/sundial/train-restricted-years/2025-11-17_11-56-34_MSFT_1d_sundial_split_2023-01-01_train_1y_test_1y_horizon_63.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 1182.2949930296256
+  mae: 24.923103549804686
+  rmse: 34.384516763066856
+  mape: 7.438811991468008
+  smape: 7.946256706330337
+  mean_directional_accuracy: 100.0
