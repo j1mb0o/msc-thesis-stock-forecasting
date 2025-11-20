@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-20_20-28-36_MSFT_1h_fm_split_2023-01-01_train_200d_test_1y_horizon_1
+run_timestamp: 2025-11-20_20-28-36
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2023-01-01'
+training_period_value: 200
+training_period_unit: days
+test_period_value: 1
+test_period_unit: years
+forecasting_method: fm
+horizon_length: 1
+differencing_applied: false
+percentage_change_applied: true
+results_file_path: /root/thesis-code-new/results/MSFT/1h/fm/train-less-year-linear-pct/2025-11-20_20-28-36_MSFT_1h_fm_split_2023-01-01_train_200d_test_1y_horizon_1.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 3.6522377664949525e-05
+  mae: 0.004045685899974775
+  rmse: 0.006043374691755387
+  mape: 511452553572.95905
+  smape: 172.34186656925368
+  mean_directional_accuracy: 48.628571428571426

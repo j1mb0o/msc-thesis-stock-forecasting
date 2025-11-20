@@ -132,7 +132,7 @@ def RQ1():
 # RQ 2
 def RQ2():
     print(args.method)
-    timefreqs = ["1d"]
+    timefreqs = ["1h"]
     for exp_name in [
         "train-restricted-years",
         "train-less-year-log",
