@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-19_20-24-17_MSFT_1h_naive_split_2023-01-01_train_6y_test_1y_horizon_1
+run_timestamp: 2025-11-19_20-24-17
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2023-01-01'
+training_period_value: 6.0
+training_period_unit: years
+test_period_value: 1
+test_period_unit: years
+forecasting_method: naive
+horizon_length: 1
+differencing_applied: false
+percentage_change_applied: false
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1h/naive/train-restricted-years/2025-11-19_20-24-17_MSFT_1h_naive_split_2023-01-01_train_6y_test_1y_horizon_1.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 3.278664114285716
+  mae: 1.2276342857142857
+  rmse: 1.8107081803221954
+  mape: 0.3993717599868192
+  smape: 0.39966791362204257
+  mean_directional_accuracy: 100.0

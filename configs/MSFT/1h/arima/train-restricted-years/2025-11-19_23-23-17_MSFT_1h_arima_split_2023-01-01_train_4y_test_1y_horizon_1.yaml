@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-19_23-23-17_MSFT_1h_arima_split_2023-01-01_train_4y_test_1y_horizon_1
+run_timestamp: 2025-11-19_23-23-17
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2023-01-01'
+training_period_value: 4.0
+training_period_unit: years
+test_period_value: 1
+test_period_unit: years
+forecasting_method: arima
+horizon_length: 1
+differencing_applied: false
+percentage_change_applied: false
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1h/arima/train-restricted-years/2025-11-19_23-23-17_MSFT_1h_arima_split_2023-01-01_train_4y_test_1y_horizon_1.csv
+arima_order: (0, 1, 1)
+evaluation_metrics:
+  mse: 3.2864883269985006
+  mae: 1.227747380200393
+  rmse: 1.812867432273662
+  mape: 0.3995065305408479
+  smape: 0.39980597636016135
+  mean_directional_accuracy: 100.0
