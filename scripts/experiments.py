@@ -199,13 +199,13 @@ def RQ2():
 # RQ 3
 def RQ3():
     print(args.method)
-    timefreqs = ["1d"]
+    timefreqs = ["1h"]
 
     # Split dates with crisis event labels
     crisis_events = {
         "2008-01-20": "financial-crisis-2008",  # Five days before 2008-01-25
         "2022-03-31": "market-downturn-2022",  # Five days before 2022-04-05
-        "2020-02-31": "covid-crash-2020",  # Five days before 2020-03-05
+        "2020-02-28": "covid-crash-2020",  # Five days before 2020-03-04
     }
 
     # Test period: 2 months (approximately 60 days)
