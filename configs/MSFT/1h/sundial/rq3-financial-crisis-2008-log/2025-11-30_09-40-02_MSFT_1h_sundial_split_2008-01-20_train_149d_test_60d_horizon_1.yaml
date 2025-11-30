@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-30_09-40-02_MSFT_1h_sundial_split_2008-01-20_train_149d_test_60d_horizon_1
+run_timestamp: 2025-11-30_09-40-02
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2008-01-20'
+training_period_value: 149
+training_period_unit: days
+test_period_value: 60
+test_period_unit: days
+forecasting_method: sundial
+horizon_length: 1
+differencing_applied: false
+percentage_change_applied: false
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1h/sundial/rq3-financial-crisis-2008-log/2025-11-30_09-40-02_MSFT_1h_sundial_split_2008-01-20_train_149d_test_60d_horizon_1.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 0.08239497434172734
+  mae: 0.18486135768558087
+  rmse: 0.28704524789957303
+  mape: 0.6246421690506048
+  smape: 0.6236252207783458
+  mean_directional_accuracy: 100.0

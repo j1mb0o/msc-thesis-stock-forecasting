@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-30_10-24-56_MSFT_1h_sundial_split_2022-03-31_train_25d_test_60d_horizon_1
+run_timestamp: 2025-11-30_10-24-56
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2022-03-31'
+training_period_value: 25
+training_period_unit: days
+test_period_value: 60
+test_period_unit: days
+forecasting_method: sundial
+horizon_length: 1
+differencing_applied: false
+percentage_change_applied: true
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1h/sundial/rq3-market-downturn-2022-log-pct/2025-11-30_10-24-56_MSFT_1h_sundial_split_2022-03-31_train_25d_test_60d_horizon_1.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 6.453998691633141e-05
+  mae: 0.005976034724685037
+  rmse: 0.008033678293056762
+  mape: 137.9820183876147
+  smape: 164.65513258163335
+  mean_directional_accuracy: 54.35540069686411
