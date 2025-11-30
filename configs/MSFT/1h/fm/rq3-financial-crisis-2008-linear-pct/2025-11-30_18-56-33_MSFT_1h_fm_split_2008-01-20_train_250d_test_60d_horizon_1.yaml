@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-30_18-56-33_MSFT_1h_fm_split_2008-01-20_train_250d_test_60d_horizon_1
+run_timestamp: 2025-11-30_18-56-33
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2008-01-20'
+training_period_value: 250
+training_period_unit: days
+test_period_value: 60
+test_period_unit: days
+forecasting_method: fm
+horizon_length: 1
+differencing_applied: false
+percentage_change_applied: true
+results_file_path: /root/thesis-code-new/results/MSFT/1h/fm/rq3-financial-crisis-2008-linear-pct/2025-11-30_18-56-33_MSFT_1h_fm_split_2008-01-20_train_250d_test_60d_horizon_1.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 8.529354500196393e-05
+  mae: 0.005927178739200745
+  rmse: 0.00923545044932644
+  mape: 5376540831950.008
+  smape: 171.0385615202269
+  mean_directional_accuracy: 48.43205574912892

@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-30_17-41-30_MSFT_1h_fm_split_2022-03-31_train_75d_test_60d_horizon_1
+run_timestamp: 2025-11-30_17-41-30
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2022-03-31'
+training_period_value: 75
+training_period_unit: days
+test_period_value: 60
+test_period_unit: days
+forecasting_method: fm
+horizon_length: 1
+differencing_applied: false
+percentage_change_applied: false
+results_file_path: /root/thesis-code-new/results/MSFT/1h/fm/rq3-market-downturn-2022-linear/2025-11-30_17-41-30_MSFT_1h_fm_split_2022-03-31_train_75d_test_60d_horizon_1.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 5.437098762981782
+  mae: 1.7973781402268878
+  rmse: 2.3317587274376788
+  mape: 0.6491371508817713
+  smape: 0.6491997688704907
+  mean_directional_accuracy: 100.0
