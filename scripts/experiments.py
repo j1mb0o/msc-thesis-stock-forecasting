@@ -253,7 +253,7 @@ def RQ3():
                     split_date=split_date,
                     test_n_days=test_n_days,
                 )
-                time.sleep(15)
+                time.sleep(1)
                 total_exp += 1
             except Exception as e:
                 print(f"Exception occurred {e}")
