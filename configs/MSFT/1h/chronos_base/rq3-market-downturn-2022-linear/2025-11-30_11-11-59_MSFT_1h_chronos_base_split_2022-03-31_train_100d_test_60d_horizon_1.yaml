@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-30_11-11-59_MSFT_1h_chronos_base_split_2022-03-31_train_100d_test_60d_horizon_1
+run_timestamp: 2025-11-30_11-11-59
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2022-03-31'
+training_period_value: 100
+training_period_unit: days
+test_period_value: 60
+test_period_unit: days
+forecasting_method: chronos_base
+horizon_length: 1
+differencing_applied: false
+percentage_change_applied: false
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1h/chronos_base/rq3-market-downturn-2022-linear/2025-11-30_11-11-59_MSFT_1h_chronos_base_split_2022-03-31_train_100d_test_60d_horizon_1.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 6.699482940963416
+  mae: 1.9908117973513708
+  rmse: 2.5883359405153374
+  mape: 0.7197075340628576
+  smape: 0.7219169673133653
+  mean_directional_accuracy: 100.0

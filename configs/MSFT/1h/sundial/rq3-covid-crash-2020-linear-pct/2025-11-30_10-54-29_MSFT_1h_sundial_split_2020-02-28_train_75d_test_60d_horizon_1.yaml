@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-30_10-54-29_MSFT_1h_sundial_split_2020-02-28_train_75d_test_60d_horizon_1
+run_timestamp: 2025-11-30_10-54-29
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2020-02-28'
+training_period_value: 75
+training_period_unit: days
+test_period_value: 60
+test_period_unit: days
+forecasting_method: sundial
+horizon_length: 1
+differencing_applied: false
+percentage_change_applied: true
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1h/sundial/rq3-covid-crash-2020-linear-pct/2025-11-30_10-54-29_MSFT_1h_sundial_split_2020-02-28_train_75d_test_60d_horizon_1.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 0.00030793301614701513
+  mae: 0.011666155871609966
+  rmse: 0.017548020291389427
+  mape: 139.4843569932685
+  smape: 160.2123149894425
+  mean_directional_accuracy: 54.70383275261324

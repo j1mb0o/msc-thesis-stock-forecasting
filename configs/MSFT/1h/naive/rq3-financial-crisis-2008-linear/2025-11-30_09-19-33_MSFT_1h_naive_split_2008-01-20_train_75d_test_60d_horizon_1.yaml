@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-30_09-19-33_MSFT_1h_naive_split_2008-01-20_train_75d_test_60d_horizon_1
+run_timestamp: 2025-11-30_09-19-33
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2008-01-20'
+training_period_value: 75
+training_period_unit: days
+test_period_value: 60
+test_period_unit: days
+forecasting_method: naive
+horizon_length: 1
+differencing_applied: false
+percentage_change_applied: false
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1h/naive/rq3-financial-crisis-2008-linear/2025-11-30_09-19-33_MSFT_1h_naive_split_2008-01-20_train_75d_test_60d_horizon_1.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 0.07946062717770032
+  mae: 0.1733797909407666
+  rmse: 0.2818876144453678
+  mape: 0.5845661621246169
+  smape: 0.5839814794983603
+  mean_directional_accuracy: 100.0

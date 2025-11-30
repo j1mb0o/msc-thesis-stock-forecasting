@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-30_17-58-36_MSFT_1h_fm_split_2020-02-28_train_150d_test_60d_horizon_1
+run_timestamp: 2025-11-30_17-58-36
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2020-02-28'
+training_period_value: 150
+training_period_unit: days
+test_period_value: 60
+test_period_unit: days
+forecasting_method: fm
+horizon_length: 1
+differencing_applied: false
+percentage_change_applied: false
+results_file_path: /root/thesis-code-new/results/MSFT/1h/fm/rq3-covid-crash-2020-linear/2025-11-30_17-58-36_MSFT_1h_fm_split_2020-02-28_train_150d_test_60d_horizon_1.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 7.374676834694443
+  mae: 1.8695139772634477
+  rmse: 2.7156356225927003
+  mape: 1.2014839358998723
+  smape: 1.2013000861404515
+  mean_directional_accuracy: 100.0
