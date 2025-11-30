@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-30_11-00-39_MSFT_1h_chronos_base_split_2008-01-20_train_32d_test_60d_horizon_1
+run_timestamp: 2025-11-30_11-00-39
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2008-01-20'
+training_period_value: 32
+training_period_unit: days
+test_period_value: 60
+test_period_unit: days
+forecasting_method: chronos_base
+horizon_length: 1
+differencing_applied: false
+percentage_change_applied: false
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1h/chronos_base/rq3-financial-crisis-2008-log/2025-11-30_11-00-39_MSFT_1h_chronos_base_split_2008-01-20_train_32d_test_60d_horizon_1.csv
+arima_order: N/A
+evaluation_metrics:
+  mse: 0.09474689636214893
+  mae: 0.20280461327954877
+  rmse: 0.307809837987919
+  mape: 0.6865162826646727
+  smape: 0.6877513388907143
+  mean_directional_accuracy: 100.0
