@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-30_09-33-45_MSFT_1h_arima_split_2020-02-28_train_25d_test_60d_horizon_1
+run_timestamp: 2025-11-30_09-33-45
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2020-02-28'
+training_period_value: 25
+training_period_unit: days
+test_period_value: 60
+test_period_unit: days
+forecasting_method: arima
+horizon_length: 1
+differencing_applied: false
+percentage_change_applied: true
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1h/arima/rq3-covid-crash-2020-linear-pct/2025-11-30_09-33-45_MSFT_1h_arima_split_2020-02-28_train_25d_test_60d_horizon_1.csv
+arima_order: (0, 1, 3)
+evaluation_metrics:
+  mse: 0.0003100626129905162
+  mae: 0.011702535679450845
+  rmse: 0.017608594861331674
+  mape: 179.33092699689806
+  smape: 148.21397374527265
+  mean_directional_accuracy: 52.264808362369344

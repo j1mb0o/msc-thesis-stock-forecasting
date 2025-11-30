@@ -1,0 +1,23 @@
+experiment_config_name: 2025-11-30_09-31-43_MSFT_1h_arima_split_2008-01-20_train_75d_test_60d_horizon_1
+run_timestamp: 2025-11-30_09-31-43
+ticker: MSFT
+timefreq: 1h
+target_column: Open
+split_date: '2008-01-20'
+training_period_value: 75
+training_period_unit: days
+test_period_value: 60
+test_period_unit: days
+forecasting_method: arima
+horizon_length: 1
+differencing_applied: false
+percentage_change_applied: true
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1h/arima/rq3-financial-crisis-2008-linear-pct/2025-11-30_09-31-43_MSFT_1h_arima_split_2008-01-20_train_75d_test_60d_horizon_1.csv
+arima_order: (0, 0, 0)
+evaluation_metrics:
+  mse: 8.393391880831448e-05
+  mae: 0.005835101075532649
+  rmse: 0.009161545656073241
+  mape: 98.60627177700349
+  smape: .nan
+  mean_directional_accuracy: 1.3937282229965158
