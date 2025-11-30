@@ -211,47 +211,55 @@ def RQ3():
     # Test period: 2 months (approximately 60 days)
     test_n_days = 60
 
-    # Training periods in days (similar to RQ2 but using days instead of years)
-    log_spaces_values = np.logspace(np.log10(25), np.log10(250), 10)
-    train_last_ns = [int(value) for value in log_spaces_values]
-
     # Horizon length
     horizon_lens = [1]
 
     if method not in ["naive", "arima", "fm", "sundial", "chronos_base"]:
         raise NameError("The method is not supported")
 
-    total_exp = 0
+    train_last_ns = []
+    # Iterate over different spacing configurations
+    for spacing_type in ["log", "linear"]:
+        print(f"Running experiments with {spacing_type} spacing")
 
-    for ticker, timefreq, split_date, horizon_len, train_last_n in product(
-        tickers, timefreqs, crisis_events.keys(), horizon_lens, train_last_ns
-    ):
-        # Create unique experiment name for each crisis event
-        exp_name = f"rq3-{crisis_events[split_date]}"
+        if spacing_type == "log":
+            log_spaces_values = np.logspace(np.log10(25), np.log10(250), 10)
+            train_last_ns = [int(value) for value in log_spaces_values]
+        elif spacing_type == "linear":
+            lineal_spaced_values = np.linspace(25, 250, 10)
+            train_last_ns = [int(value) for value in lineal_spaced_values]
 
-        if args.pct_change:
-            exp_name = exp_name + "-pct"
+        total_exp = 0
 
-        try:
-            run_pipeline(
-                ticker,
-                timefreq,
-                method,
-                horizon_len,
-                train_last_n,
-                exp_name,
-                days_flag=True,  # Use days for training
-                pct_change=args.pct_change,
-                split_date=split_date,
-                test_n_days=test_n_days,
-            )
-            time.sleep(15)
-            total_exp += 1
-        except Exception as e:
-            print(f"Exception occurred {e}")
-            exit()
+        for ticker, timefreq, split_date, horizon_len, train_last_n in product(
+            tickers, timefreqs, crisis_events.keys(), horizon_lens, train_last_ns
+        ):
+            # Create unique experiment name for each crisis event and spacing type
+            exp_name = f"rq3-{crisis_events[split_date]}-{spacing_type}"
 
-    print(f"Total experiments run: {total_exp}")
+            if args.pct_change:
+                exp_name = exp_name + "-pct"
+
+            try:
+                run_pipeline(
+                    ticker,
+                    timefreq,
+                    method,
+                    horizon_len,
+                    train_last_n,
+                    exp_name,
+                    days_flag=True,  # Use days for training
+                    pct_change=args.pct_change,
+                    split_date=split_date,
+                    test_n_days=test_n_days,
+                )
+                time.sleep(15)
+                total_exp += 1
+            except Exception as e:
+                print(f"Exception occurred {e}")
+                exit()
+
+        print(f"Total experiments run for {spacing_type} spacing: {total_exp}")
 
 
-RQ2()
+RQ3()
