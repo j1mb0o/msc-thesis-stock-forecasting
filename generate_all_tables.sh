@@ -13,12 +13,18 @@ NC='\033[0m' # No Color
 
 # Define experiment names
 EXPERIMENTS=(
-    "train-restricted-years"
-    "train-restricted-years-pct"
-    "train-less-year-linear"
-    "train-less-year-linear-pct"
-    "train-less-year-log"
-    "train-less-year-log-pct"
+	"rq3-covid-crash-2020-linear"
+	"rq3-covid-crash-2020-log-pct"
+	"rq3-financial-crisis-2008-log"
+	"rq3-market-downturn-2022-linear-pct"
+	"rq3-covid-crash-2020-linear-pct"
+	"rq3-financial-crisis-2008-linear"
+	"rq3-financial-crisis-2008-log-pct"
+	"rq3-market-downturn-2022-log"
+	"rq3-covid-crash-2020-log"
+	"rq3-financial-crisis-2008-linear-pct"
+	"rq3-market-downturn-2022-linear"
+	"rq3-market-downturn-2022-log-pct"
 )
 
 # Define error metrics
@@ -32,7 +38,7 @@ METRICS=(
 )
 
 # Base directory for configs (can be overridden with -b flag)
-BASE_PATH="configs/MSFT/1d"
+BASE_PATH="configs/MSFT/1h"
 
 # Parse command line arguments
 SPECIFIC_EXPERIMENT=""
@@ -134,7 +140,7 @@ fi
 echo ""
 
 # Show output directory
-OUTPUT_DIR="tables/1d"
+OUTPUT_DIR="tables/1h"
 if [ -d "$OUTPUT_DIR" ]; then
     echo "Generated tables saved to: $OUTPUT_DIR/"
     echo ""
