@@ -1,0 +1,20 @@
+\begin{table}[h!]
+  \centering
+  \caption{RMSE - Train Less Year Linear}
+  \label{tab:train-less-year-linear_rmse}
+  \adjustbox{max width=\textwidth}{
+\begin{tabular}{cccccccccccc}
+\toprule
+ &  & 25d & 50d & 75d & 100d & 125d & 150d & 175d & 200d & 225d & 250d \\
+Horizon & Method &  &  &  &  &  &  &  &  &  &  \\
+\midrule
+\multirow[c]{5}{*}{1d} & arima & 1.8107 & 1.8107 & 1.8107 & 1.8107 & 1.8107 & 1.8107 & 1.8107 & 1.8107 & 1.8107 & 1.8107 \\
+ & chronos_base & 2.1367 & 2.1463 & 2.1527 & 2.1610 & 2.1879 & 2.2396 & 2.2465 & 2.2369 & 2.2487 & 2.2692 \\
+ & fm & 1.9672 & 1.9796 & 1.9815 & 1.9688 & 1.9534 & 1.9372 & 1.9489 & 1.9393 & 1.9493 & 1.9462 \\
+ & naive & 1.8107 & 1.8107 & 1.8107 & 1.8107 & 1.8107 & 1.8107 & 1.8107 & 1.8107 & 1.8107 & 1.8107 \\
+ & sundial & 1.8920 & 1.9029 & 1.8827 & 1.8901 & 1.9049 & 1.9006 & 1.8974 & 1.8913 & 1.9010 & 1.8993 \\
+\bottomrule
+\end{tabular}
+
+ }
+\end{table}

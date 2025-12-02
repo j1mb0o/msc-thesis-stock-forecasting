@@ -1,0 +1,20 @@
+\begin{table}[h!]
+  \centering
+  \caption{SMAPE - Train Less Year Linear Pct}
+  \label{tab:train-less-year-linear-pct_smape}
+  \adjustbox{max width=\textwidth}{
+\begin{tabular}{cccccccccccc}
+\toprule
+ &  & 25d & 50d & 75d & 100d & 125d & 150d & 175d & 200d & 225d & 250d \\
+Horizon & Method &  &  &  &  &  &  &  &  &  &  \\
+\midrule
+\multirow[c]{5}{*}{1d} & arima & - & - & - & - & - & - & - & - & - & - \\
+ & chronos_base & 182.0417 & 184.3484 & 184.1821 & 184.6733 & 185.1923 & 185.4131 & 185.8674 & 185.8694 & 185.9981 & 185.6480 \\
+ & fm & 169.6505 & 171.5603 & 167.2387 & 167.1413 & 171.5588 & 172.7808 & 171.5941 & 172.3419 & 172.1760 & 172.6164 \\
+ & naive & 147.4777 & 147.4777 & 147.4777 & 147.4777 & 147.4777 & 147.4777 & 147.4777 & 147.4777 & 147.4777 & 147.4777 \\
+ & sundial & 165.7318 & 164.7944 & 166.8166 & 165.6882 & 167.1323 & 165.8981 & 167.1394 & 167.6731 & 167.6962 & 168.7677 \\
+\bottomrule
+\end{tabular}
+
+ }
+\end{table}

@@ -1,0 +1,20 @@
+\begin{table}[h!]
+  \centering
+  \caption{MAE - Train Less Year Linear}
+  \label{tab:train-less-year-linear_mae}
+  \adjustbox{max width=\textwidth}{
+\begin{tabular}{cccccccccccc}
+\toprule
+ &  & 25d & 50d & 75d & 100d & 125d & 150d & 175d & 200d & 225d & 250d \\
+Horizon & Method &  &  &  &  &  &  &  &  &  &  \\
+\midrule
+\multirow[c]{5}{*}{1d} & arima & 1.2276 & 1.2276 & 1.2276 & 1.2276 & 1.2276 & 1.2276 & 1.2276 & 1.2276 & 1.2276 & 1.2276 \\
+ & chronos_base & 1.5454 & 1.5507 & 1.5536 & 1.5610 & 1.5900 & 1.6387 & 1.6467 & 1.6419 & 1.6498 & 1.6668 \\
+ & fm & 1.3859 & 1.3889 & 1.4088 & 1.3855 & 1.3653 & 1.3430 & 1.3603 & 1.3666 & 1.3669 & 1.3654 \\
+ & naive & 1.2276 & 1.2276 & 1.2276 & 1.2276 & 1.2276 & 1.2276 & 1.2276 & 1.2276 & 1.2276 & 1.2276 \\
+ & sundial & 1.3060 & 1.3186 & 1.3001 & 1.3091 & 1.3256 & 1.3286 & 1.3228 & 1.3220 & 1.3287 & 1.3266 \\
+\bottomrule
+\end{tabular}
+
+ }
+\end{table}
