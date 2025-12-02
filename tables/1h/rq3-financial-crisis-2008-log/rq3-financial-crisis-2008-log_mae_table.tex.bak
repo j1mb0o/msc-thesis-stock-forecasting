@@ -1,0 +1,20 @@
+\begin{table}[h!]
+  \centering
+  \caption{MAE - Rq3 Financial Crisis 2008 Log}
+  \label{tab:rq3-financial-crisis-2008-log_mae}
+  \adjustbox{max width=\textwidth}{
+\begin{tabular}{cccccccccccc}
+\toprule
+ &  & 25d & 32d & 41d & 53d & 69d & 89d & 116d & 149d & 193d & 249d \\
+Horizon & Method &  &  &  &  &  &  &  &  &  &  \\
+\midrule
+\multirow[c]{5}{*}{1d} & arima & 0.1759 & 0.1734 & 0.1734 & 0.1734 & 0.1734 & 0.1796 & 0.1738 & 0.1737 & 0.1737 & 0.1736 \\
+ & chronos_base & 0.1943 & 0.2028 & 0.2002 & 0.2002 & 0.2162 & 0.2592 & 0.2487 & 0.2182 & 0.2022 & 0.2164 \\
+ & fm & 0.2098 & 0.2006 & 0.2032 & 0.2005 & 0.1949 & 0.1862 & 0.1799 & 0.1883 & 0.1900 & 0.1895 \\
+ & naive & 0.1734 & 0.1734 & 0.1734 & 0.1734 & 0.1734 & 0.1734 & 0.1734 & 0.1734 & 0.1734 & 0.1734 \\
+ & sundial & 0.1976 & 0.1903 & 0.1972 & 0.1944 & 0.2024 & 0.1989 & 0.1815 & 0.1849 & 0.1805 & 0.1772 \\
+\bottomrule
+\end{tabular}
+
+ }
+\end{table}

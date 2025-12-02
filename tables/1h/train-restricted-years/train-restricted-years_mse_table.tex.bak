@@ -1,0 +1,20 @@
+\begin{table}[h!]
+  \centering
+  \caption{MSE - Train Restricted Years}
+  \label{tab:train-restricted-years_mse}
+  \adjustbox{max width=\textwidth}{
+\begin{tabular}{cccccccccccc}
+\toprule
+ &  & 1y & 2y & 3y & 4y & 5y & 6y & 7y & 8y & 9y & 10y \\
+Horizon & Method &  &  &  &  &  &  &  &  &  &  \\
+\midrule
+\multirow[c]{5}{*}{1d} & arima & 3.2787 & 3.2787 & 3.2866 & 3.2865 & 3.2869 & 3.2868 & 3.2832 & 3.2833 & 3.2834 & 3.2836 \\
+ & chronos_base & 5.0919 & 5.1025 & 5.1025 & 5.1025 & 5.1025 & 5.1025 & 5.1025 & 5.1025 & 5.1025 & 5.1025 \\
+ & fm & 3.8465 & 3.9155 & 3.9155 & 3.9155 & 3.9155 & 3.9155 & 3.9155 & 3.9155 & 3.9155 & 3.9155 \\
+ & naive & 3.2787 & 3.2787 & 3.2787 & 3.2787 & 3.2787 & 3.2787 & 3.2787 & 3.2787 & 3.2787 & 3.2787 \\
+ & sundial & 3.5002 & 3.5068 & 4.4430 & 26.0026 & 36.0041 & 22.2871 & 18.8530 & 25.1669 & 26.6109 & 31.2951 \\
+\bottomrule
+\end{tabular}
+
+ }
+\end{table}

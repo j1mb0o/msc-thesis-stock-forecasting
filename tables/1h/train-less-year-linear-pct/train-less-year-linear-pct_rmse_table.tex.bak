@@ -1,0 +1,20 @@
+\begin{table}[h!]
+  \centering
+  \caption{RMSE - Train Less Year Linear Pct}
+  \label{tab:train-less-year-linear-pct_rmse}
+  \adjustbox{max width=\textwidth}{
+\begin{tabular}{cccccccccccc}
+\toprule
+ &  & 25d & 50d & 75d & 100d & 125d & 150d & 175d & 200d & 225d & 250d \\
+Horizon & Method &  &  &  &  &  &  &  &  &  &  \\
+\midrule
+\multirow[c]{5}{*}{1d} & arima & 0.0060 & 0.0060 & 0.0060 & 0.0060 & 0.0060 & 0.0060 & 0.0060 & 0.0060 & 0.0060 & 0.0060 \\
+ & chronos_base & 0.0060 & 0.0060 & 0.0060 & 0.0060 & 0.0060 & 0.0060 & 0.0060 & 0.0060 & 0.0060 & 0.0060 \\
+ & fm & 0.0061 & 0.0060 & 0.0061 & 0.0061 & 0.0060 & 0.0060 & 0.0060 & 0.0060 & 0.0060 & 0.0060 \\
+ & naive & 0.0084 & 0.0084 & 0.0084 & 0.0084 & 0.0084 & 0.0084 & 0.0084 & 0.0084 & 0.0084 & 0.0084 \\
+ & sundial & 0.0061 & 0.0061 & 0.0061 & 0.0061 & 0.0060 & 0.0060 & 0.0060 & 0.0061 & 0.0061 & 0.0060 \\
+\bottomrule
+\end{tabular}
+
+ }
+\end{table}

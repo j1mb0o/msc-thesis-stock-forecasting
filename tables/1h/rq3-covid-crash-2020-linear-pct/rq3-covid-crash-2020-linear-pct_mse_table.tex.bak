@@ -1,0 +1,20 @@
+\begin{table}[h!]
+  \centering
+  \caption{MSE - Rq3 Covid Crash 2020 Linear Pct}
+  \label{tab:rq3-covid-crash-2020-linear-pct_mse}
+  \adjustbox{max width=\textwidth}{
+\begin{tabular}{cccccccccccc}
+\toprule
+ &  & 25d & 50d & 75d & 100d & 125d & 150d & 175d & 200d & 225d & 250d \\
+Horizon & Method &  &  &  &  &  &  &  &  &  &  \\
+\midrule
+\multirow[c]{5}{*}{1d} & arima & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 \\
+ & chronos_base & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 \\
+ & fm & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 \\
+ & naive & 0.0008 & 0.0008 & 0.0008 & 0.0008 & 0.0008 & 0.0008 & 0.0008 & 0.0008 & 0.0008 & 0.0008 \\
+ & sundial & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 & 0.0003 \\
+\bottomrule
+\end{tabular}
+
+ }
+\end{table}

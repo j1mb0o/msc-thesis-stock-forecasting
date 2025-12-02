@@ -1,0 +1,20 @@
+\begin{table}[h!]
+  \centering
+  \caption{MAE - Rq3 Market Downturn 2022 Linear}
+  \label{tab:rq3-market-downturn-2022-linear_mae}
+  \adjustbox{max width=\textwidth}{
+\begin{tabular}{cccccccccccc}
+\toprule
+ &  & 25d & 50d & 75d & 100d & 125d & 150d & 175d & 200d & 225d & 250d \\
+Horizon & Method &  &  &  &  &  &  &  &  &  &  \\
+\midrule
+\multirow[c]{5}{*}{1d} & arima & 1.6353 & 1.6353 & 1.6353 & 1.6353 & 1.6353 & 1.6353 & 1.6353 & 1.6353 & 1.6353 & 1.6353 \\
+ & chronos_base & 1.9194 & 1.9326 & 1.9552 & 1.9908 & 1.9138 & 1.9106 & 1.9605 & 1.9638 & 1.9514 & 2.0185 \\
+ & fm & 1.8230 & 1.8043 & 1.7974 & 1.8133 & 1.8942 & 1.9381 & 1.7588 & 1.7650 & 1.7480 & 1.7836 \\
+ & naive & 1.6353 & 1.6353 & 1.6353 & 1.6353 & 1.6353 & 1.6353 & 1.6353 & 1.6353 & 1.6353 & 1.6353 \\
+ & sundial & 1.7878 & 1.7995 & 1.7893 & 1.7351 & 1.7205 & 1.7281 & 1.7493 & 1.7339 & 1.7290 & 1.7309 \\
+\bottomrule
+\end{tabular}
+
+ }
+\end{table}

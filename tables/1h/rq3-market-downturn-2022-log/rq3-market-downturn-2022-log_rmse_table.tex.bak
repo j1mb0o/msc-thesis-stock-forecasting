@@ -1,0 +1,20 @@
+\begin{table}[h!]
+  \centering
+  \caption{RMSE - Rq3 Market Downturn 2022 Log}
+  \label{tab:rq3-market-downturn-2022-log_rmse}
+  \adjustbox{max width=\textwidth}{
+\begin{tabular}{cccccccccccc}
+\toprule
+ &  & 25d & 32d & 41d & 53d & 69d & 89d & 116d & 149d & 193d & 249d \\
+Horizon & Method &  &  &  &  &  &  &  &  &  &  \\
+\midrule
+\multirow[c]{5}{*}{1d} & arima & 2.1999 & 2.1999 & 2.1999 & 2.1999 & 2.1999 & 2.1999 & 2.1999 & 2.1999 & 2.1999 & 2.1999 \\
+ & chronos_base & 2.5171 & 2.5633 & 2.5408 & 2.5066 & 2.5532 & 2.5457 & 2.5365 & 2.5159 & 2.5900 & 2.6564 \\
+ & fm & 2.4135 & 2.4181 & 2.4051 & 2.3658 & 2.3048 & 2.4045 & 2.3939 & 2.5248 & 2.2987 & 2.3370 \\
+ & naive & 2.1999 & 2.1999 & 2.1999 & 2.1999 & 2.1999 & 2.1999 & 2.1999 & 2.1999 & 2.1999 & 2.1999 \\
+ & sundial & 2.3617 & 2.3351 & 2.3470 & 2.3430 & 2.3607 & 2.3298 & 2.2892 & 2.2643 & 2.2831 & 2.2852 \\
+\bottomrule
+\end{tabular}
+
+ }
+\end{table}
