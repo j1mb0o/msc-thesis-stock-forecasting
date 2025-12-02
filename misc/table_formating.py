@@ -13,21 +13,26 @@ mapping = {
     # Add more pairs
 }
 
-dir_path = '/Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/tables/1d/train-less-year-log/*.tex'  # Your table files
+base_dir = '/Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/tables/'
 
-for filepath in glob.glob(dir_path):
-    backup = filepath + '.bak'
-    # print(filepath)
-    with open(filepath, 'r') as f:
-        content = f.read()
-    
-    # Apply all replacements
-    for old, new in mapping.items():
-        content = content.replace(old, new)
-    
-    # Write back (backup first)
-    os.rename(filepath, backup)
-    with open(filepath, 'w') as f:
-        f.write(content)
-    
-    print(f"Updated {os.path.basename(filepath)}")
+for timefreq in ['1d', '1h']:
+    timefreq_path = os.path.join(base_dir, timefreq)
+    for subfolder in os.listdir(timefreq_path):
+        subfolder_path = os.path.join(timefreq_path, subfolder)
+        if os.path.isdir(subfolder_path):
+            for filepath in glob.glob(os.path.join(subfolder_path, '*.tex')):
+                backup = filepath + '.bak'
+                # print(filepath)
+                with open(filepath, 'r') as f:
+                    content = f.read()
+                
+                # Apply all replacements
+                for old, new in mapping.items():
+                    content = content.replace(old, new)
+                
+                # Write back (backup first)
+                os.rename(filepath, backup)
+                with open(filepath, 'w') as f:
+                    f.write(content)
+                
+                print(f"Updated {os.path.basename(filepath)}")
