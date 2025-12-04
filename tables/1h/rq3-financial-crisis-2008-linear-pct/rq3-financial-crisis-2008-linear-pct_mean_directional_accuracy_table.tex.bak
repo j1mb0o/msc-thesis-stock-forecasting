@@ -1,4 +1,4 @@
-\begin{table}[h!]
+\begin{table}[H]
   \centering
   \caption{MEAN_DIRECTIONAL_ACCURACY - Rq3 Financial Crisis 2008 Linear Pct}
   \label{tab:rq3-financial-crisis-2008-linear-pct_mean_directional_accuracy}
