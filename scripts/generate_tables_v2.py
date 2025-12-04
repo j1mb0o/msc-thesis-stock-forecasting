@@ -32,7 +32,7 @@ def load_experiment_data(
         Dictionary with structure: {(horizon, method): {training_period: [metric_values]}}
     """
     if base_path is None:
-        base_path = Path(__file__).parent.parent / "configs" / "MSFT" / "1h"
+        base_path = Path(__file__).parent.parent / "configs" / "MSFT" / "1d"
     else:
         base_path = Path(base_path).resolve()
 
@@ -217,7 +217,7 @@ def generate_latex_table(
 
     # 4. Manually construct the Table Wrapper with \adjustbox
     # This gives us exact control over the layout requested.
-    full_latex = f"""\\begin{{table}}[h!]
+    full_latex = f"""\\begin{{table}}[H]
   \\centering
   \\caption{{{caption}}}
   \\label{{{label}}}
@@ -315,7 +315,7 @@ Examples:
     # Set defaults
     if args.output is None:
         # Create output directory structure: tables/1d/{experiment_name}/
-        output_dir = Path(__file__).parent.parent / "tables" / "1h" / args.experiment
+        output_dir = Path(__file__).parent.parent / "tables" / "1d" / args.experiment
         output_dir.mkdir(parents=True, exist_ok=True)
         args.output = str(output_dir / f"{args.experiment}_{args.metric}_table.tex")
 

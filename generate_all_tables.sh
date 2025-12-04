@@ -12,19 +12,28 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Define experiment names
+# EXPERIMENTS=(
+# 	"rq3-covid-crash-2020-linear"
+# 	"rq3-covid-crash-2020-log-pct"
+# 	"rq3-financial-crisis-2008-log"
+# 	"rq3-market-downturn-2022-linear-pct"
+# 	"rq3-covid-crash-2020-linear-pct"
+# 	"rq3-financial-crisis-2008-linear"
+# 	"rq3-financial-crisis-2008-log-pct"
+# 	"rq3-market-downturn-2022-log"
+# 	"rq3-covid-crash-2020-log"
+# 	"rq3-financial-crisis-2008-linear-pct"
+# 	"rq3-market-downturn-2022-linear"
+# 	"rq3-market-downturn-2022-log-pct"
+# )
+
 EXPERIMENTS=(
-	"rq3-covid-crash-2020-linear"
-	"rq3-covid-crash-2020-log-pct"
-	"rq3-financial-crisis-2008-log"
-	"rq3-market-downturn-2022-linear-pct"
-	"rq3-covid-crash-2020-linear-pct"
-	"rq3-financial-crisis-2008-linear"
-	"rq3-financial-crisis-2008-log-pct"
-	"rq3-market-downturn-2022-log"
-	"rq3-covid-crash-2020-log"
-	"rq3-financial-crisis-2008-linear-pct"
-	"rq3-market-downturn-2022-linear"
-	"rq3-market-downturn-2022-log-pct"
+    "train-less-year-linear"
+    "train-less-year-linear-pct"
+    "train-less-year-log"
+    "train-less-year-log-pct"
+    "train-restricted-years"
+    "train-restricted-years-pct"
 )
 
 # Define error metrics
@@ -38,7 +47,7 @@ METRICS=(
 )
 
 # Base directory for configs (can be overridden with -b flag)
-BASE_PATH="configs/MSFT/1h"
+BASE_PATH="configs/MSFT/1d"
 
 # Parse command line arguments
 SPECIFIC_EXPERIMENT=""
