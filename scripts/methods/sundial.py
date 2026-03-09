@@ -62,7 +62,7 @@ class SundialForecaster:
             # Generate predictions
             output = self.model.generate(seqs, max_new_tokens=self.horizon, num_samples=num_samples)
             
-            forecast = output[0].median(dim=0).numpy()
+            forecast = output[0].mean(dim=0).numpy()
             
             forecasts.extend(forecast)
 

@@ -72,8 +72,7 @@ class ChronosForecaster:
                 self.horizon,
             )
 
-            # For simplicity, we'll take the median of the quantiles as the forecast
-            forecast = np.median(forecast_tensor[0].cpu().numpy(), axis=0)
+            forecast = np.mean(forecast_tensor[0].cpu().numpy(), axis=0)
             forecasts.extend(forecast)
 
             # Update the context with the new observations from the test set

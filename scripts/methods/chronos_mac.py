@@ -74,7 +74,6 @@ class ChronosForecaster:
                 num_samples=num_samples,
             )
 
-            # For simplicity, we'll take the median of the samples as the forecast
             forecast = np.quantile(forecast_tensor[0], 0.5, axis=0)
             forecasts.extend(forecast)
 
