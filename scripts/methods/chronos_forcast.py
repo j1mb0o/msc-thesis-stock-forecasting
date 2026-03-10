@@ -72,7 +72,7 @@ class ChronosForecaster:
                 self.horizon,
             )
 
-            forecast = np.mean(forecast_tensor[0].cpu().numpy(), axis=0)
+            forecast = np.median(forecast_tensor[0].cpu().numpy(), axis=0)
             forecasts.extend(forecast)
 
             # Update the context with the new observations from the test set
