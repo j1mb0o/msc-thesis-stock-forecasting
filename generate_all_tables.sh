@@ -47,13 +47,14 @@ METRICS=(
 )
 
 # Base directory for configs (can be overridden with -b flag)
-BASE_PATH="configs/MSFT/1d"
+BASE_PATH="configs/MSFT/1h"
 
 # Parse command line arguments
 SPECIFIC_EXPERIMENT=""
 SPECIFIC_METRIC=""
+OUTPUT_DIR="tables/1h"
 
-while getopts "e:m:b:h" opt; do
+while getopts "e:m:b:o:h" opt; do
     case $opt in
         e)
             SPECIFIC_EXPERIMENT="$OPTARG"
@@ -64,13 +65,17 @@ while getopts "e:m:b:h" opt; do
         b)
             BASE_PATH="$OPTARG"
             ;;
+        o)
+            OUTPUT_DIR="$OPTARG"
+            ;;
         h)
-            echo "Usage: $0 [-e experiment] [-m metric] [-b base_path]"
+            echo "Usage: $0 [-e experiment] [-m metric] [-b base_path] [-o output_dir]"
             echo ""
             echo "Options:"
             echo "  -e    Generate tables for a specific experiment only"
             echo "  -m    Generate tables for a specific metric only"
             echo "  -b    Base path to configs directory (default: configs/MSFT/1d)"
+            echo "  -o    Output directory for generated tables (default: tables/1d)"
             echo "  -h    Show this help message"
             echo ""
             echo "Examples:"
@@ -78,6 +83,7 @@ while getopts "e:m:b:h" opt; do
             echo "  $0 -e train-restricted-years          # Generate all metrics for one experiment"
             echo "  $0 -m rmse                            # Generate RMSE tables for all experiments"
             echo "  $0 -e train-restricted-years -m rmse  # Generate one specific table"
+            echo "  $0 -o tables/custom-output            # Write all tables under custom directory"
             exit 0
             ;;
         \?)
@@ -107,6 +113,7 @@ echo -e "${GREEN}Starting Table Generation${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo "Total tables to generate: $TOTAL_TABLES"
 echo "Base path: $BASE_PATH"
+echo "Output directory: $OUTPUT_DIR"
 echo ""
 
 # Iterate through all combinations
@@ -115,6 +122,8 @@ for experiment in "${EXPERIMENTS[@]}"; do
 
     for metric in "${METRICS[@]}"; do
         CURRENT=$((CURRENT + 1))
+        OUTPUT_FILE="$OUTPUT_DIR/$experiment/${experiment}_${metric}_table.tex"
+        mkdir -p "$(dirname "$OUTPUT_FILE")"
 
         echo -e "  [$CURRENT/$TOTAL_TABLES] Generating ${metric} table..."
 
@@ -122,7 +131,8 @@ for experiment in "${EXPERIMENTS[@]}"; do
         if python scripts/generate_tables_v2.py \
             --experiment "$experiment" \
             --metric "$metric" \
-            --base-path "$BASE_PATH" 2>&1 | grep -q "Successfully generated"; then
+            --base-path "$BASE_PATH" \
+            --output "$OUTPUT_FILE" 2>&1 | grep -q "Successfully generated"; then
 
             SUCCESS=$((SUCCESS + 1))
             echo -e "    ${GREEN}✓${NC} Success"
@@ -149,7 +159,6 @@ fi
 echo ""
 
 # Show output directory
-OUTPUT_DIR="tables/1h"
 if [ -d "$OUTPUT_DIR" ]; then
     echo "Generated tables saved to: $OUTPUT_DIR/"
     echo ""
