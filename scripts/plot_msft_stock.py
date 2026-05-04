@@ -83,7 +83,7 @@ def plot_msft_close(dates, closes, output_path: Path) -> None:
 def main() -> None:
     repo_root = Path(__file__).resolve().parent.parent
     csv_path = repo_root / "data" / "MSFT" / "MSFT_1d.csv"
-    output_path = repo_root / "figures" / "msft_1d_close.png"
+    output_path = repo_root / "figures" / "msft_1d_close.pdf"
 
     dates, closes = load_data(csv_path)
     plot_msft_close(dates, closes, output_path)

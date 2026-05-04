@@ -220,10 +220,11 @@ def plot_crashes(ticker: str, prices: pd.Series, drawdown: pd.Series,
     ax2.grid(True, alpha=0.3, linestyle='--')
     ax2.legend(loc='lower left', fontsize=11, framealpha=0.9, ncol=2)
 
-    # Format x-axis
+    # Format x-axis with sparse, readable date labels.
+    ax2.set_xlim(prices.index.min(), prices.index.max())
+    ax2.xaxis.set_major_locator(mdates.MonthLocator(bymonth=[1, 7]))
     ax2.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
-    ax2.xaxis.set_major_locator(mdates.MonthLocator(interval=3))
-    plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45, ha='right')
+    plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45, ha='right', fontsize=9)
 
     plt.tight_layout()
 
@@ -233,7 +234,6 @@ def plot_crashes(ticker: str, prices: pd.Series, drawdown: pd.Series,
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
         logging.info(f"Figure saved to {output_path}")
 
-    plt.show()
 
 
 def main():
@@ -255,7 +255,7 @@ def main():
     parser.add_argument(
         '--output',
         type=str,
-        default='figures/market_crashes_hourly.png',
+        default='figures/market_crashes_hourly.pdf',
         help='Output path for figure'
     )
     parser.add_argument(

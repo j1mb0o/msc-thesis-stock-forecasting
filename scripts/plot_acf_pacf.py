@@ -79,7 +79,7 @@ def plot_autocorrelations(data_path, output_dir):
         ax2.set_ylabel("PACF")
 
         # Save the figure for raw prices
-        file_name = os.path.basename(data_path).replace(".csv", "_acf_pacf.png")
+        file_name = os.path.basename(data_path).replace(".csv", "_acf_pacf.pdf")
         output_path = os.path.join(output_dir, file_name)
         plt.tight_layout(rect=(0, 0.02, 1, 0.96))
         plt.savefig(output_path, dpi=300, bbox_inches="tight")
@@ -111,7 +111,7 @@ def plot_autocorrelations(data_path, output_dir):
 
         # Save the figure for returns
         returns_file_name = os.path.basename(data_path).replace(
-            ".csv", "_returns_acf_pacf.png"
+            ".csv", "_returns_acf_pacf.pdf"
         )
         returns_output_path = os.path.join(output_dir, returns_file_name)
         plt.tight_layout(rect=(0, 0.02, 1, 0.96))
