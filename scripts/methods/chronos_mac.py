@@ -6,6 +6,8 @@ import pandas as pd
 import tqdm
 from chronos_mlx import ChronosPipeline
 
+from methods import _validate_train_test
+
 warnings.filterwarnings("ignore")
 
 logging.basicConfig(
@@ -13,7 +15,7 @@ logging.basicConfig(
 )
 
 
-class ChronosForecaster:
+class ChronosMlxForecaster:
     """
     A class for performing Chronos forecasting on time series data using MLX.
     """
@@ -22,7 +24,7 @@ class ChronosForecaster:
         self, train_data, test_data, model_name="amazon/chronos-bolt-base", horizon_len=1
     ):
         """
-        Initializes the ChronosForecaster with training and test data.
+        Initializes the ChronosMlxForecaster with training and test data.
 
         Args:
             train_data (pd.Series): The training data. Must be sorted chronologically.
@@ -30,14 +32,7 @@ class ChronosForecaster:
             model_name (str): The name of the Chronos model to use.
             horizon_len (int): The forecast horizon.
         """
-        if not isinstance(train_data, pd.Series):
-            raise TypeError("train_data must be a pandas Series.")
-        if not isinstance(test_data, pd.Series):
-            raise TypeError("test_data must be a pandas Series.")
-        if train_data.empty:
-            raise ValueError("train_data cannot be empty.")
-        if test_data.empty:
-            raise ValueError("test_data cannot be empty.")
+        _validate_train_test(train_data, test_data)
 
         self.train_data = train_data
         self.test_data = test_data
@@ -63,10 +58,8 @@ class ChronosForecaster:
         forecasts = []
 
         for i in tqdm.tqdm(range(0, len(self.test_data), self.horizon)):
-            # Prepare the input context
             context_values = context.values
 
-            # Generate predictions
             # forecast shape: [num_series, num_samples, prediction_length]
             forecast_tensor = self.pipeline.predict(
                 context_values,
@@ -77,7 +70,6 @@ class ChronosForecaster:
             forecast = np.quantile(forecast_tensor[0], 0.5, axis=0)
             forecasts.extend(forecast)
 
-            # Update the context with the new observations from the test set
             new_obs = self.test_data[i : i + self.horizon]
             context = pd.concat([context, new_obs])
 
@@ -98,9 +90,8 @@ class ChronosForecaster:
 if __name__ == "__main__":
     import numpy as np
 
-    print("Running test suite for ChronosForecaster...")
+    print("Running test suite for ChronosMlxForecaster...")
 
-    # Setup for functional tests
     data = pd.Series(
         np.linspace(0, 100, 100),
         index=pd.date_range(start="2023-01-01", periods=100, freq="D"),
@@ -108,32 +99,28 @@ if __name__ == "__main__":
     )
     train_main, test_main = data.iloc[:80], data.iloc[80:]
 
-    # Test Case 1: Input Validation
     print("\n--- Test Case 1: Input Validation ---")
     try:
-        # Test for non-Series input
         print("Testing with list input for train_data...")
-        ChronosForecaster(train_data=list(train_main), test_data=test_main)
+        ChronosMlxForecaster(train_data=list(train_main), test_data=test_main)
     except TypeError as e:
         print(f"Successfully caught expected error: {e}")
 
     try:
-        # Test for empty input
         print("Testing with empty Series for train_data...")
         empty_series = pd.Series([], dtype=float)
-        ChronosForecaster(train_data=empty_series, test_data=test_main)
+        ChronosMlxForecaster(train_data=empty_series, test_data=test_main)
     except ValueError as e:
         print(f"Successfully caught expected error: {e}")
     print("Input validation tests passed.")
 
-    # Test Case 2: Core Functionality (Happy Path)
     print("\n--- Test Case 2: Core Functionality (Happy Path) ---")
     horizon_happy = 5
     test_len_happy = len(test_main)
     print(
         f"Testing with horizon={horizon_happy} on a test set of length {test_len_happy}."
     )
-    chronos_happy = ChronosForecaster(
+    chronos_happy = ChronosMlxForecaster(
         train_data=train_main.copy(),
         test_data=test_main.copy(),
         horizon_len=horizon_happy,
@@ -152,15 +139,14 @@ if __name__ == "__main__":
     )
     print("Core functionality test passed.")
 
-    # Test Case 3: Incongruent Horizon
     print("\n--- Test Case 3: Incongruent Horizon ---")
-    test_incongruent = data.iloc[80:97]  # 17 samples
+    test_incongruent = data.iloc[80:97]
     horizon_incongruent = 5
     test_len_incongruent = len(test_incongruent)
     print(
         f"Testing with horizon={horizon_incongruent} on a test set of length {test_len_incongruent}."
     )
-    chronos_incongruent = ChronosForecaster(
+    chronos_incongruent = ChronosMlxForecaster(
         train_data=train_main.copy(),
         test_data=test_incongruent.copy(),
         horizon_len=horizon_incongruent,
@@ -175,15 +161,14 @@ if __name__ == "__main__":
     )
     print("Incongruent horizon test passed.")
 
-    # Test Case 4: Horizon Exceeds Test Data
     print("\n--- Test Case 4: Horizon Exceeds Test Data ---")
-    test_short = data.iloc[80:85]  # 5 samples
+    test_short = data.iloc[80:85]
     horizon_large = 10
     test_len_short = len(test_short)
     print(
         f"Testing with horizon={horizon_large} on a test set of length {test_len_short}."
     )
-    chronos_short = ChronosForecaster(
+    chronos_short = ChronosMlxForecaster(
         train_data=train_main.copy(),
         test_data=test_short.copy(),
         horizon_len=horizon_large,

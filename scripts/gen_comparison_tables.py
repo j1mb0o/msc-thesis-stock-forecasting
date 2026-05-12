@@ -8,7 +8,6 @@ tables showing all models' performance at each training size.
 
 import argparse
 import logging
-import os
 from pathlib import Path
 from typing import Dict, List, Tuple
 import yaml
@@ -52,7 +51,6 @@ def load_experiment_metrics(
             logger.warning(f"Path does not exist: {model_path}")
             continue
 
-        # Find all config files for this model
         config_files = list(model_path.glob(f"*_horizon_{horizon}.yaml"))
 
         for config_file in config_files:
@@ -60,12 +58,10 @@ def load_experiment_metrics(
                 with open(config_file, 'r') as f:
                     config = yaml.safe_load(f)
 
-                # Extract metrics
                 metrics = config.get('evaluation_metrics', {})
                 training_size = config.get('training_period_value')
                 training_unit = config.get('training_period_unit', 'days')
 
-                # Convert to days if needed
                 if training_unit == 'years':
                     training_size = training_size * 365
 
@@ -75,19 +71,14 @@ def load_experiment_metrics(
                     'mse': metrics.get('mse'),
                     'mae': metrics.get('mae'),
                     'rmse': metrics.get('rmse'),
-                    'mape': metrics.get('mape', metrics.get('mape_percent'))  # Handle both formats
+                    'mape': metrics.get('mape', metrics.get('mape_percent'))
                 })
 
             except Exception as e:
                 logger.error(f"Error loading {config_file}: {e}")
                 continue
 
-    df = pd.DataFrame(all_data)
-
-    # Sort by training size
-    df = df.sort_values('training_size')
-
-    return df
+    return pd.DataFrame(all_data).sort_values('training_size')
 
 
 def generate_comparison_table(
@@ -108,15 +99,12 @@ def generate_comparison_table(
     Returns:
         LaTeX table string
     """
-    # Pivot to get models as columns
     pivot = df.pivot(index='training_size', columns='model', values=metric)
 
-    # Reorder columns to preferred order
     model_order = ['arima', 'chronos_base', 'sundial', 'fm', 'naive']
     available_models = [m for m in model_order if m in pivot.columns]
     pivot = pivot[available_models]
 
-    # Rename columns for display
     column_names = {
         'arima': 'ARIMA',
         'chronos_base': 'Chronos',
@@ -126,8 +114,6 @@ def generate_comparison_table(
     }
     pivot.columns = [column_names.get(col, col) for col in pivot.columns]
 
-    # Start LaTeX table
-    num_cols = len(pivot.columns) + 2  # +2 for training size and best model
     latex = []
     latex.append("\\begin{table}[htbp]")
     latex.append("\\centering")
@@ -135,23 +121,17 @@ def generate_comparison_table(
     latex.append(f"\\label{{{label}}}")
     latex.append("\\small")
 
-    # Column specification
     col_spec = "l" + "r" * len(pivot.columns) + "l"
     latex.append(f"\\begin{{tabular}}{{{col_spec}}}")
     latex.append("\\toprule")
 
-    # Header row
     header = "Training Days & " + " & ".join(pivot.columns) + " & Best Model \\\\"
     latex.append(header)
     latex.append("\\midrule")
 
-    # Data rows
     for train_size, row in pivot.iterrows():
-        # Find best (minimum) value and model
-        min_val = row.min()
         best_model = row.idxmin()
 
-        # Format values, bold the best one
         formatted_values = []
         for model_name, val in row.items():
             if pd.isna(val):
@@ -161,14 +141,11 @@ def generate_comparison_table(
             else:
                 formatted_values.append(f"{val:.4f}")
 
-        # Create row
         row_str = f"{int(train_size)} & " + " & ".join(formatted_values) + f" & {best_model} \\\\"
         latex.append(row_str)
 
-    # Add summary statistics
     latex.append("\\midrule")
 
-    # Mean performance
     mean_vals = pivot.mean()
     best_mean_model = mean_vals.idxmin()
     formatted_means = []
@@ -183,7 +160,6 @@ def generate_comparison_table(
     mean_row = "\\textit{Mean} & " + " & ".join(formatted_means) + f" & {best_mean_model} \\\\"
     latex.append(mean_row)
 
-    # Count of best performances
     best_counts = pivot.idxmin(axis=1).value_counts()
     count_strs = []
     for model_name in pivot.columns:
@@ -241,7 +217,6 @@ def main():
 
     logger.info(f"Loading experiment data: {args.ticker}/{args.timefreq}/{args.exp_type} (h={args.horizon})")
 
-    # Load data
     df = load_experiment_metrics(
         ticker=args.ticker,
         timefreq=args.timefreq,
@@ -257,11 +232,9 @@ def main():
     logger.info(f"Models: {df['model'].unique()}")
     logger.info(f"Training sizes: {sorted(df['training_size'].unique())}")
 
-    # Create output directory
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Generate tables for each metric
     metrics = [
         ('mse', 'Mean Squared Error (MSE)', 'MSE'),
         ('mae', 'Mean Absolute Error (MAE)', 'MAE'),
@@ -269,29 +242,22 @@ def main():
         ('mape', 'Mean Absolute Percentage Error (MAPE)', 'MAPE')
     ]
 
-    # Get training size range
     min_train = int(df['training_size'].min())
     max_train = int(df['training_size'].max())
 
-    # Format horizon with units
     horizon_unit = "day" if args.timefreq == "1d" else "hour"
     horizon_plural = "s" if args.horizon > 1 else ""
     horizon_str = f"{args.horizon} {horizon_unit}{horizon_plural}"
 
-    # Format time frequency
     timefreq_display = "Daily" if args.timefreq == "1d" else "Hourly"
 
     for metric_key, metric_name, metric_abbrev in metrics:
-        # Generate filename
         filename = f"{args.ticker}_{args.timefreq}_{args.exp_type}_h{args.horizon}_{metric_abbrev}_comparison.tex"
         output_path = output_dir / filename
 
-        # Generate caption and label
-        exp_name_display = args.exp_type.replace('-', ' ').title()
         caption = f"Model Comparison: {metric_name} for {args.ticker} ({timefreq_display} data, Training: {min_train}-{max_train} days, Forecast Horizon: {horizon_str})"
         label = f"tab:comparison_{args.ticker}_{args.timefreq}_{args.exp_type}_h{args.horizon}_{metric_abbrev}"
 
-        # Generate table
         try:
             latex_table = generate_comparison_table(
                 df=df,
@@ -300,7 +266,6 @@ def main():
                 label=label
             )
 
-            # Save to file
             with open(output_path, 'w') as f:
                 f.write(latex_table)
 
@@ -311,7 +276,6 @@ def main():
 
     logger.info(f"All tables saved to: {output_dir}")
 
-    # Print summary statistics
     print("\n" + "="*60)
     print("SUMMARY STATISTICS")
     print("="*60)

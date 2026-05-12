@@ -3,13 +3,77 @@ from pathlib import Path
 import logging
 from typing import Tuple, Optional
 from dateutil.relativedelta import relativedelta
-import datetime # Needed for Timestamp
 
-# --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Define the default base directory where data is stored
 BASE_DATA_DIR = Path("data")
+
+_EXTRA_INTRADAY_COLS = ['Tickvol', 'Vol', 'Spread']
+
+
+def _normalise_angle_bracket_columns(data: pd.DataFrame) -> pd.DataFrame:
+    """Strip <ANGLE> brackets and title-case headers from MetaTrader-style CSVs."""
+    data.columns = data.columns.str.replace('[<>]', '', regex=True).str.title()
+    return data
+
+
+def _load_price_csv(file_path: Path, timefreq: str) -> pd.DataFrame:
+    """Load a price CSV, supporting MetaTrader (tab + <ANGLE>) and yfinance formats.
+
+    For 1h files the MetaTrader format is assumed. For other frequencies we try
+    MetaTrader first and fall back to yfinance default CSV on failure.
+    """
+    if timefreq == '1h':
+        data = pd.read_csv(file_path, sep='\t', engine='python')
+        data = _normalise_angle_bracket_columns(data)
+        data['datetime'] = pd.to_datetime(data['Date'] + ' ' + data['Time'])
+        data = data.set_index('datetime')
+        return data.drop(columns=['Date', 'Time'] + _EXTRA_INTRADAY_COLS)
+
+    try:
+        data = pd.read_csv(file_path, sep='\t', engine='python')
+        if not any('<' in col or '>' in col for col in data.columns):
+            raise ValueError("Not angle-bracket format")
+        data = _normalise_angle_bracket_columns(data)
+        data['Date'] = pd.to_datetime(data['Date'])
+        data = data.set_index('Date')
+        cols_to_drop = [c for c in _EXTRA_INTRADAY_COLS if c in data.columns]
+        if cols_to_drop:
+            data = data.drop(columns=cols_to_drop)
+        return data
+    except (ValueError, KeyError):
+        return pd.read_csv(file_path, index_col='Date', parse_dates=True)
+
+
+def _resolve_period(
+    n_days: Optional[int],
+    n_years: Optional[float],
+    anchor: pd.Timestamp,
+    *,
+    future: bool,
+    label: str,
+) -> Tuple[pd.Timestamp, str, int]:
+    """Resolve a (days-or-years) period into a boundary date relative to ``anchor``.
+
+    ``n_days`` takes precedence over ``n_years`` when both are positive.
+    Returns ``(boundary_date, unit, value)``. ``future=True`` shifts forward
+    (test end), ``future=False`` shifts backward (train start).
+    """
+    if n_days is not None and n_days > 0:
+        delta = relativedelta(days=n_days)
+        unit, value = "days", n_days
+    elif n_years is not None and n_years > 0:
+        # int() so float years like 10.0 work with relativedelta.
+        years = int(n_years)
+        delta = relativedelta(years=years)
+        unit, value = "years", years
+    else:
+        raise ValueError(f"{label} period (n_days or n_years) must be positive.")
+
+    boundary = anchor + delta if future else anchor - delta
+    direction = "from" if future else "before"
+    logging.info(f"{label} period set to {value} {unit} {direction} {anchor.date()}.")
+    return boundary, unit, value
 
 
 def prepare_data_for_modeling(
@@ -61,64 +125,27 @@ def prepare_data_for_modeling(
     logging.info(f"Attempting to load data from: {file_path}")
 
     try:
-        try:
-            split_date = pd.Timestamp(rel_date)
-        except ValueError as e:
-            msg = f"Invalid rel_date format: '{rel_date}'. Expected YYYY-MM-DD. Error: {e}"
-            logging.error(msg)
-            raise ValueError(msg) from e
-
-        if timefreq == '1h':
-            data = pd.read_csv(file_path, sep='\t', engine='python')
-            data.columns = data.columns.str.replace('[<>]', '', regex=True)
-            data.columns = data.columns.str.title()
-            data['datetime'] = pd.to_datetime(data['Date'] + ' ' + data['Time'])
-            data = data.set_index('datetime')
-            data = data.drop(columns=['Date', 'Time', 'Tickvol', 'Vol', 'Spread'])
-        else:
-            # Try reading as tab-separated with angle-bracket headers first (new format)
-            try:
-                data = pd.read_csv(file_path, sep='\t', engine='python')
-                # Check if it has angle-bracket headers
-                if any('<' in col or '>' in col for col in data.columns):
-                    data.columns = data.columns.str.replace('[<>]', '', regex=True)
-                    data.columns = data.columns.str.title()
-                    data['Date'] = pd.to_datetime(data['Date'])
-                    data = data.set_index('Date')
-                    # Drop extra columns if they exist
-                    cols_to_drop = [col for col in ['Tickvol', 'Vol', 'Spread'] if col in data.columns]
-                    if cols_to_drop:
-                        data = data.drop(columns=cols_to_drop)
-                else:
-                    # Tab-separated but without angle brackets, try standard format
-                    raise ValueError("Not angle-bracket format")
-            except (ValueError, KeyError):
-                # Fall back to standard yfinance CSV format
-                data = pd.read_csv(file_path, index_col='Date', parse_dates=True)
-        logging.info(f"Successfully loaded data for {ticker} ({timefreq}). Columns: {data.columns.tolist()}")
-
-        if target_column not in data.columns:
-            msg = f"Target column '{target_column}' not found in {file_path}. Available: {data.columns.tolist()}"
-            logging.error(msg)
-            raise ValueError(msg)
-
-        series = data[target_column].dropna()
-        if series.empty:
-            logging.warning(f"No non-NaN data for target '{target_column}' in {file_path} after dropna().")
-            return None
-
-        series = series.sort_index()
-        logging.info(f"Target series '{target_column}' selected. Length: {len(series)}. Date range: {series.index.min()} to {series.index.max()}")
-
-    except FileNotFoundError:
-        logging.error(f"Data file not found: {file_path}")
-        raise
+        split_date = pd.Timestamp(rel_date)
     except ValueError as e:
-        logging.error(f"Data validation error: {e}")
-        raise
-    except Exception as e:
-        logging.error(f"Unexpected error loading/validating data from {file_path}: {e}")
-        raise
+        msg = f"Invalid rel_date format: '{rel_date}'. Expected YYYY-MM-DD. Error: {e}"
+        logging.error(msg)
+        raise ValueError(msg) from e
+
+    data = _load_price_csv(file_path, timefreq)
+    logging.info(f"Successfully loaded data for {ticker} ({timefreq}). Columns: {data.columns.tolist()}")
+
+    if target_column not in data.columns:
+        msg = f"Target column '{target_column}' not found in {file_path}. Available: {data.columns.tolist()}"
+        logging.error(msg)
+        raise ValueError(msg)
+
+    series = data[target_column].dropna()
+    if series.empty:
+        logging.warning(f"No non-NaN data for target '{target_column}' in {file_path} after dropna().")
+        return None
+
+    series = series.sort_index()
+    logging.info(f"Target series '{target_column}' selected. Length: {len(series)}. Date range: {series.index.min()} to {series.index.max()}")
 
     # Validate that diff and pct_change are not both True
     if diff and pct_change:
@@ -141,97 +168,31 @@ def prepare_data_for_modeling(
             return None
         logging.info(f"Series length after percentage change and dropna: {len(series)}")
 
-    # --- Calculate date ranges ---
-    # Determine training period start date based on days or years
-    train_period_unit = ""
-    train_period_value = 0
-
-    if n_train_days is not None and n_train_days > 0:
-        train_start_date = split_date - relativedelta(days=n_train_days)
-        train_period_unit = "days"
-        train_period_value = n_train_days
-        logging.info(f"Training period set to {n_train_days} days before {split_date.date()}.")
-    elif n_train_years is not None and n_train_years > 0:
-        # Ensure n_train_years is treated as int for relativedelta if it's a float (e.g. 10.0)
-        train_start_date = split_date - relativedelta(years=int(n_train_years))
-        train_period_unit = "years"
-        train_period_value = int(n_train_years)
-        logging.info(f"Training period set to {int(n_train_years)} years before {split_date.date()}.")
-    else:
-        if n_train_years is not None and n_train_years <=0 and (n_train_days is None or n_train_days <=0):
-             logging.error("Training period (years or days) must be positive.")
-             # Decide how to handle: return None, raise error, or use a default minimum.
-             # For now, let's log and it will likely result in an empty train set.
-             # A more robust solution would be to raise ValueError here.
-        # If n_train_years is None (because days is also None, which shouldn't happen with defaults)
-        # this indicates a logic flaw in how parameters are passed or defaults are set.
-        # Given the defaults, n_train_years will usually have a value.
-        # The primary goal is to give precedence to n_train_days.
-        # If n_train_days is NOT set, then n_train_years (default 10) is used.
-        # If n_train_years is explicitly set to 0 or negative, and days is not set, it's an issue.
-        # Let's refine the condition for logging an error/warning:
-        if not ((n_train_days is not None and n_train_days > 0) or \
-                (n_train_years is not None and n_train_years > 0)):
-            logging.error("Invalid training period: n_train_days or n_train_years must be positive. Using default 10 years if available.")
-            # Fallback to a default if both are invalid, though args parsing should handle some of this.
-            # This internal check is a safeguard.
-            train_start_date = split_date - relativedelta(years=10) # Default fallback
-            train_period_unit = "years"
-            train_period_value = 10
-
-
-    # Determine test period end date based on days or years
-    test_period_unit = ""
-    test_period_value = 0
-
-    if n_test_days is not None and n_test_days > 0:
-        test_end_date = split_date + relativedelta(days=n_test_days)
-        test_period_unit = "days"
-        test_period_value = n_test_days
-        logging.info(f"Test period set to {n_test_days} days from {split_date.date()}.")
-    elif n_test_years is not None and n_test_years > 0:
-        test_end_date = split_date + relativedelta(years=int(n_test_years))
-        test_period_unit = "years"
-        test_period_value = int(n_test_years)
-        logging.info(f"Test period set to {int(n_test_years)} years from {split_date.date()}.")
-    else:
-        logging.error("Invalid test period: n_test_days or n_test_years must be positive. Using default 1 year.")
-        test_end_date = split_date + relativedelta(years=1)
-        test_period_unit = "years"
-        test_period_value = 1
+    train_start_date, train_period_unit, train_period_value = _resolve_period(
+        n_train_days, n_train_years, split_date, future=False, label="Training",
+    )
+    test_end_date, test_period_unit, test_period_value = _resolve_period(
+        n_test_days, n_test_years, split_date, future=True, label="Test",
+    )
 
     logging.info(f"Splitting data around reference date: {split_date.date()}")
     logging.info(f"Calculated train period start: {train_start_date.date()} (based on {train_period_value} {train_period_unit})")
     logging.info(f"Calculated test period end: {test_end_date.date()} (based on {test_period_value} {test_period_unit})")
 
-    # --- Split the data ---
-    # Ensure train data ends *before* or *at* split_date, and starts *after* train_start_date.
-    # The original logic for train was: (series.index <= split_date) & (series.index > train_start_date)
-    # This means data *on* split_date could be in train if it's the last point.
-    # Typically, for forecasting, train data is strictly *before* the test period.
-    # Let's adjust: train ends *before* split_date. Test starts *at* split_date.
-
-    # Train data: from train_start_date (exclusive) up to split_date (exclusive)
+    # Train ends strictly before split_date; test starts at split_date inclusive.
     train = series.loc[(series.index > train_start_date) & (series.index < split_date)].copy()
-    
-    # Test data: from split_date (inclusive) up to test_end_date (exclusive)
     test = series.loc[(series.index >= split_date) & (series.index < test_end_date)].copy()
 
-    # --- Validate and log splits ---
     if train.empty:
         logging.error(f"Training set is empty. Period: ({train_start_date.date()}, {split_date.date()}). Check data availability and requested range.")
-        raise(ValueError("Training set is empty"))
-    else:
-        logging.info(f"Training set created with {len(train)} points from {train.index.min().date()} to {train.index.max().date()}")
+        raise ValueError("Training set is empty")
+    logging.info(f"Training set created with {len(train)} points from {train.index.min().date()} to {train.index.max().date()}")
 
     if test.empty:
         logging.warning(f"Test set is empty. Period: [{split_date.date()}, {test_end_date.date()}). Check data availability and requested range.")
-        raise(ValueError("Test set is empty"))
-    else:
-         logging.info(f"Test set created with {len(test)} points from {test.index.min().date()} to {test.index.max().date()}")
-    
-    # For returning, it might be useful to also return the unit and value used for training period
-    # but the function signature is fixed. This info will be in logs and pipeline.py can store it.
+        raise ValueError("Test set is empty")
+    logging.info(f"Test set created with {len(test)} points from {test.index.min().date()} to {test.index.max().date()}")
+
     return train, test
 
 # --- Example Usage ---

@@ -8,9 +8,8 @@ by aggregating hourly forecasts to daily level and computing metrics on the same
 
 import argparse
 import logging
-import os
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, Tuple
 import yaml
 import pandas as pd
 import numpy as np
@@ -47,14 +46,12 @@ def load_and_aggregate_predictions(
     Returns:
         Tuple of (actual_series, forecast_series) indexed by date
     """
-    # Find the results CSV file
     results_dir = Path("results") / ticker / timefreq / model / experiment_type
 
     if not results_dir.exists():
         logger.warning(f"Results directory does not exist: {results_dir}")
         return None, None
 
-    # Find matching CSV file by training size and horizon
     pattern = f"*_train_{training_size}d_test_*_horizon_{horizon}.csv"
     csv_files = list(results_dir.glob(pattern))
 
@@ -68,16 +65,13 @@ def load_and_aggregate_predictions(
     csv_file = csv_files[0]
 
     try:
-        # Load predictions
         df = pd.read_csv(csv_file)
         df['Date'] = pd.to_datetime(df['Date'])
 
-        # Get forecast column (model-specific)
         forecast_col = [col for col in df.columns if 'Forecast' in col][0]
 
         if timefreq == '1h':
-            # Aggregate hourly data to daily
-            # Extract date only and take the last value of each trading day
+            # Aggregate hourly bars to daily by taking the last bar of each trading day.
             df['DateOnly'] = df['Date'].dt.date
             daily_df = df.groupby('DateOnly').last().reset_index()
             daily_df['DateOnly'] = pd.to_datetime(daily_df['DateOnly'])
@@ -85,7 +79,6 @@ def load_and_aggregate_predictions(
             actual = daily_df.set_index('DateOnly')['Actual']
             forecast = daily_df.set_index('DateOnly')[forecast_col]
         else:
-            # Daily data - use as-is
             df['Date'] = df['Date'].dt.date
             df['Date'] = pd.to_datetime(df['Date'])
             actual = df.set_index('Date')['Actual']
@@ -109,7 +102,6 @@ def calculate_metrics(actual: pd.Series, forecast: pd.Series) -> Dict[str, float
     Returns:
         Dictionary of metrics
     """
-    # Align series on common dates
     aligned = pd.DataFrame({'actual': actual, 'forecast': forecast}).dropna()
 
     if len(aligned) == 0:
@@ -118,19 +110,16 @@ def calculate_metrics(actual: pd.Series, forecast: pd.Series) -> Dict[str, float
     actual_vals = aligned['actual'].values
     forecast_vals = aligned['forecast'].values
 
-    # Calculate metrics
     mae = np.mean(np.abs(actual_vals - forecast_vals))
     mse = np.mean((actual_vals - forecast_vals) ** 2)
     rmse = np.sqrt(mse)
 
-    # MAPE (avoid division by zero)
     non_zero_mask = actual_vals != 0
     if non_zero_mask.any():
         mape = np.mean(np.abs((actual_vals[non_zero_mask] - forecast_vals[non_zero_mask]) / actual_vals[non_zero_mask])) * 100
     else:
         mape = np.nan
 
-    # SMAPE
     denominator = (np.abs(actual_vals) + np.abs(forecast_vals)) / 2
     non_zero_denom = denominator != 0
     if non_zero_denom.any():
@@ -138,7 +127,6 @@ def calculate_metrics(actual: pd.Series, forecast: pd.Series) -> Dict[str, float
     else:
         smape = np.nan
 
-    # MDA (Mean Directional Accuracy)
     if len(actual_vals) > 1:
         actual_direction = np.diff(actual_vals) > 0
         forecast_direction = np.diff(forecast_vals) > 0
@@ -188,7 +176,6 @@ def load_experiment_metrics_for_frequency(
 
     all_data = []
 
-    # Find all config files for this model
     config_files = list(base_path.glob(f"*_horizon_{horizon}.yaml"))
 
     for config_file in config_files:
@@ -199,11 +186,9 @@ def load_experiment_metrics_for_frequency(
             training_size = config.get('training_period_value')
             training_unit = config.get('training_period_unit', 'days')
 
-            # Convert to days if needed
             if training_unit == 'years':
                 training_size = training_size * 365
 
-            # Load predictions and recalculate metrics with aggregation
             actual, forecast = load_and_aggregate_predictions(
                 ticker=ticker,
                 timefreq=timefreq,
@@ -233,11 +218,8 @@ def load_experiment_metrics_for_frequency(
             continue
 
     df = pd.DataFrame(all_data)
-
-    # Sort by training size
     if not df.empty:
         df = df.sort_values('training_size')
-
     return df
 
 
@@ -263,7 +245,6 @@ def generate_frequency_comparison_table(
     Returns:
         LaTeX table string
     """
-    # Merge on training size
     merged = pd.merge(
         df_1d[['training_size', metric]],
         df_1h[['training_size', metric]],
@@ -276,10 +257,9 @@ def generate_frequency_comparison_table(
         logger.warning(f"No common experiments found for {model}")
         return ""
 
-    # Calculate percentage change (negative means improvement)
+    # Negative pct_change means 1h aggregation improved over native 1d.
     merged['pct_change'] = ((merged[f'{metric}_1h'] - merged[f'{metric}_1d']) / merged[f'{metric}_1d']) * 100
 
-    # Start LaTeX table
     latex = []
     latex.append("\\begin{table}[htbp]")
     latex.append("\\centering")
@@ -287,33 +267,27 @@ def generate_frequency_comparison_table(
     latex.append(f"\\label{{{label}}}")
     latex.append("\\small")
 
-    # Column specification: training size | 1d | 1h | % change | better
     col_spec = "lrrrr"
     latex.append(f"\\begin{{tabular}}{{{col_spec}}}")
     latex.append("\\toprule")
 
-    # Header row
     metric_upper = metric.upper()
     header = f"Training Days & {metric_upper} (1d) & {metric_upper} (1h) & \\% Change & Better \\\\"
     latex.append(header)
     latex.append("\\midrule")
 
-    # Data rows
     for _, row in merged.iterrows():
         train_size = int(row['training_size'])
         val_1d = row[f'{metric}_1d']
         val_1h = row[f'{metric}_1h']
         pct_change = row['pct_change']
 
-        # Determine which is better (lower is better for all these metrics)
         if val_1h < val_1d:
             better = "1h"
-            # Bold the 1h value
             val_1h_str = f"\\textbf{{{val_1h:.4f}}}"
             val_1d_str = f"{val_1d:.4f}"
         elif val_1d < val_1h:
             better = "1d"
-            # Bold the 1d value
             val_1d_str = f"\\textbf{{{val_1d:.4f}}}"
             val_1h_str = f"{val_1h:.4f}"
         else:
@@ -321,7 +295,6 @@ def generate_frequency_comparison_table(
             val_1d_str = f"{val_1d:.4f}"
             val_1h_str = f"{val_1h:.4f}"
 
-        # Format percentage change (negative = improvement from 1d to 1h)
         if pct_change < 0:
             pct_str = f"\\textcolor{{green}}{{{pct_change:.2f}\\%}}"
         elif pct_change > 0:
@@ -332,10 +305,8 @@ def generate_frequency_comparison_table(
         row_str = f"{train_size} & {val_1d_str} & {val_1h_str} & {pct_str} & {better} \\\\"
         latex.append(row_str)
 
-    # Add summary statistics
     latex.append("\\midrule")
 
-    # Mean performance
     mean_1d = merged[f'{metric}_1d'].mean()
     mean_1h = merged[f'{metric}_1h'].mean()
     mean_pct_change = ((mean_1h - mean_1d) / mean_1d) * 100
@@ -363,10 +334,8 @@ def generate_frequency_comparison_table(
     mean_row = f"\\textit{{Mean}} & {mean_1d_str} & {mean_1h_str} & {mean_pct_str} & {mean_better} \\\\"
     latex.append(mean_row)
 
-    # Count how many times each frequency was better
     count_1d = (merged[f'{metric}_1d'] < merged[f'{metric}_1h']).sum()
     count_1h = (merged[f'{metric}_1h'] < merged[f'{metric}_1d']).sum()
-    count_tie = (merged[f'{metric}_1h'] == merged[f'{metric}_1d']).sum()
 
     count_row = f"\\textit{{\\# Better}} & {count_1d} & {count_1h} & -- & -- \\\\"
     latex.append(count_row)
@@ -421,7 +390,6 @@ def main():
     logger.info(f"Loading experiment data for {args.model} ({args.exp_type}, h={args.horizon})")
     logger.info("NOTE: 1h predictions will be aggregated to daily level for fair comparison")
 
-    # Load data for both frequencies
     df_1d = load_experiment_metrics_for_frequency(
         ticker=args.ticker,
         timefreq="1d",
@@ -448,7 +416,6 @@ def main():
 
     logger.info(f"Loaded {len(df_1d)} 1d experiments and {len(df_1h)} 1h experiments")
 
-    # Find common training sizes
     common_sizes = set(df_1d['training_size']) & set(df_1h['training_size'])
     logger.info(f"Common training sizes: {sorted(common_sizes)}")
 
@@ -456,11 +423,9 @@ def main():
         logger.error("No common experiments found between 1d and 1h!")
         return
 
-    # Create output directory
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Model name display
     model_names = {
         'arima': 'ARIMA',
         'chronos_base': 'Chronos',
@@ -470,7 +435,6 @@ def main():
     }
     model_display = model_names.get(args.model, args.model)
 
-    # Generate tables for each metric
     metrics = [
         ('mse', 'Mean Squared Error (MSE)', 'MSE'),
         ('mae', 'Mean Absolute Error (MAE)', 'MAE'),
@@ -478,20 +442,16 @@ def main():
         ('mape', 'Mean Absolute Percentage Error (MAPE)', 'MAPE')
     ]
 
-    # Format horizon with units
     horizon_str = f"{args.horizon}"
 
     for metric_key, metric_name, metric_abbrev in metrics:
-        # Generate filename
         filename = f"{args.ticker}_{args.model}_{args.exp_type}_h{args.horizon}_{metric_abbrev}_freq_comparison.tex"
         output_path = output_dir / filename
 
-        # Generate caption and label
         exp_name_display = args.exp_type.replace('-', ' ').title()
         caption = f"Frequency Comparison ({model_display}): {metric_name} - Daily vs Hourly Data (Aggregated) (Training: {exp_name_display}, Horizon: {horizon_str})"
         label = f"tab:freq_comp_{args.ticker}_{args.model}_{args.exp_type}_h{args.horizon}_{metric_abbrev}"
 
-        # Generate table
         try:
             latex_table = generate_frequency_comparison_table(
                 df_1d=df_1d,
@@ -503,10 +463,8 @@ def main():
             )
 
             if latex_table:
-                # Save to file
                 with open(output_path, 'w') as f:
                     f.write(latex_table)
-
                 logger.info(f"Generated table: {output_path}")
             else:
                 logger.warning(f"Skipped {metric_abbrev} table (no data)")
@@ -516,7 +474,6 @@ def main():
 
     logger.info(f"All tables saved to: {output_dir}")
 
-    # Print summary statistics
     print("\n" + "="*60)
     print(f"FREQUENCY COMPARISON SUMMARY - {model_display}")
     print("="*60)
@@ -524,7 +481,6 @@ def main():
     for metric_key, metric_name, _ in metrics:
         print(f"\n{metric_name}:")
 
-        # Merge data
         merged = pd.merge(
             df_1d[['training_size', metric_key]],
             df_1h[['training_size', metric_key]],

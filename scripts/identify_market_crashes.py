@@ -8,7 +8,6 @@ them for analysis in the market disruption resilience research question (RQ3).
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from datetime import datetime
 import logging
 import argparse
 from pathlib import Path
@@ -35,14 +34,11 @@ def load_hourly_data(ticker: str) -> pd.DataFrame:
         raise FileNotFoundError(f"Data file not found: {data_path}")
 
     logging.info(f"Loading data from {data_path}")
-    # Read tab-delimited file
     df = pd.read_csv(data_path, sep='\t')
 
-    # Combine DATE and TIME columns if they exist
     if '<DATE>' in df.columns and '<TIME>' in df.columns:
         df['Datetime'] = pd.to_datetime(df['<DATE>'] + ' ' + df['<TIME>'])
         df.set_index('Datetime', inplace=True)
-        # Rename columns to standard format
         df.rename(columns={
             '<OPEN>': 'Open',
             '<HIGH>': 'High',
@@ -57,7 +53,6 @@ def load_hourly_data(ticker: str) -> pd.DataFrame:
         df['Date'] = pd.to_datetime(df['Date'])
         df.set_index('Date', inplace=True)
     else:
-        # First column is likely the datetime
         df.iloc[:, 0] = pd.to_datetime(df.iloc[:, 0])
         df.set_index(df.columns[0], inplace=True)
 
@@ -108,7 +103,7 @@ def identify_crash_periods(drawdown: pd.Series, threshold: float = -10.0) -> pd.
             })
             start = None
 
-    # Handle case where crash extends to end of data
+    # Crash extending past the last sample.
     if start is not None:
         end = drawdown.index[-1]
         max_dd = drawdown[start:end].min()
@@ -131,9 +126,7 @@ def highlight_crash_periods(ax, crash_periods: pd.DataFrame, show_labels: bool =
         crash_periods: DataFrame with crash periods
         show_labels: Whether to show labels for each crash period
     """
-    # Use different colors for different severity levels
     for idx, crash in crash_periods.iterrows():
-        # Determine color based on severity
         if crash['max_drawdown'] < -30:
             color = 'darkred'
             alpha = 0.25
@@ -150,7 +143,6 @@ def highlight_crash_periods(ax, crash_periods: pd.DataFrame, show_labels: bool =
         ax.axvspan(crash['start'], crash['end'],
                   color=color, alpha=alpha, linewidth=0)
 
-        # Add label for major crashes (optional)
         if show_labels and crash['max_drawdown'] < -20:
             mid_point = crash['start'] + (crash['end'] - crash['start']) / 2
             ax.text(mid_point, ax.get_ylim()[1] * 0.95,
@@ -173,7 +165,6 @@ def plot_crashes(ticker: str, prices: pd.Series, drawdown: pd.Series,
         output_path: Path to save figure (optional)
         start_year: Year to start the plot from (optional, filters data)
     """
-    # Filter data if start_year is provided
     if start_year is not None:
         start_date = pd.Timestamp(f'{start_year}-01-01')
         prices = prices[prices.index >= start_date]
@@ -182,11 +173,9 @@ def plot_crashes(ticker: str, prices: pd.Series, drawdown: pd.Series,
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(18, 11), sharex=True)
 
-    # Plot 1: Price with crash periods highlighted
     ax1.plot(prices.index, prices.values, linewidth=0.8, color='black',
              label='MSFT Price', alpha=0.8)
 
-    # Highlight crash periods on price plot
     highlight_crash_periods(ax1, crash_periods, show_labels=True)
 
     ax1.set_ylabel('Price ($)', fontsize=13, fontweight='bold')
@@ -196,13 +185,11 @@ def plot_crashes(ticker: str, prices: pd.Series, drawdown: pd.Series,
     ax1.grid(True, alpha=0.3, linestyle='--')
     ax1.legend(loc='upper left', fontsize=11, framealpha=0.9)
 
-    # Plot 2: Drawdown
     ax2.plot(drawdown.index, drawdown.values, linewidth=0.8, color='darkred',
              label='Drawdown from Peak', alpha=0.9)
     ax2.fill_between(drawdown.index, drawdown.values, 0,
                      where=(drawdown.values < 0), color='red', alpha=0.2)
 
-    # Highlight crash periods on drawdown plot
     highlight_crash_periods(ax2, crash_periods, show_labels=False)
 
     ax2.axhline(y=-10, color='orange', linestyle='--', linewidth=1.5,
@@ -220,7 +207,7 @@ def plot_crashes(ticker: str, prices: pd.Series, drawdown: pd.Series,
     ax2.grid(True, alpha=0.3, linestyle='--')
     ax2.legend(loc='lower left', fontsize=11, framealpha=0.9, ncol=2)
 
-    # Format x-axis with sparse, readable date labels.
+    # Sparse x-axis (Jan/Jul) so labels stay readable across the full range.
     ax2.set_xlim(prices.index.min(), prices.index.max())
     ax2.xaxis.set_major_locator(mdates.MonthLocator(bymonth=[1, 7]))
     ax2.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
@@ -273,7 +260,6 @@ def main():
 
     args = parser.parse_args()
 
-    # Load hourly data
     logging.info(f"Loading hourly data for {args.ticker}")
     try:
         data = load_hourly_data(args.ticker)
@@ -281,25 +267,21 @@ def main():
         logging.error(str(e))
         return
 
-    # Use close price
     prices = data['Close']
     logging.info(f"Loaded {len(prices)} hourly price points from {prices.index[0]} to {prices.index[-1]}")
 
-    # Calculate drawdown
     logging.info("Calculating drawdown...")
     drawdown = calculate_drawdown(prices)
     max_drawdown = drawdown.min()
     max_dd_date = drawdown.idxmin()
     logging.info(f"Maximum drawdown: {max_drawdown:.2f}% on {max_dd_date}")
 
-    # Identify crash periods
     logging.info(f"Identifying crash periods (threshold: {args.threshold}%)...")
     crash_periods = identify_crash_periods(drawdown, threshold=args.threshold)
 
     if crash_periods.empty:
         logging.warning(f"No crashes found with threshold {args.threshold}%")
     else:
-        # Sort by max drawdown
         crash_periods = crash_periods.sort_values('max_drawdown')
 
         logging.info(f"\n{'='*80}")
@@ -313,12 +295,10 @@ def main():
             logging.info(f"  Duration: {crash['duration_days']:.1f} days")
             logging.info("")
 
-    # Create visualization
     logging.info("Creating visualization...")
     plot_crashes(args.ticker, prices, drawdown, crash_periods,
                 output_path=args.output, start_year=args.start_year)
 
-    # Print summary statistics
     logging.info(f"\n{'='*80}")
     logging.info("SUMMARY STATISTICS")
     logging.info(f"{'='*80}")

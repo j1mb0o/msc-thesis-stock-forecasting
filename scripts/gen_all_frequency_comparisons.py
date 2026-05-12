@@ -9,16 +9,7 @@ comprehensive frequency comparison tables.
 import argparse
 import logging
 import subprocess
-import sys
 from pathlib import Path
-
-# Import the main function from the frequency comparison script
-sys.path.insert(0, str(Path(__file__).parent))
-from gen_frequency_comparison_tables import (
-    load_experiment_metrics_for_frequency,
-    generate_frequency_comparison_table
-)
-import pandas as pd
 
 logging.basicConfig(
     level=logging.INFO,
@@ -52,17 +43,14 @@ def main():
 
     args = parser.parse_args()
 
-    # Define all models and experiment types
     models = ["arima", "chronos_base", "sundial", "fm", "naive"]
 
-    # Define base experiment types (without -pct suffix)
     base_exp_types = [
         "train-less-year-log",
         "train-less-year-linear",
         "train-restricted-years"
     ]
 
-    # Add both regular and -pct versions
     exp_types = []
     for exp in base_exp_types:
         exp_types.append(exp)
@@ -78,7 +66,6 @@ def main():
     logger.info(f"  Total combinations: {total_combinations}")
     logger.info("")
 
-    # Track successes and failures
     successful = []
     failed = []
     skipped = []
@@ -88,7 +75,6 @@ def main():
             current += 1
             logger.info(f"\n[{current}/{total_combinations}] Processing: {model} - {exp_type}")
 
-            # Check if configs exist for both frequencies
             config_path_1d = Path("configs") / args.ticker / "1d" / model / exp_type
             config_path_1h = Path("configs") / args.ticker / "1h" / model / exp_type
 
@@ -102,7 +88,6 @@ def main():
                 skipped.append(f"{model}/{exp_type} (no 1h data)")
                 continue
 
-            # Run the comparison script
             cmd = [
                 "python3", "scripts/gen_frequency_comparison_tables.py",
                 "--ticker", args.ticker,
@@ -122,10 +107,9 @@ def main():
                 logger.info(f"  Success: Generated tables for {model}/{exp_type}")
                 successful.append(f"{model}/{exp_type}")
 
-                # Print summary from subprocess
                 if "FREQUENCY COMPARISON SUMMARY" in result.stdout:
                     summary_lines = result.stdout.split("FREQUENCY COMPARISON SUMMARY")[1].split("\n")[:10]
-                    for line in summary_lines[:5]:  # Just print first few lines
+                    for line in summary_lines[:5]:
                         if line.strip():
                             logger.info(f"    {line.strip()}")
 
@@ -134,7 +118,6 @@ def main():
                 logger.error(f"    Error: {e.stderr[:200]}")
                 failed.append(f"{model}/{exp_type}")
 
-    # Print final summary
     print("\n" + "="*80)
     print("GENERATION SUMMARY")
     print("="*80)

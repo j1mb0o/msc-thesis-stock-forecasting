@@ -37,11 +37,9 @@ def plot_autocorrelations(data_path, output_dir):
     plot for the ACF and PACF of the returns.
     """
     try:
-        # Create output directory if it doesn't exist
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        # Read the data (supports both comma- and tab-separated files)
         df = pd.read_csv(data_path, sep=None, engine="python")
         df.columns = [
             col.strip().replace("<", "").replace(">", "").upper() for col in df.columns
@@ -49,7 +47,6 @@ def plot_autocorrelations(data_path, output_dir):
         close_col = "CLOSE"
         instrument_label, date_label = _build_plot_labels(data_path, df)
 
-        # Ensure the close column exists
         if close_col not in df.columns:
             print(
                 f"Column '{close_col}' not found in {data_path}. Available columns: {list(df.columns)}"
@@ -58,7 +55,6 @@ def plot_autocorrelations(data_path, output_dir):
 
         stock_prices = df[close_col]
 
-        # Create a figure for raw prices with two subplots
         fig1, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8))
         fig1.suptitle(
             f"Autocorrelation Diagnostics - {instrument_label} Close Prices {date_label}",
@@ -66,19 +62,16 @@ def plot_autocorrelations(data_path, output_dir):
             fontweight="semibold",
         )
 
-        # Plot ACF for raw prices
         plot_acf(stock_prices, ax=ax1, lags=100)
         ax1.set_title("ACF of Close Prices")
         ax1.set_xlabel("Lag")
         ax1.set_ylabel("ACF")
 
-        # Plot PACF for raw prices
         plot_pacf(stock_prices, ax=ax2, lags=100)
         ax2.set_title("PACF of Close Prices")
         ax2.set_xlabel("Lag")
         ax2.set_ylabel("PACF")
 
-        # Save the figure for raw prices
         file_name = os.path.basename(data_path).replace(".csv", "_acf_pacf.pdf")
         output_path = os.path.join(output_dir, file_name)
         plt.tight_layout(rect=(0, 0.02, 1, 0.96))
@@ -86,10 +79,9 @@ def plot_autocorrelations(data_path, output_dir):
         plt.close(fig1)
         print(f"Plot saved to {output_path}")
 
-        # It's more common to analyze returns than prices for stationarity
+        # Returns (rather than raw prices) are usually the stationary input for ACF/PACF.
         returns = stock_prices.pct_change().dropna()
 
-        # Create a figure for returns with two subplots
         fig2, (ax3, ax4) = plt.subplots(2, 1, figsize=(12, 8))
         fig2.suptitle(
             f"Autocorrelation Diagnostics - {instrument_label} Returns {date_label}",
@@ -97,19 +89,16 @@ def plot_autocorrelations(data_path, output_dir):
             fontweight="semibold",
         )
 
-        # Plot ACF for returns
         plot_acf(returns, ax=ax3, lags=100)
         ax3.set_title("ACF of Returns")
         ax3.set_xlabel("Lag")
         ax3.set_ylabel("ACF")
 
-        # Plot PACF for returns
         plot_pacf(returns, ax=ax4, lags=100)
         ax4.set_title("PACF of Returns")
         ax4.set_xlabel("Lag")
         ax4.set_ylabel("PACF")
 
-        # Save the figure for returns
         returns_file_name = os.path.basename(data_path).replace(
             ".csv", "_returns_acf_pacf.pdf"
         )
@@ -124,7 +113,6 @@ def plot_autocorrelations(data_path, output_dir):
 
 
 if __name__ == "__main__":
-    # Define file paths
     data_files = [
         "/Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/data/MSFT/MSFT_1d.csv",
         "/Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/data/MSFT/MSFT_1h.csv",
@@ -135,6 +123,5 @@ if __name__ == "__main__":
         "/Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/figures/MSFT/1h",
     ]
 
-    # Generate and save plots for each dataset
     for data_file, out_dir in zip(data_files, output_dirs):
         plot_autocorrelations(data_file, out_dir)

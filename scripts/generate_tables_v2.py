@@ -7,7 +7,6 @@ import numpy as np
 import pandas as pd
 import yaml
 
-# Set up logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -43,14 +42,12 @@ def load_experiment_data(
     logger.info(f"Experiment: {experiment_name}")
     logger.info(f"Metric: {metric}")
 
-    # Valid metrics
     valid_metrics = ["mse", "mae", "rmse", "mape", "smape", "mean_directional_accuracy"]
     if metric.lower() not in valid_metrics:
         raise ValueError(f"Invalid metric '{metric}'. Must be one of: {valid_metrics}")
 
     data = {}
 
-    # Iterate through method directories
     for method_dir in base_path.iterdir():
         if not method_dir.is_dir() or method_dir.name.startswith("."):
             continue
@@ -58,7 +55,6 @@ def load_experiment_data(
         method_name = method_dir.name
         logger.info(f"Processing method: {method_name}")
 
-        # Look for the experiment subdirectory
         exp_dir = method_dir / experiment_name
         if not exp_dir.exists():
             logger.warning(
@@ -66,7 +62,6 @@ def load_experiment_data(
             )
             continue
 
-        # Load all YAML files in the experiment directory
         yaml_files = list(exp_dir.glob("*.yaml"))
         logger.info(f"Found {len(yaml_files)} YAML files for {method_name}")
 
@@ -75,20 +70,15 @@ def load_experiment_data(
                 with open(yaml_file, "r") as f:
                     config = yaml.safe_load(f)
 
-                # Extract horizon length
                 horizon = config.get("horizon_length", 1)
-
-                # Create key as (horizon, method)
                 key = (horizon, method_name)
 
                 if key not in data:
                     data[key] = {}
 
-                # Extract training period
                 train_value = config.get("training_period_value")
                 train_unit = config.get("training_period_unit", "")
 
-                # Create a key for the training period
                 if train_unit == "years":
                     train_key = f"{int(float(train_value))}y"
                 elif train_unit == "days":
@@ -96,7 +86,6 @@ def load_experiment_data(
                 else:
                     train_key = str(train_value)
 
-                # Extract the metric value
                 metrics = config.get("evaluation_metrics", {})
                 metric_value = metrics.get(metric.lower())
 
@@ -104,9 +93,6 @@ def load_experiment_data(
                     if train_key not in data[key]:
                         data[key][train_key] = []
                     data[key][train_key].append(float(metric_value))
-                    logger.debug(
-                        f"h{horizon}-{method_name} - {train_key}: {metric} = {metric_value}"
-                    )
 
             except Exception as e:
                 logger.error(f"Error processing {yaml_file}: {e}")
@@ -129,16 +115,13 @@ def prepare_table_data(
     Returns:
         Tuple of (data_array, idx_structure, idx_names, columns)
     """
-    # Sort by horizon first, then method name
     horizon_method_pairs = sorted(experiment_data.keys(), key=lambda x: (x[0], x[1]))
 
-    # If training periods not specified, extract and sort them
     if training_periods is None:
         all_periods = set()
         for method_data in experiment_data.values():
             all_periods.update(method_data.keys())
 
-        # Sort training periods intelligently
         def sort_key(period):
             if period.endswith("y"):
                 return (1, float(period[:-1]))
@@ -155,7 +138,6 @@ def prepare_table_data(
     logger.info(f"Training periods (columns): {training_periods}")
     logger.info(f"Horizon-Method pairs (rows): {horizon_method_pairs}")
 
-    # Build data matrix
     data_matrix = []
     idx_structure = []
 
@@ -163,12 +145,8 @@ def prepare_table_data(
         row = []
         for period in training_periods:
             values = experiment_data.get((horizon, method), {}).get(period, [])
-            if values:
-                # Use mean if multiple values exist for same training period
-                row.append(np.mean(values))
-            else:
-                # Use NaN for missing data
-                row.append(np.nan)
+            # mean if multiple runs share the same training period; NaN if absent
+            row.append(np.mean(values) if values else np.nan)
 
         data_matrix.append(row)
         idx_structure.append((f"{horizon}d", method))
@@ -195,28 +173,20 @@ def generate_latex_table(
     Uses \adjustbox to fit content to \textwidth.
     """
 
-    # 1. Construct MultiIndex for Rows (Horizon, Method)
     index = pd.MultiIndex.from_tuples(idx_structure, names=idx_names)
-
-    # 2. Create DataFrame
     df = pd.DataFrame(data, index=index, columns=columns)
 
-    # 3. Generate just the tabular code using Pandas
-    # We set caption=None and positioning=None to get ONLY the tabular environment
-    # This allows us to wrap it in \adjustbox manually below.
+    # Emit only the inner tabular so we can wrap it in \adjustbox below.
     latex_tabular = df.style.format(precision=4, na_rep="-").to_latex(
-        position=None,  # Do not generate \begin{table} wrapper yet
-        caption=None,  # Do not generate \caption yet
-        label=None,  # Do not generate \label yet
-        hrules=True,  # Adds \toprule, \midrule, \bottomrule
-        multirow_align="c",  # Center vertical alignment for merged cells
-        multicol_align="c",  # Center horizontal alignment
-        column_format="c"
-        * (len(idx_names) + len(columns)),  # Force 'c' for all columns
+        position=None,
+        caption=None,
+        label=None,
+        hrules=True,
+        multirow_align="c",
+        multicol_align="c",
+        column_format="c" * (len(idx_names) + len(columns)),
     )
 
-    # 4. Manually construct the Table Wrapper with \adjustbox
-    # This gives us exact control over the layout requested.
     full_latex = f"""\\begin{{table}}[H]
   \\centering
   \\caption{{{caption}}}
@@ -226,7 +196,6 @@ def generate_latex_table(
  }}
 \\end{{table}}"""
 
-    # 5. Save to file
     with open(filename, "w") as f:
         f.write(full_latex)
 
@@ -312,9 +281,7 @@ Examples:
 
     args = parser.parse_args()
 
-    # Set defaults
     if args.output is None:
-        # Create output directory structure: tables/1d/{experiment_name}/
         output_dir = Path(__file__).parent.parent / "tables" / "1d" / args.experiment
         output_dir.mkdir(parents=True, exist_ok=True)
         args.output = str(output_dir / f"{args.experiment}_{args.metric}_table.tex")
@@ -327,7 +294,6 @@ Examples:
     if args.label is None:
         args.label = f"tab:{args.experiment}_{args.metric}"
 
-    # Load data
     try:
         experiment_data = load_experiment_data(
             experiment_name=args.experiment,
@@ -339,10 +305,8 @@ Examples:
             logger.error("No data loaded. Check experiment name and base path.")
             return 1
 
-        # Prepare table data
         data, idx_structure, idx_names, columns = prepare_table_data(experiment_data)
 
-        # Generate LaTeX table
         generate_latex_table(
             data=data,
             idx_structure=idx_structure,

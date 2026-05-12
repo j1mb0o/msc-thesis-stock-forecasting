@@ -21,7 +21,6 @@ def benchmark_config(model, seqs, forecast_length, num_samples, use_cache, num_r
     return mean_time, std_time
 
 if __name__ == "__main__":
-    # Define benchmark parameters
     MODEL_NAME = 'thuml/sundial-base-128m'
     INPUT_LENGTH = 2880
     FORECAST_LENGTH = 64
@@ -34,25 +33,21 @@ if __name__ == "__main__":
     model.eval()
     print("Model loaded.")
 
-    # Generate random input data once
     seqs = torch.randn(1, INPUT_LENGTH)
 
     print("\n--- Benchmarking ---")
     print(f"Running {NUM_RUNS} measurements for each configuration...")
 
-    # --- Benchmark without KV Cache ---
     print("\nConfiguration: KV Cache Disabled")
     mean_no_kv, std_no_kv = benchmark_config(
         model, seqs, FORECAST_LENGTH, NUM_SAMPLES, use_cache=False, num_runs=NUM_RUNS, num_warmup_runs=NUM_WARMUP_RUNS
     )
 
-    # --- Benchmark with KV Cache ---
     print("\nConfiguration: KV Cache Enabled")
     mean_with_kv, std_with_kv = benchmark_config(
         model, seqs, FORECAST_LENGTH, NUM_SAMPLES, use_cache=True, num_runs=NUM_RUNS, num_warmup_runs=NUM_WARMUP_RUNS
     )
 
-    # --- Log results ---
     log_file = "sundial_benchmark_summary.log"
     with open(log_file, "w") as f:
         f.write("Configuration,Mean Inference Time (ms),Standard Deviation (ms)\n")
