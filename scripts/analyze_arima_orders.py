@@ -7,7 +7,8 @@ by the dimensions that change what an order *means*: time frequency
 Outputs:
   - console summary
   - LaTeX tables -> tables/arima_orders.tex
-  - figure       -> figures/arima_order_distribution.png
+  - figure       -> figures/arima_order_distribution.pdf
+  - raw figure   -> figures/arima_order_distribution_raw_prices.pdf
 """
 
 import ast
@@ -23,6 +24,7 @@ TABLES_DIR = ROOT / "tables"
 FIGURES_DIR = ROOT / "figures"
 TEX_OUT = TABLES_DIR / "arima_orders.tex"
 FIG_OUT = FIGURES_DIR / "arima_order_distribution.pdf"
+FIG_RAW_OUT = FIGURES_DIR / "arima_order_distribution_raw_prices.pdf"
 
 
 # ---------- loading ----------
@@ -370,6 +372,80 @@ def make_figure(rows, out_path):
     print(f"Figure written: {out_path}")
 
 
+def make_raw_price_figure(rows, out_path):
+    pct = False
+    buckets = [(rq, pct) for rq in RQS]
+    counters = {b: Counter() for b in buckets}
+    for r in rows:
+        if r["pct"] == pct:
+            counters[(r["rq"], pct)][r["order"]] += 1
+
+    # Stable colour per order: union of top-5 across all panels.
+    union, seen = [], set()
+    for b in buckets:
+        for order, _ in sorted(counters[b].items(), key=lambda kv: -kv[1])[:5]:
+            if order not in seen:
+                union.append(order)
+                seen.add(order)
+    cmap = plt.get_cmap("tab20")
+    colors = {o: cmap(i % 20) for i, o in enumerate(union)}
+
+    rq_subtitles = {
+        "RQ1": "Daily (1d)",
+        "RQ2": "Hourly, normal periods (1h)",
+        "RQ3": "Hourly, crisis periods (1h)",
+    }
+
+    fig, axes = plt.subplots(1, 3, figsize=(13, 4.2), sharey=True)
+    for col_idx, rq in enumerate(RQS):
+        ax = axes[col_idx]
+        c = counters[(rq, pct)]
+        total = sum(c.values()) or 1
+        items = sorted(c.items(), key=lambda kv: -kv[1])[:5]
+        labels = [fmt_order(o) for o, _ in items]
+        pcts = [100 * n / total for _, n in items]
+        bar_colors = [colors.get(o, "lightgray") for o, _ in items]
+        bars = ax.bar(
+            labels,
+            pcts,
+            color=bar_colors,
+            edgecolor="black",
+            linewidth=0.5,
+        )
+        ax.set_ylim(0, 100)
+        ax.tick_params(axis="x", rotation=0)
+        ax.set_title(f"{rq}\n{rq_subtitles[rq]}", fontsize=11)
+        for bar, p in zip(bars, pcts):
+            ax.text(
+                bar.get_x() + bar.get_width() / 2,
+                p + 2,
+                f"{p:.0f}%",
+                ha="center",
+                va="bottom",
+                fontsize=9,
+            )
+
+    axes[0].set_ylabel("Raw prices\n% of configs", fontsize=11)
+    fig.suptitle(
+        "Distribution of ARIMA $(p,d,q)$ orders selected by auto_arima on raw prices",
+        fontsize=14, y=0.99,
+    )
+    fig.text(
+        0.5, 0.91,
+        "Top-5 orders per research question; percentages computed within each panel; "
+        "percentage-change configs excluded",
+        ha="center",
+        fontsize=10,
+        style="italic",
+        color="dimgray",
+    )
+    fig.tight_layout(rect=(0, 0, 1, 0.86))
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out_path, dpi=150)
+    plt.close(fig)
+    print(f"Raw-price figure written: {out_path}")
+
+
 # ---------- main ----------
 
 def main():
@@ -410,6 +486,7 @@ def main():
 
     # figure
     make_figure(rows, FIG_OUT)
+    make_raw_price_figure(rows, FIG_RAW_OUT)
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ name = "thesis-code-new"
 version = "0.1.0"
 description = "Thesis project code (not packaged)"
 authors = [
-    { name = "Dimitris", email = "zinodimitris@gmail.com" },
+    { name = "Dimitrios Kourntidis", email = "zinodimitris@gmail.com" },
 ]
 requires-python = ">=3.11,<3.12"
 
