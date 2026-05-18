@@ -29,7 +29,7 @@ chronos = [
 # Dependencies exclusively for the Sundial model
 sundial = [
     # "sundial-package-name", # Add the actual sundial package here
-    "transformers==4.40.1", # The specific older version Sundial needs
+    "transformers==5.0.0rc3", # The specific older version Sundial needs
 ]
 
 times = [
