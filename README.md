@@ -1,4 +1,4 @@
-# Thesis Project: When Old Meets New: A Comparative Study of Traditional and Foundation Models for Stock Prediction
+# MSc Thesis: Comparing Classical and Foundation Models for Stock Price Forecasting
 
 ## Project Description
 This thesis explores stock price prediction by comparing time-series foundation models (Chronos, Sundial, TimesFM) with traditional methods (ARIMA, Naive) for stock price prediction. Using daily stock data, the project benchmarks predictive performance across accuracy, generalizability, and robustness within financial forecasting.
