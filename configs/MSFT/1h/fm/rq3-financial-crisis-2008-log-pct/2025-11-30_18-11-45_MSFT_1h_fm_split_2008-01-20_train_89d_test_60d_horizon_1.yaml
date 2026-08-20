@@ -12,7 +12,7 @@ forecasting_method: fm
 horizon_length: 1
 differencing_applied: false
 percentage_change_applied: true
-results_file_path: /root/thesis-code-new/results/MSFT/1h/fm/rq3-financial-crisis-2008-log-pct/2025-11-30_18-11-45_MSFT_1h_fm_split_2008-01-20_train_89d_test_60d_horizon_1.csv
+results_file_path: /root/msc-thesis-stock-forecasting/results/MSFT/1h/fm/rq3-financial-crisis-2008-log-pct/2025-11-30_18-11-45_MSFT_1h_fm_split_2008-01-20_train_89d_test_60d_horizon_1.csv
 arima_order: N/A
 evaluation_metrics:
   mse: 8.436469730368175e-05

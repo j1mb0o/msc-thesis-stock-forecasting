@@ -12,7 +12,7 @@ forecasting_method: sundial
 horizon_length: 1
 differencing_applied: false
 percentage_change_applied: true
-results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1h/sundial/rq3-covid-crash-2020-log-pct/2025-11-30_10-35-11_MSFT_1h_sundial_split_2020-02-28_train_89d_test_60d_horizon_1.csv
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/msc-thesis-stock-forecasting/results/MSFT/1h/sundial/rq3-covid-crash-2020-log-pct/2025-11-30_10-35-11_MSFT_1h_sundial_split_2020-02-28_train_89d_test_60d_horizon_1.csv
 arima_order: N/A
 evaluation_metrics:
   mse: 0.000320215492078737

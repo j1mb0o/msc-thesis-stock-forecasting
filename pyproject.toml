@@ -1,5 +1,5 @@
 [project]
-name = "thesis-code-new"
+name = "msc-thesis-stock-forecasting"
 version = "0.1.0"
 description = "Thesis project code (not packaged)"
 authors = [
@@ -53,5 +53,4 @@ exclude = [
     "notebooks*",
     "*_env",  # Using a pattern to exclude sundial_env, chronos_env, etc.
 ]
-
 

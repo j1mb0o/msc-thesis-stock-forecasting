@@ -10,7 +10,7 @@ mapping = {
     '\\multirow': '\\midrule\n\\multirow',
 }
 
-base_dir = '/Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/tables/'
+base_dir = '/Users/dimitris/LU/Thesis/Thesis-Master-Repo/msc-thesis-stock-forecasting/tables/'
 
 for timefreq in ['1d', '1h']:
     timefreq_path = os.path.join(base_dir, timefreq)

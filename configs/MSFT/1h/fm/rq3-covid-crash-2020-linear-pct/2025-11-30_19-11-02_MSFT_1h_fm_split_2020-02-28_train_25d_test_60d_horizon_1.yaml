@@ -12,7 +12,7 @@ forecasting_method: fm
 horizon_length: 1
 differencing_applied: false
 percentage_change_applied: true
-results_file_path: /root/thesis-code-new/results/MSFT/1h/fm/rq3-covid-crash-2020-linear-pct/2025-11-30_19-11-02_MSFT_1h_fm_split_2020-02-28_train_25d_test_60d_horizon_1.csv
+results_file_path: /root/msc-thesis-stock-forecasting/results/MSFT/1h/fm/rq3-covid-crash-2020-linear-pct/2025-11-30_19-11-02_MSFT_1h_fm_split_2020-02-28_train_25d_test_60d_horizon_1.csv
 arima_order: N/A
 evaluation_metrics:
   mse: 0.0003469855211506013

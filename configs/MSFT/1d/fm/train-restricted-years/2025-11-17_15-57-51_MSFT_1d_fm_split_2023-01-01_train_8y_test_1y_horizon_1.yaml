@@ -12,7 +12,7 @@ forecasting_method: fm
 horizon_length: 1
 differencing_applied: false
 percentage_change_applied: false
-results_file_path: /root/thesis-code-new/results/MSFT/1d/fm/train-restricted-years/2025-11-17_15-57-51_MSFT_1d_fm_split_2023-01-01_train_8y_test_1y_horizon_1.csv
+results_file_path: /root/msc-thesis-stock-forecasting/results/MSFT/1d/fm/train-restricted-years/2025-11-17_15-57-51_MSFT_1d_fm_split_2023-01-01_train_8y_test_1y_horizon_1.csv
 arima_order: N/A
 evaluation_metrics:
   mse: 28.646831669059743

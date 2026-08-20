@@ -114,13 +114,13 @@ def plot_autocorrelations(data_path, output_dir):
 
 if __name__ == "__main__":
     data_files = [
-        "/Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/data/MSFT/MSFT_1d.csv",
-        "/Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/data/MSFT/MSFT_1h.csv",
+        "/Users/dimitris/LU/Thesis/Thesis-Master-Repo/msc-thesis-stock-forecasting/data/MSFT/MSFT_1d.csv",
+        "/Users/dimitris/LU/Thesis/Thesis-Master-Repo/msc-thesis-stock-forecasting/data/MSFT/MSFT_1h.csv",
     ]
 
     output_dirs = [
-        "/Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/figures/MSFT/1d",
-        "/Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/figures/MSFT/1h",
+        "/Users/dimitris/LU/Thesis/Thesis-Master-Repo/msc-thesis-stock-forecasting/figures/MSFT/1d",
+        "/Users/dimitris/LU/Thesis/Thesis-Master-Repo/msc-thesis-stock-forecasting/figures/MSFT/1h",
     ]
 
     for data_file, out_dir in zip(data_files, output_dirs):

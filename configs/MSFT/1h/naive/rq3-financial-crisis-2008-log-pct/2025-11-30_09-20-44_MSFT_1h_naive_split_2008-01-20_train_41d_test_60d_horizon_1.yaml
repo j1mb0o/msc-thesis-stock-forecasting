@@ -12,7 +12,7 @@ forecasting_method: naive
 horizon_length: 1
 differencing_applied: false
 percentage_change_applied: true
-results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1h/naive/rq3-financial-crisis-2008-log-pct/2025-11-30_09-20-44_MSFT_1h_naive_split_2008-01-20_train_41d_test_60d_horizon_1.csv
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/msc-thesis-stock-forecasting/results/MSFT/1h/naive/rq3-financial-crisis-2008-log-pct/2025-11-30_09-20-44_MSFT_1h_naive_split_2008-01-20_train_41d_test_60d_horizon_1.csv
 arima_order: N/A
 evaluation_metrics:
   mse: 0.00018347351709439142

@@ -57,7 +57,7 @@ df = download_alpaca_data(ticker="MSFT", timeframe="15min")
 ### Command Line Usage
 
 ```bash
-cd /Users/dimitris/LU/Thesis/thesis-code-new
+cd /Users/dimitris/LU/Thesis/msc-thesis-stock-forecasting
 python scripts/utils/download_alpaca_data.py
 ```
 

@@ -12,7 +12,7 @@ forecasting_method: chronos_base
 horizon_length: 1
 differencing_applied: false
 percentage_change_applied: true
-results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/thesis-code-new/results/MSFT/1d/chronos_base/train-less-year-linear-pct/2025-11-18_22-31-16_MSFT_1d_chronos_base_split_2023-01-01_train_150d_test_1y_horizon_1.csv
+results_file_path: /Users/dimitris/LU/Thesis/Thesis-Master-Repo/msc-thesis-stock-forecasting/results/MSFT/1d/chronos_base/train-less-year-linear-pct/2025-11-18_22-31-16_MSFT_1d_chronos_base_split_2023-01-01_train_150d_test_1y_horizon_1.csv
 arima_order: N/A
 evaluation_metrics:
   mse: 0.0002805361307302144
